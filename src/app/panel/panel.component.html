@@ -1,0 +1,26 @@
+<app-header></app-header>
+<mat-drawer-container  class="example-container sidenav" (backdropClick)="toggle.toggle_sidenav(750)" dir="rtl" autosize>
+	<mat-drawer  class="example-sidenav"  [mode]="toggle.toggle_type()" (auxclick)="toggle.toggle_sidenav(752)" [opened]="toggle.toggle_mini()" >
+    <mat-list>
+<!--      <div mat-subheader data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false"
+           aria-controls="collapseExample" (click)="miniSize = !miniSize">
+        <mat-icon >home</mat-icon>
+      </div>-->
+      <div class="" id="" >
+      <mat-list-item class="sidenav-item"
+                     [routerLink]="item.route?item.route:''"
+                     [routerLinkActive]="'active-item'"
+                     [routerLinkActiveOptions]="{exact:true}"
+                     *ngFor="let item of items; let index = index">
+        <mat-icon matListItemIcon class="sidenav-icon" >{{item.icon}}</mat-icon>
+        <div style="width: 150px; margin-right: 15px;" matListItemTitle *ngIf="!toggle.toggle_max()">{{item.title}}</div>
+      </mat-list-item>
+      </div>
+      <mat-divider></mat-divider>
+    </mat-list>
+	</mat-drawer>
+  <mat-drawer-content>
+      <router-outlet></router-outlet>
+  </mat-drawer-content>
+</mat-drawer-container>
+

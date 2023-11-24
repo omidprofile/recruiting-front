@@ -1,0 +1,49 @@
+.table {
+	
+	tr, td, th {
+		text-align: center;
+		vertical-align: middle;
+		transition: all 200ms;
+	}
+	thead th {
+		background-color: #eee;
+	}
+	
+	td.sort {}
+	td.img {
+		img {
+			height: 80px;
+		}
+	}
+	th.title, td.title {
+		text-align: right;
+	}
+	td.tools {
+		.tools {
+			display: flex;
+			justify-content: center;
+		}
+	}
+	
+	&.table-settings {
+		td {
+			text-align: right;
+			vertical-align: middle;
+			&:first-child {
+				font-weight: 500;
+				@media (min-width: 576px) {
+					width: 200px;
+				}
+				@media (min-width: 992px) {
+					width: 300px;
+				}
+			}
+		}
+	}
+	
+	&.editable {
+		td {
+			height: 51px;
+		}
+	}
+}

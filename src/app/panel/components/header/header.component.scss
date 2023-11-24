@@ -1,0 +1,19 @@
+.example-spacer {
+	flex: 1 1 auto;
+}
+.price-show{
+	display: none !important;
+	@media screen and (min-width: 992px ) {
+		display: flex !important;
+	}
+}
+.name{
+	font-size: 10px;
+	
+}
+.price{
+	font-size: 14px;
+	font-weight: 800;
+
+}
+

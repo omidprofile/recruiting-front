@@ -1,0 +1,23 @@
+.example-sidenav-content {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	transition: 300ms;
+}
+
+.example-container{
+	height: calc(100% - #{64px});
+	overflow: hidden;
+	background-color: #eee !important;
+
+}
+
+
+.example-sidenav {
+	user-select: none;
+  padding: 20px;
+}
+
+.mdc-list-item--with-leading-icon.mdc-list-item{
+  padding-left: 0 !important;
+}

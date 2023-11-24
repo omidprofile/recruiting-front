@@ -1,0 +1,30 @@
+@use '@angular/material' as mat;
+
+@use 'sass:map';
+
+
+$workshop-success: mat.define-palette(mat.$green-palette);
+$workshop-sidenav: mat.define-palette(mat.$gray-palette);
+$workshop-info: mat.define-palette(mat.$blue-palette);
+$workshop-warning: mat.define-palette(mat.$orange-palette);
+
+$workshop-typography: mat.define-legacy-typography-config(
+	$font-family: "'irsans', 'Tahoma', 'sans-serif'",
+);
+
+
+@function extra-theme($workshop-theme) {
+	@return map.deep-merge($workshop-theme, (
+		success:$workshop-success,
+		info:$workshop-info,
+		warning:$workshop-warning,
+		sidenav:$workshop-sidenav,
+		color:(
+			success:$workshop-success,
+			info:$workshop-info,
+			warning:$workshop-warning,
+			sidenav:$workshop-sidenav,
+		)
+	)
+	);
+}

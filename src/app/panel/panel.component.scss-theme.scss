@@ -1,0 +1,61 @@
+@use '@angular/material' as mat;
+
+@mixin sidenav($theme){
+	$colors: mat.get-color-config($theme);
+	$background :map-get($colors, sidenav);
+  $icons: map-get($colors, primary);
+  $success: map-get($colors, success);
+  $background-color: mat.get-color-from-palette($background,900);
+  $item-hover-color: mat.get-color-from-palette($icons,A200);
+  $item-active-color: mat.get-color-from-palette($icons,A400);
+  $icon-color: mat.get-color-from-palette($icons,A400);
+  .sidenav{
+    .mat-drawer{
+      background-color: $background-color !important;
+      margin-top: .04rem;
+      padding: 0 !important;
+    }
+    .sidenav-icon{
+      font-size: 30px;
+      width: 30px !important;
+      height: 30px !important;
+      margin-left: 16px !important;
+      color: #fff !important;
+    }
+  }
+  .mat-mdc-menu-item .mat-icon{
+    margin-right: 0 !important;
+    margin-left: 16px;
+    color: $icon-color !important;
+  }
+  .mdc-list-item__primary-text {
+    color: rgb(255 255 255 / 100%) !important;
+  }
+  .sidenav-item{
+    border-right: 2px solid transparent;
+  }
+  .sidenav-item:hover{
+    div{
+      color: #{rgba($item-hover-color,1)} !important;
+    }
+    .mat-icon{
+      color: $icon-color !important;
+    }
+    border-radius: 5px;
+    cursor: pointer !important;
+  }
+  .active-item{
+    background-color: #{rgba($item-active-color,0.1)} !important;
+    border-right: 2px solid $item-active-color;
+    .mat-icon{
+      color: $icon-color !important;
+    }
+  }
+  .price{
+    color: map-get($icons , A200);
+  }
+  .price-btn{
+    background-color: rgba(map-get($icons , A400), 0.1) !important;
+  }
+
+}

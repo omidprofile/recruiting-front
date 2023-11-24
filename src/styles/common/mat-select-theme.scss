@@ -1,0 +1,29 @@
+@use "@angular/material" as mat;
+
+@mixin mat-select-theme($theme){
+  $colors: mat.get-color-config($theme);
+  $text-colors: mat.get-color-from-palette($colors, sidenav);
+  $text-color:map-get($text-colors,900);
+  $primary-colors:mat.get-color-from-palette($colors, primary);
+  $primary-color:map-get($primary-colors, 500);
+.mat-select-design{
+  mat-label{
+    color: $text-color !important;
+  }
+
+}
+.mat-option-design{
+  span.mdc-list-item__primary-text{
+    color: $text-color !important;
+  }
+  .mat-pseudo-checkbox-checked.mat-pseudo-checkbox-minimal::after, .mat-pseudo-checkbox-indeterminate.mat-pseudo-checkbox-minimal::after{
+    color: $primary-color !important;
+  }
+
+}
+
+  .mat-mdc-form-field.mat-focused .mat-mdc-select-arrow {
+    color: $text-color !important;
+  }
+
+}

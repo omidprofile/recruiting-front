@@ -1,0 +1,82 @@
+@use '@angular/material' as mat;
+@mixin dashboard_typography($config){
+	.headline-title{
+		@include  mat.typography-level($config ,  headline);
+		font-weight: 500;
+	}
+
+.card-title-c{
+	@include  mat.typography-level($config ,  display-1);
+	font-weight: 500;
+	font-size: 18px;
+	
+}
+
+	.dashboard-caption{
+		@include  mat.typography-level($config ,  subheading-2);
+		font-weight: 500;
+	}
+}
+
+
+
+@mixin general_theme($theme){
+	$colors: mat.get-color-config($theme);
+	$typography:mat.get-typography-config($theme);
+	@include dashboard_typography($typography);
+	$background :map-get($colors, sidenav);
+	$headline-color: map-get($background, 700);
+	$card-title-color: map-get($background, 800);
+	$dashboard-card-bgc :map-get($colors, primary);
+	$dashboard-card-bgc-color :map-get($dashboard-card-bgc, 700);
+
+	.headline-title{
+		color: $headline-color !important;
+		position: relative;
+	}
+	.headline-title:after{
+		content: '';
+		position: absolute;
+		height: 2px;
+		width: 100px;
+		right: 0;
+		bottom: -5px;
+		background-color:$dashboard-card-bgc-color;
+	}
+	
+	.card-title-c{
+		color: #ffffff !important;
+	}
+	
+	.dashboard-caption{
+		color: $headline-color !important;
+		margin-bottom: 15px;
+	}
+	
+	.mat-divider{
+		background-color: $headline-color !important;
+		margin-top: 30px!important;
+		
+	}
+	
+	.mdc-text-field--filled:not(.mdc-text-field--disabled).mdc-text-field--focused .mdc-floating-label, .mdc-text-field--filled:not(.mdc-text-field--disabled).mdc-text-field--focused .mdc-floating-label--float-above {
+		color: $headline-color !important;
+	}
+
+	.dashboard-card{
+		mat-card-content.mat-mdc-card-content {
+			background-color: $dashboard-card-bgc-color;
+		}
+	}
+
+	.disable-card{
+		.card-title-c{
+			color: gray!important;
+		}
+
+		mat-card-content.mat-mdc-card-content {
+			background-color: #cccccc;
+		}
+	}
+	
+}

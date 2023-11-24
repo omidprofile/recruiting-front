@@ -1,0 +1,14 @@
+sidebar and header background:
+#323537
+platie{
+
+}
+
+active color:D6690B
+text color:F7C90C
+platie{
+F7560C
+ED8E00
+F7C90C
+}
+

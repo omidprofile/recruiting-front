@@ -1,0 +1,38 @@
+<div class="d-flex justify-content-center align-items-center">
+	<div class="col-3 justify-content-start">
+		<div class=" d-flex align-items-center justify-content-start">
+			<mat-card-subtitle>نمایش:</mat-card-subtitle>
+			<div class="col-4 ms-5">
+				<mat-select [(value)]="selected" placeholder="" >
+					<mat-option class="mat-option-design" (click)="changePerPage(5)" [value]=5>{{'5' |persianNumbers}}</mat-option>
+					<mat-option class="mat-option-design" (click)="changePerPage(10)" [value]=10>{{'10' |persianNumbers}}</mat-option>
+					<mat-option class="mat-option-design" (click)="changePerPage(20)" [value]=20>{{'20' |persianNumbers}}</mat-option>
+					<mat-option class="mat-option-design" (click)="changePerPage(40)" [value]=40>{{'40' |persianNumbers}}</mat-option>
+				</mat-select>
+			</div>
+		</div>
+	</div>
+	<div class="col-9 d-flex justify-content-start">
+		<div class=" col-6 d-flex justify-content-evenly align-items-center">
+			<div class="number  d-flex justify-content-evenly align-items-center">
+				<button mat-icon-button [disabled]="startPageItem <= 1" (click)="goFirst()">
+					<mat-icon>last_page</mat-icon>
+				</button>
+				<button mat-icon-button [disabled]="startPageItem <= 1" (click)="previous()">
+					<mat-icon>keyboard_arrow_right</mat-icon>
+				</button>
+				<div class="d-flex">
+					<div class="me-2">{{startPageItem.toString()+" تا "+endPageItem.toString() |persianNumbers}}</div>
+					<div class="me-2">از</div>
+					<div class="me-2">{{itemTotal.toString() |persianNumbers}}</div>
+				</div>
+				<button mat-icon-button [disabled]="!(endPageItem < itemTotal)" (click)="next()">
+					<mat-icon>keyboard_arrow_left</mat-icon>
+				</button>
+				<button mat-icon-button [disabled]="!(endPageItem < itemTotal)"  (click)="goLast()">
+					<mat-icon>first_page</mat-icon>
+				</button>
+			</div>
+		</div>
+	</div>
+</div>

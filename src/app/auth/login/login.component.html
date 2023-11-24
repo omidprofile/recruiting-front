@@ -1,0 +1,64 @@
+
+<div class="navbar_login">
+  <div class="d-flex flex-row align-items-center justify-content-center logobox">
+    <div class="col col-auto logo_login">
+      <img src="./assets/images/logo.png" height="95" width="95px" alt="">
+    </div>
+    <div class="col col-auto  m-0 p-0 header-text_login">
+      <a class="h3 p-0 m-0" style="color: var(--header_text_color)">
+        <p class="pb-0 m-0 text1_login"> صنعت پروفیل آرش</p>
+        <!--        <p class="text2">صنعت </p>-->
+      </a>
+    </div>
+  </div>
+
+</div>
+
+
+
+<div class="sidebar_login">
+  <div class="info_login" [ngClass]="animation_class" (mouseenter)="change_animate($event)"
+       (mouseleave)="change_animate($event)">
+    <p>توضیحات این تصویر</p>
+    <span>
+      <i  class="fas  fa-info  login_icon"></i>
+    </span>
+  </div>
+
+  <div class="login_btn" [ngClass]="[login_is_hide?'show':!login_is_hide&& !first?'hide':'',login_animation_class]"
+       (click)="toggle()"
+       (mouseenter)="change_animate_login($event)" (mouseleave)="change_animate_login($event)"
+  >
+
+    <a>ورود به سامانه</a>
+    <span>
+      <i  class="fas  fa-sign-in-alt  login_icon"></i>
+    </span>
+
+  </div>
+</div>
+
+
+
+<section>
+  <img src="/assets/images/login_bg.png" class="bg" alt="">
+  <div class="login" [ngClass]="show_login?'come':'back'">
+      <div class="header_login d-flex justify-content-around align-items-baseline s">
+        <p> سامانه مشتریان صنعت پروفیل آرش</p>
+        <a class="fas fa-times" style="color: var(--logo_color);" (click)="toggle()"></a>
+      </div>
+      <div class="login-content">
+        <div class="login_logo">
+          <img src="./assets/images/logo.png" width="150" height="150" alt="">
+        </div>
+        <div class="inputBox">
+          <input type="text" required>
+          <span>شماره همراه:</span>
+          <i></i>
+        </div>
+        <div class="inputBox">
+          <input type="submit" value="ورود" id="btn" [routerLink]="['/panel']">
+        </div>
+      </div>
+  </div>
+</section>

@@ -1,0 +1,23 @@
+.example-card {
+  max-width: 400px;
+}
+
+.example-header-image {
+  background-image: url('/assets/images/logo.png');
+  background-size: cover;
+}
+.card-header-image{
+  position: absolute;
+  left: -15px;
+  top: 18px;
+  height: 140px;
+}
+
+.dashboard-title{
+  margin-right: 30px;
+  color: #000;
+}
+
+.dashboard-product{
+  padding: 15px;
+}

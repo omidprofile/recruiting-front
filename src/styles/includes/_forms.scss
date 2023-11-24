@@ -1,0 +1,73 @@
+.form_group {
+	margin-bottom: 15px;
+}
+.label {
+	margin-bottom: 5px;
+	font-size: 14px;
+}
+input, select {
+	&.field {
+		padding: 0 15px;
+		width: 100%;
+		height: 40px;
+		border: 1px solid #ccc;
+		border-radius: 5px;
+		
+		&:active, &:focus {
+			border-color: var(--color_orange_500);
+		}
+	}
+}
+textarea {
+	&.field {
+		padding: 15px;
+		width: 100%;
+		border: 1px solid #ccc;
+		border-radius: 5px;
+		
+		&:active, &:focus {
+			border-color: var(--color_orange_500);
+		}
+	}
+}
+
+.submit_con {
+	margin-top: 30px;
+}
+.submit {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	height: 40px;
+	min-width: 100px;
+	width: 100%;
+	font-size: 16px;
+}
+
+.hidden_input_file {
+	display: block;
+	position: absolute;
+	top: 0;
+	right: 0;
+	width: 100%;
+	height: 100%;
+	opacity: 0;
+}
+
+.button_file {
+	display: flex;
+	flex-wrap: wrap;
+	align-content: center;
+	text-align: center;
+	border-radius: 5px;
+	
+	.icon {
+		width: 100%;
+	}
+	.label {
+		width: 100%;
+	}
+	input {
+	
+	}
+}

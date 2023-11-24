@@ -1,0 +1,46 @@
+.card {
+	margin-bottom: 1.5rem;
+	min-height: 50px;
+	border: 0;
+	border-radius: 8px;
+	box-shadow: 0 2px 5px #aaa;
+
+	.card-header {
+		font-size: 16px;
+		font-weight: 500;
+	}
+
+	.shadow-none {
+		border: 1px solid #ddd;
+	}
+
+	&.section {
+		display: block;
+		text-align: center;
+		border-radius: 5px;
+		padding: 30px 0;
+
+		.icon_con {
+			font-size: 60px;
+		}
+		.label {
+			font-size: 20px;
+			font-weight: 500;
+		}
+		.alerts {
+			position: absolute;
+			right: 5px;
+			top: 5px;
+			padding: 5px 10px;
+			min-width: 40px;
+			direction: ltr;
+			color: #fff;
+			background-color: var(--color_orange_600);
+			border-radius: 5px;
+		}
+
+		&:hover {
+			color: var(--color_orange_500);
+		}
+	}
+}

@@ -1,0 +1,445 @@
+<mat-stepper
+        class="example-stepper"
+        [orientation]="(stepperOrientation | async)!"
+        #stepper
+        [linear]="true"
+>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <mat-step [completed]="person.valid" [stepControl]="person" label="اطلاعات هویتی" errorMessage="کامل شود!"
+              state="person">
+        <form [formGroup]="person" class="mt-5">
+            <div class="row">
+                <mat-form-field class="col col-12 col-md-6 mb-3">
+                    <mat-label>نام</mat-label>
+                    <input matInput placeholder="نام را وارد کنید..." formControlName="name">
+                    <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>
+                    <mat-error>{{validate.stringValidate(person.get('name'),'نام')}}</mat-error>
+                </mat-form-field>
+                <mat-form-field class="col col-12 col-md-6 mb-3">
+                    <mat-label>نام خانوادگی</mat-label>
+                    <input matInput placeholder="نام خانوادگی را وارد کنید..." formControlName="last_name">
+                    <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>
+                    <mat-error>{{validate.stringValidate(person.get('last_name'),'نام خانوادگی')}}</mat-error>
+                </mat-form-field>
+                <mat-form-field class="col col-12 col-md-6 mb-3">
+                    <mat-label>نام پدر</mat-label>
+                    <input matInput placeholder="نام پدر را وارد کنید..." formControlName="father">
+                    <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>
+                    <mat-error>{{validate.stringValidate(person.get('father'),'نام پدر')}}</mat-error>
+                </mat-form-field>
+                <mat-form-field class="col col-12 col-md-6 mb-3">
+                    <mat-label>سال تولد</mat-label>
+                    <input matInput [matDatepicker]="picker6"  placeholder="سال تولد را انتخاب کنید"
+                           formControlName="birth_day" >
+                    <mat-datepicker-toggle matSuffix [for]="picker6"></mat-datepicker-toggle>
+                    <mat-datepicker #picker6></mat-datepicker>
+                    <mat-error>{{validate.requiredValidate(person.get('birth_day'), 'تاریخ تولد')}}</mat-error>
+                </mat-form-field>
+                <mat-form-field class="col col-12 col-md-6 mb-3">
+                    <mat-label>کدملی</mat-label>
+                    <input matInput placeholder="کدملی را وارد کنید..." formControlName="national_code">
+                    <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>
+                    <mat-error>{{validate.nationalCodeValidate(person.get('national_code'))}}</mat-error>
+                </mat-form-field>
+                <mat-form-field class="col col-12 col-md-6 mb-3">
+                    <mat-label>شماره شناسنامه</mat-label>
+                    <input matInput placeholder="شماره شناسنامه را وارد کنید..."
+                           formControlName="certificate_code">
+                    <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>
+                    <mat-error>{{validate.numberValidate(person.get('certificate_code'),'شماره شناسنامه')}}</mat-error>
+                </mat-form-field>
+                <mat-form-field class="col col-12 col-md-6 mb-3">
+                    <mat-label>جنسیت</mat-label>
+                    <mat-select formControlName="gender">
+                        <mat-option class="mat-option-design" value="آقا" (click)="person.get('military_service')?.setValue(null)">آقا</mat-option>
+                        <mat-option class="mat-option-design" value="خانم" (click)="person.get('military_service')?.setValue('ندارد')">خانم</mat-option>
+                    </mat-select>
+                    <mat-error>{{validate.requiredValidate(person.get('gender'), 'جنسیت')}}</mat-error>
+                </mat-form-field>
+                <mat-form-field class="col col-12 col-md-6 mb-3" *ngIf="person.get('gender')?.value == 'آقا'">
+                    <mat-label> پایان خدمت</mat-label>
+                    <mat-select formControlName="military_service">
+                        <mat-option class="mat-option-design" value="دارد">دارد</mat-option>
+                        <mat-option class="mat-option-design" value="ندارد">ندارد</mat-option>
+                    </mat-select>
+                    <mat-error>{{validate.requiredValidate(person.get('military_service'), ' پایان خدمت')}}</mat-error>
+                </mat-form-field>
+                <mat-form-field class="col col-12 col-md-6 mb-3">
+                    <mat-label>وضعیت تاهل</mat-label>
+                    <mat-select formControlName="marital_status">
+                        <mat-option class="mat-option-design" value="متاهل" (click)="person.get('children')?.setValue(null)">متاهل</mat-option>
+                        <mat-option class="mat-option-design" value="مجرد" (click)="person.get('children')?.setValue(0)">مجرد</mat-option>
+                    </mat-select>
+                    <mat-error>{{validate.requiredValidate(person.get('marital_status'), 'وضعیت تاهل')}}</mat-error>
+                </mat-form-field>
+                <mat-form-field class="col col-12 col-md-6 mb-3" *ngIf="person.get('marital_status')?.value == 'متاهل'">
+                    <mat-label>تعداد فرزندان</mat-label>
+                    <input  matInput placeholder="تعداد فرزندان را وارد کنید..." formControlName="children">
+                    <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>
+                    <mat-error>{{validate.numberValidate(person.get('children'),'تعداد فرزرندان')}}</mat-error>
+                </mat-form-field>
+
+            </div>
+            <div class="col-12 d-flex justify-content-end">
+                <button mat-flat-button color="accent" matStepperNext [disabled]="!person.valid"
+                        (click)="test()">ثبت و ادامه
+                </button>
+            </div>
+        </form>
+
+    </mat-step>
+    <mat-step [completed]="connection.valid" [stepControl]="connection" label="اطلاعات ارتباطی" state="call"
+              errorMessage="کامل شود!">
+        <form [formGroup]="connection" class="mt-5">
+            <div class="row">
+                <ng-container formArrayName="mobile">
+                    <div class="col-12  d-flex justify-content-start align-items-baseline"
+                         *ngFor="let item of mobile.controls let i = index">
+                        <mat-form-field class="col col-6 mb-3">
+                            <mat-label>شماره همراه</mat-label>
+                            <input matInput placeholder="شماره همراه را وارد کنید..." [formControlName]="i">
+                            <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>
+                            <mat-error>{{validate.mobileValidate(item)}}</mat-error>
+                        </mat-form-field>
+                        <div class="col-6 d-flex justify-content-start mx-3">
+                            <button type="button" mat-flat-button color="warn" class="me-3"
+                                    (click)="removeMobile(i)" *ngIf="mobile.controls.length >1">حذف
+                            </button>
+                            <button type="button" mat-flat-button color="primary"
+                                    *ngIf="mobile.controls.length == i+1" (click)="addMobile()">افزودن
+                            </button>
+                        </div>
+                    </div>
+                </ng-container>
+                <ng-container formArrayName="phone">
+                    <div class="col-12 mb-3 d-flex justify-content-start align-items-baseline"
+                         *ngFor="let item of phone.controls let i = index">
+                        <mat-form-field class="col col-6 mb-3">
+                            <mat-label>شماره ثابت</mat-label>
+                            <input matInput placeholder="شماره ثابت را وارد کنید..." [formControlName]="i">
+                            <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>
+                            <mat-error>{{validate.phoneValidate(item)}}</mat-error>
+                        </mat-form-field>
+                        <div class="col-6 d-flex justify-content-start mx-3">
+                            <button type="button" mat-flat-button color="warn" class="me-3"
+                                    (click)="removePhone(i)" *ngIf="phone.controls.length >1">حذف
+                            </button>
+                            <button type="button" mat-flat-button color="primary"
+                                    *ngIf="phone.controls.length == i+1" (click)="addPhone()">افزودن
+                            </button>
+                        </div>
+                    </div>
+                </ng-container>
+                <ng-container formArrayName="email">
+                    <div class="col-12 mb-3 d-flex justify-content-start align-items-baseline"
+                         *ngFor="let item of email.controls let i = index">
+                        <mat-form-field class="col col-6 mb-3">
+                            <mat-label>ایمیل</mat-label>
+                            <input matInput placeholder="ایمیل را وارد کنید..." [formControlName]="i">
+                            <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>
+                            <mat-error>{{validate.emailValidate(item)}}</mat-error>
+                        </mat-form-field>
+                        <div class="col-6 d-flex justify-content-start mx-3">
+                            <button type="button" mat-flat-button color="warn" class="me-3"
+                                    (click)="removeEmail(i)" *ngIf="email.controls.length >1">حذف
+                            </button>
+                            <button type="button" mat-flat-button color="primary"
+                                    *ngIf="email.controls.length == i+1" (click)="addEmail()">افزودن
+                            </button>
+                        </div>
+                    </div>
+                </ng-container>
+            </div>
+            <div class="col-12 d-flex justify-content-between">
+                <button mat-flat-button color="warn" matStepperPrevious>بازگشت</button>
+                <button mat-flat-button color="accent" matStepperNext [disabled]="!connection.valid">ثبت و
+                    ادامه
+                </button>
+            </div>
+        </form>
+    </mat-step>
+    <mat-step [completed]="address.valid" [stepControl]="address" label="اطلاعات محل سکونت" state="map"
+              errorMessage="کامل شود!">
+        <form [formGroup]="address" class="mt-5">
+            <div class="row">
+                <mat-form-field class="col col-12 col-md-6 mb-3">
+                    <mat-label>استان</mat-label>
+                    <input matInput placeholder="نام استان را وارد کنید..." formControlName="province">
+                    <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>
+                    <mat-error>{{validate.notEmptyValidate(address.get('province'), 'استان')}}</mat-error>
+                </mat-form-field>
+                <mat-form-field class="col col-12 col-md-6 mb-3">
+                    <mat-label>شهر</mat-label>
+                    <input matInput placeholder="نام شهر را وارد کنید..." formControlName="city">
+                    <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>
+                    <mat-error>{{validate.notEmptyValidate(address.get('city'), 'شهر')}}</mat-error>
+                </mat-form-field>
+                <mat-form-field class="col col-12 col-md-6 mb-3">
+                    <mat-label>روستا</mat-label>
+                    <input matInput placeholder="نام روستا را وارد کنید..." formControlName="Village">
+                    <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>
+                    <mat-error>{{validate.notEmptyValidate(address.get('Village'), 'روستا')}}</mat-error>
+                </mat-form-field>
+                <mat-form-field class="col col-12 col-md-6 mb-3">
+                    <mat-label>خیابان</mat-label>
+                    <input matInput placeholder="نام خیابان را وارد کنید..." formControlName="street">
+                    <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>
+                    <mat-error>{{validate.notEmptyValidate(address.get('street'), 'خیابان')}}</mat-error>
+                </mat-form-field>
+                <mat-form-field class="col col-12 col-md-6 mb-3">
+                    <mat-label>کوچه</mat-label>
+                    <input matInput placeholder="نام کوچه را وارد کنید..." formControlName="alley">
+                    <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>
+                    <mat-error>{{validate.notEmptyValidate(address.get('alley'), 'کوچه')}}</mat-error>
+                </mat-form-field>
+                <mat-form-field class="col col-12 col-md-6 mb-3">
+                    <mat-label>پلاک</mat-label>
+                    <input matInput placeholder=" پلاک را وارد کنید..." formControlName="Plaque">
+                    <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>
+                    <mat-error>{{validate.plaqueValidate(address.get('Plaque'))}}</mat-error>
+                </mat-form-field>
+                <mat-form-field class="col col-12 col-md-6 mb-3">
+                    <mat-label>ساختمان</mat-label>
+                    <input matInput placeholder=" ساختمان را وارد کنید..." formControlName="building">
+                    <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>
+                    <mat-error>{{validate.notEmptyValidate(address.get('building'), 'ساختمان')}}</mat-error>
+                </mat-form-field>
+                <mat-form-field class="col col-12 col-md-6 mb-3">
+                    <mat-label>کدپستی</mat-label>
+                    <input matInput placeholder=" کدپستی را وارد کنید..." formControlName="postal_code">
+                    <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>
+                    <mat-error>{{validate.postalCodeValidate(address.get('postal_code'))}}</mat-error>
+                </mat-form-field>
+                <mat-form-field class="col col-12  mb-3">
+                    <mat-label>آدرس کامل</mat-label>
+                    <textarea matInput placeholder=" آدرس کامل را وارد کنید..." formControlName="full_address">
+							</textarea>
+                    <mat-error>{{validate.notEmptyValidate(address.get('full_address'), 'آدرس کامل')}}</mat-error>
+                </mat-form-field>
+
+            </div>
+            <div class="col-12 d-flex justify-content-between">
+                <button mat-flat-button color="warn" matStepperPrevious>بازگشت</button>
+                <button mat-flat-button color="accent" matStepperNext [disabled]="!address.valid">ثبت و ادامه
+                </button>
+            </div>
+        </form>
+
+    </mat-step>
+    <mat-step [completed]="job.valid" [stepControl]="job" label="اطلاعات شغلی" state="job"
+              errorMessage="کامل شود!">
+        <form [formGroup]="job" class="mt-5">
+            <div class="row">
+                <mat-form-field class="col col-12 col-md-6 mb-3">
+                    <mat-label>قسمت</mat-label>
+                    <mat-select formControlName="section">
+                        <mat-option class="mat-option-design" value="اداری" >اداری</mat-option>
+                        <mat-option class="mat-option-design" value="تولید" >تولید</mat-option>
+                    </mat-select>
+                    <mat-error>{{validate.requiredValidate(job.get('section'), 'قسمت کار')}}</mat-error>
+                </mat-form-field>
+                <mat-form-field class="col col-12 col-md-6 mb-3">
+                    <mat-label>بخش</mat-label>
+                    <mat-select formControlName="sector">
+                        <mat-option class="mat-option-design" value="فروش" >فروش</mat-option>
+                        <mat-option class="mat-option-design" value="حسابداری" >حسابداری</mat-option>
+                    </mat-select>
+                    <mat-error>{{validate.requiredValidate(job.get('sector'), 'بخش کار')}}</mat-error>
+                </mat-form-field>
+                <mat-form-field class="col col-12 col-md-6 mb-3">
+                    <mat-label>پست</mat-label>
+                    <mat-select formControlName="rank">
+                        <mat-option class="mat-option-design" value="سرپرست" >سرپرست</mat-option>
+                        <mat-option class="mat-option-design" value="حرفه ای" >حرفه ای</mat-option>
+                        <mat-option class="mat-option-design" value="عادی" >عادی</mat-option>
+                    </mat-select>
+                    <mat-error>{{validate.requiredValidate(job.get('rank'), 'پست')}}</mat-error>
+                </mat-form-field>
+                <mat-form-field class="col col-12 col-md-6 mb-3">
+                    <mat-label>عنوان شغلی</mat-label>
+                    <input matInput placeholder="عنوان شغلی را وارد نمایید ..." formControlName="title">
+                    <mat-error>{{validate.stringValidate(job.get('title'),'عنوان شغلی')}}</mat-error>
+                </mat-form-field>
+                <mat-form-field class="col col-12 col-md-6 mb-3">
+                    <mat-label>َشروع به کار</mat-label>
+                    <input matInput [matDatepicker]="picker7" placeholder="تاریخ شروع به کار را وارد نمایید ..." formControlName="start">
+                    <mat-datepicker-toggle matSuffix [for]="picker7"></mat-datepicker-toggle>
+                    <mat-datepicker #picker7></mat-datepicker>
+                    <mat-error>{{validate.stringValidate(job.get('start'),'شروع به کار')}}</mat-error>
+                </mat-form-field>
+                <mat-form-field class="col col-12 col-md-6 mb-3">
+                    <mat-label>مدرک تحصیلی</mat-label>
+                    <mat-select formControlName="education">
+                        <mat-option class="mat-option-design" value="دیپلم" >دیپلم</mat-option>
+                        <mat-option class="mat-option-design" value="فوق دیپلم" >فوق دیپلم</mat-option>
+                        <mat-option class="mat-option-design" value="لیسانس" >لیسانس</mat-option>
+                    </mat-select>
+                    <mat-error>{{validate.requiredValidate(job.get('education'), 'مدرک تحصیلی')}}</mat-error>
+                </mat-form-field>
+                <mat-form-field class="col col-12 col-md-6 mb-3">
+                    <mat-label>کدپرسنلی</mat-label>
+                    <input matInput placeholder="کدپرسنلی را وارد نمایید ..." formControlName="personal_code">
+                    <mat-error>{{validate.numberValidate(job.get('personal_code'),'کدپرسنلی')}}</mat-error>
+                </mat-form-field>
+                <mat-form-field class="col col-12 col-md-6 mb-3">
+                    <mat-label>وضعیت</mat-label>
+                    <mat-select formControlName="is_active">
+                        <mat-option class="mat-option-design" value="فعال" >فعال</mat-option>
+                        <mat-option class="mat-option-design" value="غیرفعال" >غیرفعال</mat-option>
+                    </mat-select>
+                    <mat-error>{{validate.requiredValidate(job.get('is_active'), 'وضعیت')}}</mat-error>
+                </mat-form-field>
+
+            </div>
+            <div class="col-12 d-flex justify-content-between">
+                <button mat-flat-button color="warn" matStepperPrevious>بازگشت</button>
+                <button mat-flat-button color="accent" matStepperNext [disabled]="!job.valid">ثبت و ادامه
+                </button>
+            </div>
+        </form>
+
+    </mat-step>
+    <mat-step [completed]="insurance.valid" [stepControl]="insurance" label="اطلاعات بیمه" state="insurance"
+              errorMessage="کامل شود!">
+        <form [formGroup]="insurance" class="mt-5">
+            <div class="row">
+                <mat-form-field class="col col-12 col-md-6 mb-3">
+                    <mat-label>وضعیت</mat-label>
+                    <mat-select formControlName="status">
+                        <mat-option class="mat-option-design" value="دارد" >دارد</mat-option>
+                        <mat-option class="mat-option-design" value="ندارد" >ندارد</mat-option>
+                    </mat-select>
+                    <mat-error>{{validate.requiredValidate(insurance.get('status'), 'وضعیت بیمه')}}</mat-error>
+                </mat-form-field>
+                <mat-form-field class="col col-12 col-md-6 mb-3">
+                    <mat-label>روز بیمه ای</mat-label>
+                    <input matInput placeholder="تعداد روز بیمه در ماه ..." formControlName="per_month">
+                    <mat-error>{{validate.numberValidate(insurance.get('per_month'), 'روز بیمه ای')}}</mat-error>
+                </mat-form-field>
+                <mat-form-field class="col col-12 col-md-6 mb-3">
+                    <mat-label>سابق بیمه </mat-label>
+                    <mat-select formControlName="history">
+                        <mat-option class="mat-option-design" value="دارد" >دارد</mat-option>
+                        <mat-option class="mat-option-design" value="ندارد" >ندارد</mat-option>
+                    </mat-select>
+                    <mat-error>{{validate.requiredValidate(insurance.get('history'), 'سابق بیمه ')}}</mat-error>
+                </mat-form-field>
+                <mat-form-field class="col col-12 col-md-6 mb-3">
+                    <mat-label>َشروع بیمه</mat-label>
+                    <input matInput [matDatepicker]="picker8" placeholder="تاریخ شروع بیمه را وارد نمایید ..." formControlName="start">
+                    <mat-datepicker-toggle matSuffix [for]="picker8"></mat-datepicker-toggle>
+                    <mat-datepicker #picker8></mat-datepicker>
+                    <mat-error>{{validate.stringValidate(insurance.get('start'),'شروع بیمه')}}</mat-error>
+                </mat-form-field>
+                <mat-form-field class="col col-12 col-md-6 mb-3">
+                    <mat-label>کد بیمه</mat-label>
+                    <input matInput placeholder="کد بیمه را وارد نمایید ..." formControlName="code">
+                    <mat-error>{{validate.numberValidate(insurance.get('code'),'کد بیمه')}}</mat-error>
+                </mat-form-field>
+
+
+            </div>
+            <div class="col-12 d-flex justify-content-between">
+                <button mat-flat-button color="warn" matStepperPrevious>بازگشت</button>
+                <button mat-flat-button color="accent" matStepperNext [disabled]="!insurance.valid">ثبت و ادامه
+                </button>
+            </div>
+        </form>
+
+    </mat-step>
+    <mat-step [completed]="bank.valid" [stepControl]="bank" label="اطلاعات بانکی" state="bank"
+              errorMessage="کامل شود!">
+        <form [formGroup]="bank" class="mt-5">
+            <div class="row">
+                <mat-form-field class="col col-12 col-md-6 mb-3">
+                    <mat-label>َشماره حساب</mat-label>
+                    <input matInput placeholder="َشماره حساب را وارد نمایید ..." formControlName="account">
+                    <mat-error>{{validate.numberValidate(bank.get('account'),'َشماره حساب')}}</mat-error>
+                </mat-form-field>
+                <mat-form-field class="col col-12 col-md-6 mb-3">
+                    <mat-label>شماره کارت</mat-label>
+                    <input matInput placeholder="شماره کارت را وارد نمایید ..." formControlName="card">
+                    <mat-error>{{validate.numberValidate(bank.get('card'),'شماره کارت')}}</mat-error>
+                </mat-form-field>
+
+
+            </div>
+            <div class="col-12 d-flex justify-content-between">
+                <button mat-flat-button color="warn" matStepperPrevious>بازگشت</button>
+                <button mat-flat-button color="accent" matStepperNext [disabled]="!bank.valid">ثبت و ادامه
+                </button>
+            </div>
+        </form>
+
+    </mat-step>
+
+
+
+    <mat-step>
+        <ng-template matStepLabel>Done</ng-template>
+        <p>You are now done.</p>
+        <div>
+            <button mat-button matStepperPrevious>Back</button>
+        </div>
+    </mat-step>
+
+    <ng-template matStepperIcon="person">
+        <mat-icon [ngStyle]="{'color':person.valid?'black':'white'}">person</mat-icon>
+    </ng-template>
+    <ng-template matStepperIcon="call">
+        <mat-icon [ngStyle]="{'color':connection.valid?'black':'white'}">call</mat-icon>
+    </ng-template>
+    <ng-template matStepperIcon="map">
+        <mat-icon [ngStyle]="{'color':address.valid?'black':'white'}">person_pin_circle</mat-icon>
+    </ng-template>
+    <ng-template matStepperIcon="job">
+        <mat-icon [ngStyle]="{'color':job.valid?'black':'white'}">developer_board</mat-icon>
+    </ng-template>
+    <ng-template matStepperIcon="insurance">
+        <mat-icon [ngStyle]="{'color':insurance.valid?'black':'white'}">local_hospital</mat-icon>
+    </ng-template>
+    <ng-template matStepperIcon="bank">
+        <mat-icon [ngStyle]="{'color':bank.valid?'black':'white'}">account_balance</mat-icon>
+    </ng-template>
+</mat-stepper>

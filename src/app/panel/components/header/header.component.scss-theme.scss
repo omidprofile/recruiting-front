@@ -1,0 +1,12 @@
+@use '@angular/material' as mat;
+
+@mixin header-theme($theme){
+  $colors: mat.get-color-config($theme);
+  $header-colors: mat.get-color-from-palette($theme, sidenav);
+  $header-color: map-get($header-colors, 900);
+
+  .mat-toolbar{
+    background-color: $header-color !important;
+    color: #fff !important;
+  }
+}
