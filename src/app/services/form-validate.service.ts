@@ -32,7 +32,7 @@ export class FormValidateService {
     return !!field.hasError('phoneValidator');
   }
   
-  isNationalCodeValidatorValid(field:any){
+  isNationalCodeValidator(field:any){
     return !!field.hasError('nationalCodeValidator');
   }
   
@@ -67,7 +67,7 @@ export class FormValidateService {
       return "کدملی را وارد نمایید";
     if(this.isNumber(field))
       return "فرمت وارد شده صحیح نیست"
-    if (this.isNationalCodeValidatorValid(field)){
+    if (this.isNationalCodeValidator(field)){
       return "کد ملی وارد شده اشتباه است"
     }
     return null;
@@ -117,9 +117,9 @@ export class FormValidateService {
       return "کدپستی وارد شود"
     if (this.isNumber(field))
       return "قالب وارد شده صحیح نمیباشد"
-    if (this.numberValidate(field, 'کدپستی'))
+    if (this.isNationalCodeValidator(field))
       return "قالب وارد شده صحیح نمیباشد"
-    
+
     return null;
   }
   

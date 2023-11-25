@@ -1,4 +1,11 @@
 .mat-divider{
 	top: unset !important;
 }
+::ng-deep{
+	.mat-mdc-standard-chip.mdc-evolution-chip--with-trailing-action .mdc-evolution-chip__action--primary{
+	padding-left: 12px !important;
+	padding-right: 0 !important;
+}
 
+
+}

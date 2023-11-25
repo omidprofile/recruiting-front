@@ -41,6 +41,7 @@ import { UserCreateComponent } from './panel/pages/users/user-create/user-create
 import {MatDatepickerModule} from "@angular/material/datepicker";
 import {MatNativeDateModule} from "@angular/material/core";
 import {MatFormFieldModule} from "@angular/material/form-field";
+import {MatGridListModule} from "@angular/material/grid-list";
 
 
 
@@ -95,6 +96,7 @@ import {MatFormFieldModule} from "@angular/material/form-field";
         MatNativeDateModule,
         FormsModule,
         ReactiveFormsModule,
+        MatGridListModule,
     ],
   providers: [Sidenav_model,
     MapService,

@@ -10,7 +10,7 @@ export class ValidationFormService {
 	}
 	
 	public number(control: FormControl): { [s: string]: boolean } | null {
-		if (!+control.value && control.value) {
+		if (+control.value<0 && control.value) {
 			return {numberValidator: true}
 		}
 		return null
@@ -54,7 +54,7 @@ export class ValidationFormService {
 	}
 	
 	public phone(control: FormControl): { [s: string]: boolean } | null {
-		var regex = new RegExp('^0[0-9]{2,}-[0-9]{8}$');
+		var regex = new RegExp('^0[0-9]{2,}[0-9]{8}$');
 		if (control.value){
 			var result = regex.test(control.value.toString());
 			if (!result) {
