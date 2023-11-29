@@ -24,6 +24,10 @@ export class FormValidateService {
     return !!field.hasError('numberValidator');
   }
   
+  isMax(field:any){
+    return !!field.hasError('max');
+  }
+  
   isValidMobile(field:any){
     return !!field.hasError('mobileValidator');
   }
@@ -77,6 +81,8 @@ export class FormValidateService {
       return `${title}  را وارد نمایید`;
     if(this.isNumber(field))
       return "فرمت وارد شده صحیح نیست"
+    if(this.isMax(field))
+      return 'مقدار وارد شده بیشتر از حد مجاز است'
     return null;
   }
   

@@ -1,0 +1,39 @@
+
+<div mat-dialog-content dir="rtl">
+	<form action="" [formGroup]="form">
+		<p class="mb-3">ساعت ثبت شده: <b class="mx-3">{{data.time |persianNumbers}}</b></p>
+		<div class="d-flex align-items-baseline justify-content-around mb-3">
+			<mat-form-field>
+				<mat-label>دقیقه :</mat-label>
+				<input matInput class="ps-2" formControlName="min">
+				<mat-error>{{validate.numberValidate(form.get('min'),'دقیقه')}}</mat-error>
+			</mat-form-field>
+			<div class="mx-3">:</div>
+			<mat-form-field>
+				<mat-label>ساعت</mat-label>
+				<input matInput class="ps-2" formControlName="hour" >
+				<mat-error>{{validate.numberValidate(form.get('hour'),'ساعت')}}</mat-error>
+			</mat-form-field>
+		</div>
+		<p class="mb-3">نوع فعالیت ثبت شده:<b class="mx-3">{{data.type}}</b> </p>
+		<mat-form-field class=" col-12">
+			<mat-label>نوع فعالیت:</mat-label>
+			<mat-select formControlName="type">
+				<mat-option class="mat-option-design" value="ورود" >ورود</mat-option>
+				<mat-option class="mat-option-design" value="خروج" >خروج</mat-option>
+			</mat-select>
+			<mat-error>{{validate.requiredValidate(form.get('type'), 'نوع فعالیت')}}</mat-error>
+		</mat-form-field>
+		<mat-form-field class=" col-12 ">
+			<mat-label>علت:</mat-label>
+			<textarea matInput formControlName="reason">
+			</textarea>
+			<mat-error>{{validate.requiredValidate(form.get('reason'), 'علت')}}</mat-error>
+		</mat-form-field>
+	</form>
+
+</div>
+<div mat-dialog-actions>
+	<button mat-button cdkFocusInitial [mat-dialog-close]="form.value" [disabled]="!form.valid" color="accent">ثبت و تایید</button>
+	<button mat-button color="warn"  mat-dialog-close>انصراف</button>
+</div>

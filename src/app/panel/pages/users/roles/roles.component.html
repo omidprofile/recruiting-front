@@ -1,0 +1,75 @@
+<div class="dashboard col-12">
+    <div class="headline-title col-12 col-xl-10 mb-3">نقش ها</div>
+    <mat-card class="col col-12 col-xl-10">
+        <mat-card-content>
+            <div class="row">
+                <mat-form-field class="col col-12 col-lg-3 mt-3">
+                    <mat-label>قسمت:</mat-label>
+                    <mat-select [(value)]="section_value" [multiple]="section.length>0">
+                        <mat-option class="mat-option-design" *ngIf="section.length == 0">افزودن قسمت<mat-icon color="primary">playlist_add</mat-icon></mat-option>
+                        <mat-option class="mat-option-design" (click)="getSector()" *ngFor="let item of section" [value]="item">{{item}}</mat-option>
+                        <mat-divider></mat-divider>
+                        <mat-card style="box-shadow: unset !important;" *ngIf="section.length">
+                            <mat-card-actions>
+                                <button mat-flat-button color="primary" class="me-3">افزودن</button>
+                                <button mat-flat-button color="warn" *ngIf="section_value?.length">حذف</button>
+                            </mat-card-actions>
+                        </mat-card>
+                    </mat-select>
+                </mat-form-field>
+                <mat-form-field class="col col-12 col-lg-3 mt-3" *ngIf="section_value?.length" >
+                    <mat-label>بخش:</mat-label>
+                    <mat-select [(value)]="sector_value" [multiple]="sector.length>0">
+                        <mat-option class="mat-option-design" *ngIf="sector.length == 0">افزودن بخش<mat-icon color="primary">playlist_add</mat-icon></mat-option>
+                        <ng-container *ngFor="let item of sector_show">
+                                <mat-option class="mat-option-design" (click)="getRank()"  [value]="item['sector']">{{item['sector']+(section_value.length != 1?'('+item['parent']+')':'')}}</mat-option>
+                        </ng-container>
+                        <mat-divider></mat-divider>
+                        <mat-card style="box-shadow: unset !important;" *ngIf="section.length">
+                            <mat-card-actions>
+                                <button mat-flat-button color="primary" class="me-3">افزودن</button>
+                                <button mat-flat-button color="warn" *ngIf="sector_value?.length">حذف</button>
+                            </mat-card-actions>
+                        </mat-card>
+                    </mat-select>
+                </mat-form-field>
+                <mat-form-field class="col col-12 col-lg-3 mt-3" *ngIf="sector_value?.length">
+                    <mat-label>رده:</mat-label>
+                    <mat-select [(value)]="rank_value" [multiple]="rank_show.length > 0">
+                        <mat-option class="mat-option-design" *ngIf="rank_show. length == 0" >افزودن رده<mat-icon color="primary">playlist_add</mat-icon></mat-option>
+                        <ng-container *ngFor="let item of rank_show">
+                                <mat-option class="mat-option-design"
+                                            (click)="getTitle()"
+                                            [value]="item.rank">
+                                    {{item.rank+(sector_value.length != 1?'('+item['parent']+')':'')}}
+                                </mat-option>
+                        </ng-container>
+                        <mat-divider></mat-divider>
+                        <mat-card style="box-shadow: unset !important;" *ngIf="rank_show.length">
+                                <mat-card-actions>
+                                    <button mat-flat-button color="primary" class="me-3">افزودن</button>
+                                    <button mat-flat-button color="warn" *ngIf="rank_value?.length">حذف</button>
+                                </mat-card-actions>
+                        </mat-card>
+                    </mat-select>
+                </mat-form-field>
+                <mat-form-field class="col col-12 col-lg-3 mt-3" *ngIf="rank_value?.length">
+                    <mat-label>عنوان:</mat-label>
+                    <mat-select [(value)]="title_value" [multiple]="title_show.length>0">
+                        <mat-option class="mat-option-design" *ngIf="title_show.length == 0" >افزودن عنوان<mat-icon color="primary">playlist_add</mat-icon></mat-option>
+                        <ng-container *ngFor="let item of title_show">
+                                <mat-option class="mat-option-design"  [value]="item.title">{{item.title+(sector_value.length != 1?'('+item['parent']+')':'')+(rank_value.length != 1?'('+item['rank']+')':'')}}</mat-option>
+                        </ng-container>
+                        <mat-divider></mat-divider>
+                        <mat-card style="box-shadow: unset !important;" *ngIf="rank_show.length">
+                            <mat-card-actions>
+                                <button mat-flat-button color="primary" class="me-3">افزودن</button>
+                                <button mat-flat-button color="warn" *ngIf="title_value?.length">حذف</button>
+                            </mat-card-actions>
+                        </mat-card>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+        </mat-card-content>
+    </mat-card>
+</div>

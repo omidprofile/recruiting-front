@@ -70,10 +70,10 @@
 	}
 
 	.disable-card{
+		pointer-events: none;
 		.card-title-c{
 			color: gray!important;
 		}
-
 		mat-card-content.mat-mdc-card-content {
 			background-color: #cccccc;
 		}

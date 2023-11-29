@@ -1,0 +1,41 @@
+<div mat-dialog-content dir="rtl">
+	<form action="" [formGroup]="device">
+		<div class="d-flex justify-content-around flex-wrap">
+			<mat-form-field class=" mb-3 me-3" >
+				<mat-label> نام</mat-label>
+				<input matInput placeholder="نام دستگاه را وارد کنید ..." formControlName="name">
+				<mat-error>{{validate.stringValidate(device.get('name'),'نام')}}</mat-error>
+			</mat-form-field>
+			<mat-form-field class=" mb-3" >
+				<mat-label>آی پی</mat-label>
+				<input matInput placeholder="آی پی دستگاه را وارد کنید ..." formControlName="ip">
+				<mat-error>{{validate.requiredValidate(device.get('ip'), 'آی پی')}}</mat-error>
+			</mat-form-field>
+		</div>
+		<div class="flex justify-content-around flex-wrap">
+			<mat-form-field class=" mb-3 me-3" >
+				<mat-label>پورت</mat-label>
+				<input matInput placeholder="پورت دستگاه را وارد کنید ..." formControlName="port">
+				<mat-error>{{validate.numberValidate(device.get('port'), 'پورت')}}</mat-error>
+			</mat-form-field>
+			<mat-form-field class=" mb-3" >
+				<mat-label>سریال</mat-label>
+				<input matInput placeholder="سریال دستگاه را وارد کنید ..." formControlName="serial">
+				<mat-error>{{validate.requiredValidate(device.get('serial'), 'سریال')}}</mat-error>
+			</mat-form-field>
+		</div>
+		<mat-form-field class="col-12 mb-3">
+			<mat-label>وضعیت</mat-label>
+			<mat-select formControlName="status">
+				<mat-option class="mat-option-design" [value]="true">فعال</mat-option>
+				<mat-option class="mat-option-design" [value]="false">غیرفعال</mat-option>
+			</mat-select>
+			<mat-error>{{validate.requiredValidate(device.get('status'), 'وضعیت')}}</mat-error>
+		</mat-form-field>
+	</form>
+
+</div>
+<div mat-dialog-actions>
+	<button mat-button color="warn"  mat-dialog-close>انصراف</button>
+
+</div>

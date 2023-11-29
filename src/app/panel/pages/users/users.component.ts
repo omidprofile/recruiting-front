@@ -3,7 +3,7 @@ import {Component, OnInit} from '@angular/core';
 const items = [
   {title:'افزودن کاربر', logo:'adduser', link:'create',is_active:true},
   {title:'لیست کاربران', logo:'usersList', link:'list',is_active:true},
-  {title:'نقش ها', logo:'chart', link:'',is_active:false},
+  {title:'نقش ها', logo:'chart', link:'roles',is_active:true},
 ]
 @Component({
   selector: 'app-users',

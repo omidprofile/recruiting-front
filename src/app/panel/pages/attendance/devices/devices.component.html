@@ -1,0 +1,53 @@
+<div class="dashboard col-12">
+	<div class="headline-title col col-12 col-xl-10 mb-3">
+		دستگاه ها
+	</div>
+	<div class="col col-12 col-xl-10">
+		<button mat-raised-button color="accent" class="mb-3" (click)="openDialog('create',null)">افزودن دستگاه جدید</button>
+		<table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+			<ng-container matColumnDef="position">
+				<th mat-header-cell *matHeaderCellDef> شماره </th>
+				<td mat-cell *matCellDef="let element; let i = index"> {{i+1}} </td>
+			</ng-container>
+			
+			<ng-container matColumnDef="name">
+				<th mat-header-cell *matHeaderCellDef> نام </th>
+				<td mat-cell *matCellDef="let element"> {{element.name}} </td>
+			</ng-container>
+			
+			<ng-container matColumnDef="ip">
+				<th mat-header-cell *matHeaderCellDef> آی پی </th>
+				<td mat-cell *matCellDef="let element"> {{element.ip}} </td>
+			</ng-container>
+			
+			<ng-container matColumnDef="port">
+				<th mat-header-cell *matHeaderCellDef> پورت </th>
+				<td mat-cell *matCellDef="let element"> {{element.port}} </td>
+			</ng-container>
+			
+			<ng-container matColumnDef="serial">
+				<th mat-header-cell *matHeaderCellDef> سریال </th>
+				<td mat-cell *matCellDef="let element"> {{element.serial}} </td>
+			</ng-container>
+			
+			<ng-container matColumnDef="status">
+				<th mat-header-cell *matHeaderCellDef> وضعیت </th>
+				<td mat-cell *matCellDef="let element">
+					<mat-slide-toggle  [checked]="element.status" color="primary">
+					</mat-slide-toggle>
+<!--					{{element.status?'فعال':'غیرفعال'}}-->
+				</td>
+			</ng-container>
+			
+			<ng-container matColumnDef="action">
+				<th mat-header-cell *matHeaderCellDef>  </th>
+				<td mat-cell *matCellDef="let element">
+					<button mat-flat-button color="accent" (click)="openDialog('update',element)">ویرایش</button>
+				</td>
+			</ng-container>
+			
+			<tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+			<tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+		</table>
+	</div>
+</div>
