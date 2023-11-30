@@ -1,10 +1,6 @@
-<div class="dashboard col-12">
-	<div class="headline-title col-12 col-xl-10 mb-3">لیست مغایرت</div>
-	<div class="col col-12 col-xl-10">
+
 		<table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
-			
-			<!--- Note that these columns can be defined in any order.
-				  The actual rendered columns are set as a property on the row definition" -->
+
 			
 			<!-- Position Column -->
 			<ng-container matColumnDef="name">
@@ -35,7 +31,7 @@
 				<td mat-cell *matCellDef="let element"> {{element.day}} </td>
 			</ng-container>
 			
-			<ng-container matColumnDef="device_type">
+			<ng-container matColumnDef="device_type" *ngIf="type != 'report'">
 				<th mat-header-cell *matHeaderCellDef> نوع فعالیت دستگاه: </th>
 				<td mat-cell *matCellDef="let element">
 					<div *ngIf="element.device_type == 'ورود'" class="in">ورود</div>
@@ -44,7 +40,7 @@
 				</td>
 			</ng-container>
 			
-			<ng-container matColumnDef="device_time">
+			<ng-container matColumnDef="device_time" *ngIf="type != 'report'">
 				<th mat-header-cell *matHeaderCellDef> ساعت دستگاه </th>
 				<td mat-cell *matCellDef="let element"> {{element.device_time |persianNumbers}} </td>
 			</ng-container>
@@ -78,7 +74,39 @@
 					</b>
 				</td>
 			</ng-container>
-			
+
+			<ng-container matColumnDef="normal_work" *ngIf="type == 'report'">
+				<th mat-header-cell *matHeaderCellDef>  کار عادی </th>
+				<td mat-cell *matCellDef="let element" class="normal-design">
+					<div *ngIf="+element.normal_work == 0">-</div>
+					<div *ngIf="+element.normal_work != 0">{{element.normal_work}}</div>
+				</td>
+			</ng-container>
+
+			<ng-container matColumnDef="extra_work" *ngIf="type == 'report'">
+				<th mat-header-cell *matHeaderCellDef> اضافه کاری </th>
+				<td mat-cell *matCellDef="let element" class="extra-design">
+					<div *ngIf="+element.extra_work == 0">-</div>
+					<div *ngIf="+element.extra_work != 0">{{element.extra_work}}</div>
+				</td>
+			</ng-container>
+
+			<ng-container matColumnDef="delay_work" *ngIf="type == 'report'">
+				<th mat-header-cell *matHeaderCellDef> تاخیر </th>
+				<td mat-cell *matCellDef="let element" class="delay-design">
+					<div *ngIf="+element.delay_work == 0">-</div>
+					<div *ngIf="+element.delay_work != 0">{{element.delay_work}}</div>
+				</td>
+			</ng-container>
+
+			<ng-container matColumnDef="total_work" *ngIf="type == 'report'">
+				<th mat-header-cell *matHeaderCellDef> مجموع </th>
+				<td mat-cell *matCellDef="let element" [ngClass]="+element.total_work >= 8?'extra-design':'delay-design'">
+					<div *ngIf="+element.total_work == 0">-</div>
+					<div *ngIf="+element.total_work != 0">{{element.total_work}}</div>
+				</td>
+			</ng-container>
+
 			<ng-container matColumnDef="action">
 				<th mat-header-cell *matHeaderCellDef>  </th>
 				<td mat-cell *matCellDef="let element">
@@ -94,15 +122,16 @@
 						<button mat-stroked-button color="accent"  class="me-3" (click)="openAcceptDialog(element)"  >جزئیات</button>
 						<button mat-stroked-button color="warn" (click)="openEditDialog(element)">بررسی مجدد</button>
 					</div>
+					<div class="d-flex justify-content-start align-items-baseline" *ngIf="type == 'report'">
+						<button mat-stroked-button color="accent"  class="me-3" (click)="viewMoreInfo()"  >جزئیات بیشتر</button>
+					</div>
 				</td>
 			</ng-container>
 			
 			<tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
 			<tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
 		</table>
-	</div>
 
-</div>
 
 
 
