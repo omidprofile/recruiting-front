@@ -4,6 +4,69 @@
         #stepper
         [linear]="true"
 >
+    <mat-step [completed]="experiment.valid" [stepControl]="experiment" label="اطلاعات سلامت" state="experiment"
+              errorMessage="کامل شود!">
+        <form [formGroup]="experiment" class="mt-5">
+            <div class="row">
+                <mat-form-field class="col col-12 mb-3">
+                    <mat-label>وضعیت آزمایش بدوی</mat-label>
+                    <mat-select formControlName="status">
+                        <mat-option class="mat-option-design" value="ندارد" (click)="rmExperiment()" >ندارد</mat-option>
+                        <mat-option class="mat-option-design" value="دارد" (click)="addExperimentV()">دارد</mat-option>
+                    </mat-select>
+                    <mat-error>{{validate.requiredValidate(experiment.get('status'), 'وضعیت آزمایش بدوی')}}</mat-error>
+                </mat-form-field>
+                <ng-container formArrayName="data" *ngIf="experiment.get('status')?.value == 'دارد'">
+                    <ng-container *ngFor="let item of experiment_data.controls;let i = index" [formGroupName]="i">
+                        <mat-form-field class="col col-12 col-md-6 mb-3">
+                            <mat-label>َتاریخ آزمایش</mat-label>
+                            <input matInput [matDatepicker]="picker8" placeholder="تاریخ آزمایش  را وارد نمایید ..." formControlName="date">
+                            <mat-datepicker-toggle matSuffix [for]="picker8"></mat-datepicker-toggle>
+                            <mat-datepicker #picker8></mat-datepicker>
+                            <mat-error>{{validate.stringValidate(item.get('date'),'تاریخ آزمایش')}}</mat-error>
+                        </mat-form-field>
+                        <mat-form-field class="col col-12 col-xl-2 mb-3">
+                            <a type="submit" mat-flat-button style="width: 100%"   (click)="inv.click()">
+                                <mat-icon>add_box</mat-icon>
+                                افزودن تصویر
+                            </a>
+                            <input type="text" #inv (click)="f_input.click()" style="height: 0px" readonly matInput formControlName="img" />
+                            <input
+                                type="file"
+                                multiple
+                                hidden
+                                #f_input
+                                (change)="handleExperimentFileInputChange(f_input.files, i)"
+                            />
+                            <mat-error>{{validate.requiredValidate(item.get('img'),'تصاویر')}}</mat-error>
+                        </mat-form-field>
+                        <mat-grid-list *ngIf="experimentUrls.length"  [cols]="experimentUrls.length >4 ?experimentUrls.length:4" rowHeight="150px">
+                            <mat-grid-tile *ngFor="let url of experimentUrls">
+                                <div class="d-flex flex-column">
+                                    <mat-chip class="d-flex flex-row-reverse" >
+                                        <button matChipRemove matPrefix  (click)="deleteExperimentImage(url.name,i)">
+                                            <mat-icon>cancel</mat-icon>
+                                        </button>
+                                        {{url.name}}
+                                    </mat-chip>
+                                    <img  [src]="url.url"  height="100px">
+                                </div>
+                            </mat-grid-tile>
+                        </mat-grid-list>
+                        <div>
+                        </div>
+                    </ng-container>
+                </ng-container>
+            
+            </div>
+            <div class="col-12 d-flex justify-content-between">
+                <button mat-flat-button color="warn" matStepperPrevious>بازگشت</button>
+                <button mat-flat-button color="accent"  (click)="test(experiment)" [disabled]="!experiment.valid">ثبت و ادامه
+                </button>
+            </div>
+        </form>
+    
+    </mat-step>
 
     <mat-step [completed]="person.valid" [stepControl]="person" label="اطلاعات هویتی" errorMessage="کامل شود!"
               state="person">
@@ -82,7 +145,7 @@
             </div>
             <div class="col-12 d-flex justify-content-end">
                 <button mat-flat-button color="accent" matStepperNext [disabled]="!person.valid"
-                        (click)="test()">ثبت و ادامه
+                        >ثبت و ادامه
                 </button>
             </div>
         </form>
@@ -377,69 +440,6 @@
         </form>
 
     </mat-step>
-    <mat-step [completed]="experiment.valid" [stepControl]="experiment" label="اطلاعات سلامت" state="experiment"
-              errorMessage="کامل شود!">
-        <form [formGroup]="experiment" class="mt-5">
-            <div class="row">
-                <mat-form-field class="col col-12 mb-3">
-                    <mat-label>وضعیت آزمایش بدوی</mat-label>
-                    <mat-select formControlName="status">
-                        <mat-option class="mat-option-design" value="ندارد" >ندارد</mat-option>
-                        <mat-option class="mat-option-design" value="دارد" >دارد</mat-option>
-                    </mat-select>
-                    <mat-error>{{validate.requiredValidate(experiment.get('status'), 'وضعیت آزمایش بدوی')}}</mat-error>
-                </mat-form-field>
-                <ng-container formArrayName="data" *ngIf="experiment.get('status')?.value == 'دارد'">
-                    <ng-container *ngFor="let item of experiment_data.controls;let i = index" [formGroupName]="i">
-                        <mat-form-field class="col col-12 col-md-6 mb-3">
-                            <mat-label>َتاریخ آزمایش</mat-label>
-                            <input matInput [matDatepicker]="picker8" placeholder="تاریخ آزمایش  را وارد نمایید ..." formControlName="date">
-                            <mat-datepicker-toggle matSuffix [for]="picker8"></mat-datepicker-toggle>
-                            <mat-datepicker #picker8></mat-datepicker>
-                            <mat-error>{{validate.stringValidate(item.get('date'),'تاریخ آزمایش')}}</mat-error>
-                        </mat-form-field>
-                        <mat-form-field class="col col-12 col-xl-2 mb-3">
-                            <a type="submit" mat-flat-button style="width: 100%"   (click)="inv.click()">
-                                <mat-icon>add_box</mat-icon>
-                                افزودن تصویر
-                            </a>
-                            <input type="text" #inv (click)="f_input.click()" style="height: 0px" readonly matInput formControlName="img" />
-                            <input
-                                    type="file"
-                                    multiple
-                                    hidden
-                                    #f_input
-                                    (change)="handleExperimentFileInputChange(f_input.files, i)"
-                            />
-                            <mat-error>{{validate.requiredValidate(item.get('img'),'تصاویر')}}</mat-error>
-                        </mat-form-field>
-                        <mat-grid-list *ngIf="experimentUrls.length"  [cols]="experimentUrls.length >4 ?experimentUrls.length:4" rowHeight="150px">
-                            <mat-grid-tile *ngFor="let url of experimentUrls">
-                                <div class="d-flex flex-column">
-                                    <mat-chip class="d-flex flex-row-reverse" >
-                                        <button matChipRemove matPrefix  (click)="deleteExperimentImage(url.name,i)">
-                                            <mat-icon>cancel</mat-icon>
-                                        </button>
-                                        {{url.name}}
-                                    </mat-chip>
-                                    <img  [src]="url.url"  height="100px">
-                                </div>
-                            </mat-grid-tile>
-                        </mat-grid-list>
-                        <div>
-                        </div>
-                    </ng-container>
-                </ng-container>
-
-            </div>
-            <div class="col-12 d-flex justify-content-between">
-                <button mat-flat-button color="warn" matStepperPrevious>بازگشت</button>
-                <button mat-flat-button color="accent" matStepperNext (click)="test()" [disabled]="!experiment.valid">ثبت و ادامه
-                </button>
-            </div>
-        </form>
-
-    </mat-step>
     <mat-step [completed]="guaranty.valid" [stepControl]="guaranty" label="اطلاعات وثیقه" state="guaranty"
               errorMessage="کامل شود!">
         <form [formGroup]="guaranty" class="mt-5">
@@ -487,7 +487,7 @@
             </div>
             <div class="col-12 d-flex justify-content-between">
                 <button mat-flat-button color="warn" matStepperPrevious>بازگشت</button>
-                <button mat-flat-button color="accent" matStepperNext (click)="test()" [disabled]="!experiment.valid">ثبت و ادامه
+                <button mat-flat-button color="accent" matStepperNext  [disabled]="!experiment.valid">ثبت و ادامه
                 </button>
             </div>
         </form>

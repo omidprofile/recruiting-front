@@ -1,0 +1,31 @@
+<h1 mat-dialog-title>ثبت {{data.title}} جدید</h1>
+<div mat-dialog-content dir="rtl">
+	<form action="" [formGroup]="rol">
+		<div class="d-flex justify-content-around flex-wrap">
+			<mat-form-field class=" mb-3 me-3" >
+				<mat-label>عنوان</mat-label>
+				<input matInput placeholder="عنوان را وارد کنید ..." formControlName="title">
+				<mat-error *ngIf="!error">{{validate.requiredValidate(rol.get('title'),'عنوان')}}</mat-error>
+				<mat-error *ngIf="error">این عنوان قبلا ثبت شده است.</mat-error>
+			</mat-form-field>
+			<mat-form-field class=" mb-3">
+				<mat-label>وضعیت</mat-label>
+				<mat-select formControlName="isActive">
+					<mat-option class="mat-option-design" [value]="true">فعال</mat-option>
+					<mat-option class="mat-option-design" [value]="false">غیرفعال</mat-option>
+				</mat-select>
+				<mat-error>{{validate.requiredValidate(rol.get('isActive'), 'وضعیت')}}</mat-error>
+			</mat-form-field>
+		</div>
+		<mat-form-field class="col-12 mb-3" >
+			<mat-label>توضیحات</mat-label>
+			<textarea matInput placeholder="توضیحات را وارد کنید ..." formControlName="description"></textarea>
+			<mat-error>{{validate.requiredValidate(rol.get('description'), 'توضیحات')}}</mat-error>
+		</mat-form-field>
+	</form>
+
+</div>
+<div mat-dialog-actions>
+	<button mat-button color="warn"  mat-dialog-close>انصراف</button>
+	<button mat-stroked-button cdkFocusInitial (click)="onSubmit()"  [disabled]="!rol.valid" color="accent">ثبت و ایجاد</button>
+</div>

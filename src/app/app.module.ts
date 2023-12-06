@@ -56,6 +56,8 @@ import { CreateDeviceComponent } from './shared/dialog/create-device/create-devi
 import { BillComponent } from './panel/pages/bill/bill.component';
 import { WorkReportComponent } from './panel/pages/bill/work-report/work-report.component';
 import {MatAutocompleteModule} from "@angular/material/autocomplete";
+import { RoleFormComponent } from './shared/role-form/role-form.component';
+import { SuccessComponent } from './shared/snackbar/success/success.component';
 
 
 @NgModule({
@@ -95,6 +97,8 @@ import {MatAutocompleteModule} from "@angular/material/autocomplete";
   CreateDeviceComponent,
   BillComponent,
   WorkReportComponent,
+  RoleFormComponent,
+  SuccessComponent,
 	],
     imports: [
         BrowserModule,

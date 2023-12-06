@@ -1,50 +1,112 @@
-import { Component } from '@angular/core';
-import {log10} from "chart.js/helpers";
+import { Component, OnInit } from '@angular/core';
+import { log10 } from "chart.js/helpers";
+import { RolesHttpService } from "../../../../HttpServices/roles-http.service";
+import { async, tap } from "rxjs";
+import { MatDialog } from "@angular/material/dialog";
+import { RoleFormComponent } from "../../../../shared/role-form/role-form.component";
 
 @Component({
-  selector: 'app-roles',
-  templateUrl: './roles.component.html',
-  styleUrls: ['./roles.component.scss']
+	selector: 'app-roles',
+	templateUrl: './roles.component.html',
+	styleUrls: ['./roles.component.scss']
 })
-export class RolesComponent {
+export class RolesComponent implements OnInit {
+	
+	companies: any;
+	company_value: any
+	collection_value: any;
+	part_value: any;
+	rank_value: any;
+	
+	collection_show: any;
+	part_show: any;
+	rank_show: any;
+	
+	constructor(private http: RolesHttpService, public dialog: MatDialog) {
+	}
+	
+	ngOnInit() {
+		this.getCompanies()
+	}
+	
+	getCompanies() {
+		this.http.getCompanies().subscribe(data => {
+			this.companies = data
+		})
+	}
+	
+	 getSection() {
+		this.collection_value = null
+		this.part_value = null
+		this.rank_value = null
+		this.collection_show = null
+		for (let item of this.company_value){
+			 this.http.getCollection(item._id).subscribe({
+				next: (data: any) => {
+					if (this.collection_show == undefined) {
+						this.collection_show = data.collections
+					} else {
+						this.collection_show.push(...data.collections)
+					}
+				},
+				error: (error) => {
+					console.log(error)
+				}
+			})
+		}
+	}
+	
+	getSector() {
+		this.part_value = null
+		this.rank_value = null
+		this.part_show = null
+		for(let item of this.collection_value) {
+			this.http.getPart(item._id).subscribe({
+				next: (data: any) => {
+					if (this.part_show == undefined) {
+						this.part_show = data.parts
+					} else {
+						this.part_show.push(...data.parts)
+					}
+				},
+				error: (error) => {
+					console.log(error)
+				}
+			})
+		}
+	}
+	
+	getRank() {
+		this.rank_show = null
+		for(let item of this.part_value) {
+			this.http.getRank(item._id).subscribe({
+				next: (data: any) => {
+					if (this.rank_show == undefined) {
+						this.rank_show = data.ranks
+					} else {
+						this.rank_show.push(...data.ranks)
+					}
+				},
+				error: (error) => {
+					console.log(error)
+				}
+			})
+		}
+	}
+	
+	openDialog(type:string, title:string, parent?:string): void {
+		const dialogRef = this.dialog.open(RoleFormComponent, {
+			data: {type:type,parent:parent, title:title},
+		});
+		
+		dialogRef.afterClosed().subscribe(result => {
+			if (result.created){
+				if (type == 'company')
+					this.getCompanies()
+			}
+		});
+	}
+	
 
-
-  section=['تولید','اداری']
-  sector=[{parent:'تولید',sector:'انبارداری'},{parent:'تولید',sector:'باسکول'},{parent:'اداری',sector:'برنامه نویسی'},{parent:'اداری',sector:'حسابداری'}]
-  rank=[{parent:'انبارداری',rank:'کارمند'},{parent:'برنامه نویسی',rank:'سرپرست'},{parent:'برنامه نویسی',rank:'کارمند'},{parent:'حسابداری',rank:'مشاور'}]
-  title=[{parent:'انبارداری',rank:'کارمند',title:'لیبل زن'},{parent:'برنامه نویسی',rank:'سرپرست',title:'بکند'},{parent:'برنامه نویسی',rank:'کارمند',title:'فرانت اند'},{parent:'حسابداری',rank:'مشاور',title:'حقوق'},{parent:'حسابداری',rank:'مشاور',title:'تولید'}]
-
-  section_value:any;
-  sector_value:any;
-  rank_value:any;
-  title_value:any;
-
-  section_show:any;
-  sector_show:any;
-  rank_show:any;
-  title_show:any;
-
-
-
-test(){
-  console.log('hi there')
-  console.log(this.rank_value)
-}
-getSector(){
-  this.sector_value = null
-  this.rank_value = null
-  this.title_value = null
-  this.sector_show = this.sector.filter(e=> this.section_value.includes(e.parent ));
-}
-getRank(){
-  this.title_value = null
-  this.rank_show = this.rank.filter(e=>this.sector_value.includes(e.parent));
-}
-
-getTitle(){
-  this.title_show = this.title.filter(e=>this.rank_value.includes(e.rank) && this.sector_value.includes(e.parent));
-
-}
-
-  protected readonly console = console;
+	
 }

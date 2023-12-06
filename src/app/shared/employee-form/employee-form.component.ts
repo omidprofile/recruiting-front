@@ -2,11 +2,12 @@ import {Component, Inject, OnInit} from '@angular/core';
 import {FormArray, FormControl, FormGroup, Validators} from "@angular/forms";
 import {FormValidateService} from "../../services/form-validate.service";
 import {STEPPER_GLOBAL_OPTIONS, StepperOrientation} from "@angular/cdk/stepper";
-import {map, Observable} from "rxjs";
+import { map, Observable, tap } from "rxjs";
 import {BreakpointObserver} from "@angular/cdk/layout";
 import {ValidationFormService} from "../../services/validation-form.service";
 import {DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE} from '@angular/material/core';
 import {MaterialPersianDateAdapter, PERSIAN_DATE_FORMATS} from "src/app/services/material.persian-date.adapter.service";
+import { UsersHttpService } from "../../HttpServices/users-http.service";
 
 @Component({
     selector: 'app-employee-form',
@@ -22,6 +23,7 @@ import {MaterialPersianDateAdapter, PERSIAN_DATE_FORMATS} from "src/app/services
         },
         {provide: DateAdapter, useClass: MaterialPersianDateAdapter, deps: [MAT_DATE_LOCALE]},
         {provide: MAT_DATE_FORMATS, useValue: PERSIAN_DATE_FORMATS},
+        UsersHttpService
     ],
 })
 export class EmployeeFormComponent implements OnInit {
@@ -34,6 +36,7 @@ export class EmployeeFormComponent implements OnInit {
     constructor(public validate: FormValidateService,
                 breakpointObserver: BreakpointObserver,
                 private validator: ValidationFormService,
+                private http:UsersHttpService
     ) {
         this.stepperOrientation = breakpointObserver
             .observe('(min-width: 800px)')
@@ -173,8 +176,7 @@ export class EmployeeFormComponent implements OnInit {
     get experiment_data() {
         return this.experiment.get('data') as FormArray
     }
-
-
+    
     addExperiment() {
         this.experiment_data.push(
             new FormGroup({
@@ -191,16 +193,20 @@ export class EmployeeFormComponent implements OnInit {
     }
 
     rmExperiment(){
-        this.experiment_data.get('date')?.setValidators([])
-        this.experiment_data.get('img')?.setValidators([])
-        this.experiment_data.get('date')?.updateValueAndValidity()
-        this.experiment_data.get('img')?.updateValueAndValidity()
+        for (let crl of this.experiment_data.controls){
+            crl.get('date')?.setValidators([])
+            crl.get('img')?.setValidators([])
+            crl.get('date')?.updateValueAndValidity()
+            crl.get('img')?.updateValueAndValidity()
+        }
     }
     addExperimentV(){
-        this.experiment_data.get('date')?.setValidators([Validators.required])
-        this.experiment_data.get('img')?.setValidators([Validators.required])
-        this.experiment_data.get('date')?.updateValueAndValidity()
-        this.experiment_data.get('img')?.updateValueAndValidity()
+        for (let crl of this.experiment_data.controls){
+            crl.get('date')?.setValidators([Validators.required])
+            crl.get('img')?.setValidators([Validators.required])
+            crl.get('date')?.updateValueAndValidity()
+            crl.get('img')?.updateValueAndValidity()
+        }
     }
 
     experimentUrls: any[] = [];
@@ -223,9 +229,6 @@ export class EmployeeFormComponent implements OnInit {
             }
             this.experiment_data.controls[index].get('img')?.patchValue(this.experimentSelectImages);
         }
-        // else {
-        //     this.experiment_data.controls[index].get('img')?.patchValue("");
-        // }
     }
 
     deleteExperimentImage(name:any, index:number){
@@ -345,8 +348,22 @@ export class EmployeeFormComponent implements OnInit {
     ngOnInit() {
     }
 
-    test() {
-        console.log(this.insurance.get('status')?.value == 'ندارد')
+    test(value:any) {
+        const formData = new FormData();
+        formData.append('date',value.value.data[0].date)
+        formData.append("personal", "ali")
+        for (let img of value.value.data[0].img)
+            formData.append("personal", img);
+        console.log(value.value.data)
+        console.log(formData.getAll("value"))
+        this.http.test(formData).pipe(
+            tap((data)=>{
+                console.log(data)
+            })
+        ).subscribe({
+            error:(err)=>{
+                console.log(err)}
+        })
     }
 
 
