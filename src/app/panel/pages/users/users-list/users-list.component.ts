@@ -1,5 +1,6 @@
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { MatTable } from "@angular/material/table";
+import {UsersHttpService} from "../../../../HttpServices/users-http.service";
 
 export interface PeriodicElement {
 	name: string;
@@ -34,21 +35,43 @@ let ELEMENT_DATA: PeriodicElement[] = [
 })
 export class UsersListComponent implements OnInit, AfterViewInit {
 	displayedColumns: string[] = ['personal_code', 'name', 'roll', 'status'];
-	dataTable = ELEMENT_DATA
-	dataSource = ELEMENT_DATA;
+	 dataSource:any
 	searchKey:string = '';
 	searchValue:string = '';
 	@ViewChild(MatTable) table: MatTable<PeriodicElement>;
 	
-	
+	constructor(private http:UsersHttpService) {
+	}
 
 
 	ngOnInit() {
+		setTimeout(()=>{
+			this.getUsers()
+		},100)
 	}
 	
 	ngAfterViewInit() {
 	}
-	
+
+
+	getUsers(){
+	this.http.getUsers().subscribe({
+		next:(data:any)=>{
+			let item :any= {}
+			this.dataSource = []
+			for(let user of data){
+				item.personal_code = user.user_id.personal_code
+				item.name = user.user_id.name + ' ' +user.user_id.last_name
+				item.roll = user.title??''
+				item.status = user.is_active
+				this.dataSource.push(item)
+				item = {}
+			}
+		},
+		error:()=>{}
+	})
+	}
+
 	paginator(data:any){
 		this.dataSource = data
 	}
@@ -61,7 +84,7 @@ export class UsersListComponent implements OnInit, AfterViewInit {
 	}
 	
 	updateElement(personal_code: any) {
-		this.dataSource.map((e) => {
+		this.dataSource.map((e:any) => {
 			e.personal_code == personal_code ? e.status = !e.status : '';
 		})
 	}

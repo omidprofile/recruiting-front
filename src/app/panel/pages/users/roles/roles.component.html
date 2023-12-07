@@ -5,14 +5,15 @@
             <div class="row">
                 <mat-form-field class="col col-12 col-lg-3 mt-3 mb-3" *ngIf="companies != undefined">
                     <mat-label>شرکت:</mat-label>
-                    <mat-select [(value)]="company_value" [multiple]="companies.companies.length >0 ">
-                        <mat-option class="mat-option-design" *ngIf="companies.length == 0">افزودن شرکت<mat-icon color="primary">playlist_add</mat-icon></mat-option>
+                    <mat-select [(value)]="company_value" [multiple]="true ">
+                        <mat-option class="mat-option-design" *ngIf="companies.companies.length == 0" (click)="openDialog('company','شرکت')">افزودن شرکت<mat-icon color="primary">playlist_add</mat-icon></mat-option>
                         <mat-option class="mat-option-design" (click)="getSection()" *ngFor="let item of companies.companies" [value]="item">{{item.title}}</mat-option>
                         <mat-divider></mat-divider>
                         <mat-card style="box-shadow: unset !important;" *ngIf="companies.companies.length">
                             <mat-card-actions>
                                 <button mat-flat-button color="primary" class="me-3" (click)="openDialog('company','شرکت')">افزودن</button>
-                                <button mat-flat-button color="warn" *ngIf="company_value?.length">حذف</button>
+<!--                                <button mat-flat-button color="warn" *ngIf="company_value?.length">حذف</button>-->
+                                <button mat-stroked-button color="accent" *ngIf="company_value?.length" (click)="openDialog('company','شرکت',null,company_value)">ویرایش</button>
                             </mat-card-actions>
                         </mat-card>
                     </mat-select>
@@ -20,18 +21,19 @@
                 <mat-form-field class="col col-12 col-lg-3 mt-3 mb-3" *ngIf="company_value?.length && collection_show != undefined">
                     <mat-label>قسمت:</mat-label>
                     <mat-select [(value)]="collection_value" [multiple]="true">
-                        <mat-option class="mat-option-design" *ngIf="collection_show.length == 0">افزودن قسمت<mat-icon color="primary">playlist_add</mat-icon></mat-option>
+                        <mat-option class="mat-option-design" *ngIf="collection_show.length == 0" (click)="openDialog('collection','قسمت',company_value)">افزودن قسمت<mat-icon color="primary">playlist_add</mat-icon></mat-option>
                             <ng-container *ngIf="company_value?.length">
                                 <mat-option class="mat-option-design" (click)="getSector()"
                                             *ngFor="let item of collection_show" [value]="item">
-                                    {{item.name+(company_value?.length != 1?'('+item.company.name+')':'')}}
+                                    {{item.title+(company_value?.length != 1?'('+item.company.title+')':'')}}
                                 </mat-option>
                             </ng-container>
                         <mat-divider></mat-divider>
                         <mat-card style="box-shadow: unset !important;" *ngIf="collection_show.length">
                             <mat-card-actions>
-                                <button mat-flat-button color="primary" class="me-3">افزودن</button>
-                                <button mat-flat-button color="warn" *ngIf="collection_value?.length">حذف</button>
+                                <button mat-flat-button color="primary" class="me-3" (click)="openDialog('collection','قسمت',company_value)">افزودن</button>
+<!--                                <button mat-flat-button color="warn" *ngIf="collection_value?.length">حذف</button>-->
+                                <button mat-stroked-button color="accent" *ngIf="collection_value?.length" (click)="openDialog('collection','قسمت',null,collection_value)">ویرایش</button>
                             </mat-card-actions>
                         </mat-card>
                     </mat-select>
@@ -39,17 +41,18 @@
                 <mat-form-field class="col col-12 col-lg-3 mt-3 mb-3" *ngIf="collection_value?.length && part_show != undefined" >
                     <mat-label>بخش:</mat-label>
                     <mat-select [(value)]="part_value" [multiple]="true">
-                        <mat-option class="mat-option-design" *ngIf="part_show.length == 0">افزودن بخش<mat-icon color="primary">playlist_add</mat-icon></mat-option>
+                        <mat-option class="mat-option-design" *ngIf="part_show.length == 0" (click)="openDialog('part','بخش',collection_value)">افزودن بخش<mat-icon color="primary">playlist_add</mat-icon></mat-option>
                             <ng-container *ngIf="part_show?.length">
                                 <ng-container *ngFor="let item of part_show">
-                                    <mat-option class="mat-option-design" (click)="getRank()"  [value]="item">{{item.name+(collection_value.length != 1?'('+item.parent.name+')':'')}}</mat-option>
+                                    <mat-option class="mat-option-design" (click)="getRank()"  [value]="item">{{item.title+(collection_value.length != 1?'('+item.parent.title+')':'')}}</mat-option>
                                 </ng-container>
                             </ng-container>
                         <mat-divider></mat-divider>
                         <mat-card style="box-shadow: unset !important;" *ngIf="part_show.length">
                             <mat-card-actions>
-                                <button mat-flat-button color="primary" class="me-3">افزودن</button>
-                                <button mat-flat-button color="warn" *ngIf="part_value?.length">حذف</button>
+                                <button mat-flat-button color="primary" class="me-3" (click)="openDialog('part','بخش',collection_value)">افزودن</button>
+<!--                                <button mat-flat-button color="warn" *ngIf="part_value?.length">حذف</button>-->
+                                <button mat-stroked-button color="accent" *ngIf="part_value?.length" (click)="openDialog('part','بخش',null,part_value)">ویرایش</button>
                             </mat-card-actions>
                         </mat-card>
                     </mat-select>
@@ -57,19 +60,21 @@
                 <mat-form-field class="col col-12 col-lg-3 mt-3 mb-3" *ngIf="part_value?.length && rank_show != undefined">
                     <mat-label>رده:</mat-label>
                     <mat-select [(value)]="rank_value" [multiple]="true">
-                        <mat-option class="mat-option-design" *ngIf="rank_show.length == 0" >افزودن رده<mat-icon color="primary">playlist_add</mat-icon></mat-option>
+                        <mat-option class="mat-option-design" *ngIf="rank_show.length == 0" (click)="openDialog('rank','رده',part_value)" >افزودن رده<mat-icon color="primary">playlist_add</mat-icon></mat-option>
                         <ng-container *ngFor="let item of rank_show">
                                 <mat-option class="mat-option-design"
                                             [value]="item">
-                                    {{item.title+(part_value?.length != 1?'('+item.part.name+')':'')}}
+                                    {{item.title+(part_value?.length != 1?'('+item.part.title+')':'')}}
                                 </mat-option>
                         </ng-container>
                         <mat-divider></mat-divider>
                         <mat-card style="box-shadow: unset !important;" *ngIf="rank_show.length">
                                 <mat-card-actions>
-                                    <button mat-flat-button color="primary" class="me-3">افزودن</button>
-                                    <button mat-flat-button color="warn" *ngIf="rank_value != null && rank_value?.length">حذف</button>
+                                    <button mat-flat-button color="primary" class="me-3" (click)="openDialog('rank','رده',part_value)">افزودن</button>
+<!--                                    <button mat-flat-button color="warn" *ngIf="rank_value != null && rank_value?.length">حذف</button>-->
+                                    <button mat-stroked-button color="accent" *ngIf="rank_value?.length" (click)="openDialog('rank','رده',null,rank_value)">ویرایش</button>
                                 </mat-card-actions>
+
                         </mat-card>
                     </mat-select>
                 </mat-form-field>

@@ -1,4 +1,5 @@
-<h1 mat-dialog-title>ثبت {{data.title}} جدید</h1>
+<h1 mat-dialog-title *ngIf="mode == 'create'">ثبت {{data.title}} جدید</h1>
+<h1 mat-dialog-title *ngIf="mode == 'update'">ویرایش {{data.title}} </h1>
 <div mat-dialog-content dir="rtl">
 	<form action="" [formGroup]="rol">
 		<div class="d-flex justify-content-around flex-wrap">
@@ -17,6 +18,16 @@
 				<mat-error>{{validate.requiredValidate(rol.get('isActive'), 'وضعیت')}}</mat-error>
 			</mat-form-field>
 		</div>
+		<mat-form-field class="col-12 mb-3" *ngIf="data.type != 'company' && data.parent?.length>1">
+			<mat-label>سرپرست</mat-label>
+			<mat-select formControlName="parent">
+				<mat-option class="mat-option-design"
+							*ngFor="let item of data.parent"
+							[value]="item['_id']">{{item.title}}</mat-option>
+
+			</mat-select>
+			<mat-error>{{validate.requiredValidate(rol.get('parent'), 'سرپرست')}}</mat-error>
+		</mat-form-field>
 		<mat-form-field class="col-12 mb-3" >
 			<mat-label>توضیحات</mat-label>
 			<textarea matInput placeholder="توضیحات را وارد کنید ..." formControlName="description"></textarea>
@@ -27,5 +38,6 @@
 </div>
 <div mat-dialog-actions>
 	<button mat-button color="warn"  mat-dialog-close>انصراف</button>
-	<button mat-stroked-button cdkFocusInitial (click)="onSubmit()"  [disabled]="!rol.valid" color="accent">ثبت و ایجاد</button>
+	<button mat-stroked-button *ngIf="mode == 'create'" (click)="onSubmit()"  [disabled]="!rol.valid" color="accent">ثبت و ایجاد</button>
+	<button mat-flat-button *ngIf="mode == 'update'" (click)="update()"  [disabled]="!rol.valid" color="primary">ثبت و ویرایش</button>
 </div>

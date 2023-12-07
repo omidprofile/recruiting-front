@@ -1,7 +1,7 @@
 <div class="dashboard col-12">
 	<div class="headline-title col-12 col-xl-10">کاربران</div>
 	<div class="col-12 col-xl-10">
-		<table mat-table [dataSource]="dataSource | searchTable :searchKey:searchValue" class="">
+		<table mat-table [dataSource]="dataSource | searchTable :searchKey:searchValue" class="" *ngIf="dataSource != undefined">
 
 			<!--- Note that these columns can be defined in any order.
 				  The actual rendered columns are set as a property on the row definition" -->
@@ -39,7 +39,7 @@
 			<!-- Position Column -->
 			<ng-container matColumnDef="personal_code">
 				<th mat-header-cell *matHeaderCellDef> کدپرسنلی</th>
-				<td mat-cell *matCellDef="let element"> {{element.personal_code}} </td>
+				<td mat-cell *matCellDef="let element"> {{element.personal_code |persianNumbers}} </td>
 			</ng-container>
 
 			<!-- Name Column -->

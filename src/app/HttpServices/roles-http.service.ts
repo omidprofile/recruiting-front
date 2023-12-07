@@ -23,6 +23,13 @@ export class RolesHttpService {
               shareReplay(),
           )
   }
+  updateCompany(company:any, id:string){
+      return this.http.post(`http://localhost:2020/company/${id}`,company,{})
+          .pipe(
+              shareReplay(),
+          )
+  }
+
  
     getCollection(company:any){
         return this.http.get('http://localhost:2020/collection',{
@@ -34,6 +41,19 @@ export class RolesHttpService {
                 shareReplay(),
             );
     }
+    createCollection(collection:any){
+        return this.http.post('http://localhost:2020/collection',collection)
+            .pipe(
+                shareReplay(),
+            )
+    }
+    updateCollection(collection:any, id:string){
+        return this.http.post(`http://localhost:2020/collection/${id}`,collection,{})
+            .pipe(
+                shareReplay(),
+            )
+    }
+
     
     getPart(collection:any){
         return this.http.get('http://localhost:2020/part',{
@@ -45,6 +65,19 @@ export class RolesHttpService {
                 shareReplay(),
             );
     }
+    createPart(part:any){
+        return this.http.post('http://localhost:2020/part',part)
+            .pipe(
+                shareReplay(),
+            )
+    }
+    updatePart(part:any, id:string){
+        return this.http.post(`http://localhost:2020/part/${id}`,part,{})
+            .pipe(
+                shareReplay(),
+            )
+    }
+
     
     
     getRank(part:any){
@@ -57,6 +90,20 @@ export class RolesHttpService {
                 shareReplay(),
             );
     }
+    createRank(rank:any){
+        return this.http.post('http://localhost:2020/rank',rank)
+            .pipe(
+                shareReplay(),
+            )
+    }
+    updateRank(rank:any, id:string){
+        console.log(id)
+        return this.http.post(`http://localhost:2020/rank/${id}`,rank,{})
+            .pipe(
+                shareReplay(),
+            )
+    }
+
     
     
 }

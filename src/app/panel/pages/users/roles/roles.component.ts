@@ -32,6 +32,7 @@ export class RolesComponent implements OnInit {
 	getCompanies() {
 		this.http.getCompanies().subscribe(data => {
 			this.companies = data
+			console.log(data)
 		})
 	}
 	
@@ -94,15 +95,21 @@ export class RolesComponent implements OnInit {
 		}
 	}
 	
-	openDialog(type:string, title:string, parent?:string): void {
+	openDialog(type:string, title:string, parent?:any, value?:any): void {
 		const dialogRef = this.dialog.open(RoleFormComponent, {
-			data: {type:type,parent:parent, title:title},
+			data: {type:type,parent:parent, title:title, value:value},
 		});
 		
 		dialogRef.afterClosed().subscribe(result => {
 			if (result.created){
 				if (type == 'company')
 					this.getCompanies()
+				if (type == 'collection')
+					this.getSection()
+				if (type == 'part')
+					this.getSector()
+				if (type == 'rank')
+					this.getRank()
 			}
 		});
 	}

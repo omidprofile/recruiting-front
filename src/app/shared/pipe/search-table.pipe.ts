@@ -1,4 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
+import {log10} from "chart.js/helpers";
 
 @Pipe({
   name: 'searchTable'
