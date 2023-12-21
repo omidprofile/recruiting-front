@@ -32,7 +32,6 @@ export class RolesComponent implements OnInit {
 	getCompanies() {
 		this.http.getCompanies().subscribe(data => {
 			this.companies = data
-			console.log(data)
 		})
 	}
 	

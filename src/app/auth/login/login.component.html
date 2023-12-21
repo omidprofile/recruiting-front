@@ -44,7 +44,7 @@
   <img src="/assets/images/login_bg.png" class="bg" alt="">
   <div class="login" [ngClass]="show_login?'come':'back'">
       <div class="header_login d-flex justify-content-around align-items-baseline s">
-        <p> سامانه مشتریان صنعت پروفیل آرش</p>
+        <p> سامانه کارکنان صنعت پروفیل آرش</p>
         <a class="fas fa-times" style="color: var(--logo_color);" (click)="toggle()"></a>
       </div>
       <div class="login-content">
@@ -52,13 +52,17 @@
           <img src="./assets/images/logo.png" width="150" height="150" alt="">
         </div>
         <div class="inputBox">
-          <input type="text" required>
-          <span>شماره همراه:</span>
+          <input type="text"   [value]="personal_code|persianNumbers" [(ngModel)]="personal_code" required>
+          <span>کدپرسنلی:</span>
           <i></i>
         </div>
-        <div class="inputBox">
-          <input type="submit" value="ورود" id="btn" [routerLink]="['/panel']">
+        <mat-error *ngIf="error.length">{{error}}</mat-error>
+        <div class="inputBox" *ngIf="!onSubmit">
+          <a type="submit" value="ورود" id="btn" (click)="submit()" >
+            <div>ورود</div>
+          </a>
         </div>
+        <span class="loader" *ngIf="onSubmit"></span>
       </div>
   </div>
 </section>

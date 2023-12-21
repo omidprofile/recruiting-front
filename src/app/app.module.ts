@@ -26,7 +26,7 @@ import { MatBadgeModule } from "@angular/material/badge";
 import { TestComponent } from './test/test.component';
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { MapService } from "./services/http-services/map.service";
-import { HttpClientModule } from "@angular/common/http";
+import { HTTP_INTERCEPTORS, HttpClientModule } from "@angular/common/http";
 import { DashboardCardComponent } from './shared/dashboard-card/dashboard-card.component';
 import { UsersComponent } from './panel/pages/users/users.component';
 import { UsersListComponent } from './panel/pages/users/users-list/users-list.component';
@@ -58,6 +58,13 @@ import { WorkReportComponent } from './panel/pages/bill/work-report/work-report.
 import {MatAutocompleteModule} from "@angular/material/autocomplete";
 import { RoleFormComponent } from './shared/role-form/role-form.component';
 import { SuccessComponent } from './shared/snackbar/success/success.component';
+import { EnglishNumberPipe } from './shared/pipe/english-number.pipe';
+import { SetTokenInterceptor } from "./interceptor/set-token.interceptor";
+import { JWT_OPTIONS, JwtHelperService } from "@auth0/angular-jwt";
+import { ManualComponent } from './panel/pages/attendance/manual/manual.component';
+import { ConflictDialogComponent } from './shared/dialog/conflict-dialog/conflict-dialog.component';
+import { BaseSalary } from "./shared/dialog/create-baseSalary/base-salary.component";
+import { CreateShiftComponent } from './shared/dialog/create-shift/create-shift.component';
 
 
 @NgModule({
@@ -99,6 +106,11 @@ import { SuccessComponent } from './shared/snackbar/success/success.component';
   WorkReportComponent,
   RoleFormComponent,
   SuccessComponent,
+  EnglishNumberPipe,
+  ManualComponent,
+  ConflictDialogComponent,
+	BaseSalary,
+ CreateShiftComponent
 	],
     imports: [
         BrowserModule,
@@ -125,9 +137,18 @@ import { SuccessComponent } from './shared/snackbar/success/success.component';
         MatGridListModule,
         MatAutocompleteModule,
     ],
-	providers: [Sidenav_model,
+	providers: [
+		{
+			provide:HTTP_INTERCEPTORS,
+			useClass:SetTokenInterceptor,
+			multi:true
+		},
+		Sidenav_model,
 		MapService,
-		MatDatepickerModule],
+		MatDatepickerModule,
+		{ provide: JWT_OPTIONS, useValue: JWT_OPTIONS },
+		JwtHelperService
+	],
 	exports: [],
 	bootstrap: [AppComponent]
 })

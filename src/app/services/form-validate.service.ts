@@ -28,6 +28,10 @@ export class FormValidateService {
     return !!field.hasError('max');
   }
   
+  isMin(field:any){
+    return !!field.hasError('min');
+  }
+  
   isValidMobile(field:any){
     return !!field.hasError('mobileValidator');
   }
@@ -83,6 +87,8 @@ export class FormValidateService {
       return "فرمت وارد شده صحیح نیست"
     if(this.isMax(field))
       return 'مقدار وارد شده بیشتر از حد مجاز است'
+    if (this.isMin(field))
+      return 'مقدار وارد شده کمتر از حد مجاز است'
     return null;
   }
   

@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { MatTable } from "@angular/material/table";
-import {UsersHttpService} from "../../../../HttpServices/users-http.service";
+import { UsersHttpService } from "../../../../HttpServices/users-http.service";
 
 export interface PeriodicElement {
 	name: string;
@@ -35,61 +35,66 @@ let ELEMENT_DATA: PeriodicElement[] = [
 })
 export class UsersListComponent implements OnInit, AfterViewInit {
 	displayedColumns: string[] = ['personal_code', 'name', 'roll', 'status'];
-	 dataSource:any
-	searchKey:string = '';
-	searchValue:string = '';
+	dataSource: any;
+	show_data:any;
+	searchKey: string = '';
+	searchValue: string = '';
 	@ViewChild(MatTable) table: MatTable<PeriodicElement>;
 	
-	constructor(private http:UsersHttpService) {
+	constructor(private http: UsersHttpService) {
 	}
-
-
+	
+	
 	ngOnInit() {
-		setTimeout(()=>{
+		setTimeout(() => {
 			this.getUsers()
-		},100)
+		}, 100)
 	}
 	
 	ngAfterViewInit() {
 	}
-
-
-	getUsers(){
-	this.http.getUsers().subscribe({
-		next:(data:any)=>{
-			let item :any= {}
-			this.dataSource = []
-			for(let user of data){
-				item.personal_code = user.user_id.personal_code
-				item.name = user.user_id.name + ' ' +user.user_id.last_name
-				item.roll = user.title??''
-				item.status = user.is_active
-				this.dataSource.push(item)
-				item = {}
-			}
-		},
-		error:()=>{}
-	})
-	}
-
-	paginator(data:any){
-		this.dataSource = data
-	}
-
 	
-	searching(key:any , value:any){
+	
+	getUsers() {
+		this.http.getUsers().subscribe({
+			next: (data: any) => {
+				let item: any = {}
+				this.dataSource = []
+				for (let user of data) {
+					item.personal_code = user.user_id.personal_code??user.personal_code
+					item.name = user.user_id.name + ' ' + user.user_id.last_name
+					item.roll = user.title ?? user.rank_info?.title
+					item.status = user.is_active
+					this.dataSource.push(item)
+					item = {}
+				}
+				this.show_data = JSON.parse(JSON.stringify(this.dataSource))
+			},
+			error: () => {
+			}
+		})
+	}
+	
+	paginator(data: any) {
+		setTimeout(()=>{
+			this.show_data = data
+		})
+	}
+	
+	
+	searching(key: any, value: any) {
 		this.searchValue = '';
 		this.searchKey = key;
 		this.searchValue = value;
 	}
 	
 	updateElement(personal_code: any) {
-		this.dataSource.map((e:any) => {
+		this.dataSource.map((e: any) => {
 			e.personal_code == personal_code ? e.status = !e.status : '';
 		})
 	}
 	
-	test(row:any){
+	test(row: any) {
 		console.log(row)
 	}
 }

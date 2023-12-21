@@ -1,0 +1,77 @@
+<h2 mat-dialog-title>افزودن پایه حقوق</h2>
+<div mat-dialog-content dir="rtl">
+	<form action="" [formGroup]="shiftForm">
+		<div class="d-flex justify-content-around flex-wrap">
+			<mat-form-field class=" mb-3 me-3" >
+				<mat-label> عنوان</mat-label>
+				<input matInput placeholder="عنوان شیفت را وارد کنید ..." formControlName="title">
+				<mat-error *ngIf="!error">{{validate.stringValidate(shiftForm.get('title'),'عنوان')}}</mat-error>
+				<mat-error *ngIf="error">این عنوان قبلا ثبت شده است</mat-error>
+			</mat-form-field>
+			<mat-form-field class=" mb-3" >
+				<mat-label>حقوق ساعتی(ریال)</mat-label>
+				<input matInput placeholder="حقوق ساعتی را وارد کنید ..."  formControlName="hourPayment">
+				<mat-error>{{validate.numberValidate(shiftForm.get('hourPayment'), 'حقوق ساعتی')}}</mat-error>
+			</mat-form-field>
+		</div>
+		<div class="d-flex justify-content-around flex-wrap">
+			<mat-form-field class=" mb-3 me-3" >
+				<mat-label>اضافه کار هر ساعت(ریال) </mat-label>
+				<input matInput placeholder="هر ساعت اضافه کار را وارد کنید ..." formControlName="extraHourPayment">
+				<mat-error>{{validate.numberValidate(shiftForm.get('extraHourPayment'),'اضافه کار هر ساعت')}}</mat-error>
+			</mat-form-field>
+			<mat-form-field class=" mb-3" >
+				<mat-label>دستمزد روزانه(ریال)</mat-label>
+				<input matInput placeholder="دستمزد روزانه را وارد کنید ..." formControlName="dailyPayment">
+				<mat-error>{{validate.numberValidate(shiftForm.get('dailyPayment'), 'دستمزد روزانه')}}</mat-error>
+			</mat-form-field>
+		</div>
+		<div class="d-flex justify-content-around flex-wrap">
+			<mat-form-field class=" mb-3 me-3" >
+				<mat-label>دستمزد ماهانه(ریال)</mat-label>
+				<input matInput placeholder="دستمزد ماهانه را وارد کنید ..." formControlName="monthlyPayment">
+				<mat-error>{{validate.numberValidate(shiftForm.get('monthlyPayment'), 'دستمزد ماهانه')}}</mat-error>
+			</mat-form-field>
+			<mat-form-field class=" mb-3 " >
+				<mat-label>حق  مسکن(ریال)</mat-label>
+				<input matInput placeholder="حق  مسکن را وارد کنید ..." formControlName="housingPayment">
+				<mat-error>{{validate.numberValidate(shiftForm.get('housingPayment'),'حق  مسکن')}}</mat-error>
+			</mat-form-field>
+		</div>
+		<div class="d-flex justify-content-around flex-wrap">
+			<mat-form-field class=" mb-3 me-3" >
+				<mat-label>بن ماهانه(ریال)</mat-label>
+				<input matInput placeholder="بن ماهانه را وارد کنید ..." formControlName="subsidy">
+				<mat-error>{{validate.numberValidate(shiftForm.get('subsidy'), 'بن ماهانه')}}</mat-error>
+			</mat-form-field>
+			<mat-form-field class=" mb-3 " >
+				<mat-label>حق  عائله مندی(ریال)</mat-label>
+				<input matInput placeholder="حق  عائله مندی را وارد کنید ..." formControlName="childPayment">
+				<mat-error>{{validate.numberValidate(shiftForm.get('childPayment'),'حق  عائله مندی')}}</mat-error>
+			</mat-form-field>
+		</div>
+		<div class="d-flex justify-content-around flex-wrap">
+			<mat-form-field class=" mb-3 me-3" >
+				<mat-label>علی الحساب سنوات(ریال)</mat-label>
+				<input matInput placeholder="علی الحساب سنوات را وارد کنید ..." formControlName="interim_interest">
+				<mat-error>{{validate.numberValidate(shiftForm.get('interim_interest'), 'علی الحساب سنوات')}}</mat-error>
+			</mat-form-field>
+			<mat-form-field class=" mb-3 " >
+				<mat-label>ایاب ذهاب(ریال)</mat-label>
+				<input matInput placeholder="ایاب ذهاب را وارد کنید ..." formControlName="transportation">
+				<mat-error>{{validate.numberValidate(shiftForm.get('transportation'),'ایاب ذهاب')}}</mat-error>
+			</mat-form-field>
+		</div>
+		<div class="d-flex justify-content-around flex-wrap">
+			<mat-form-field class=" mb-3 col-12" >
+				<mat-label>حق بیمه(ریال) </mat-label>
+				<input matInput placeholder="حق بیمه را وارد کنید ..." formControlName="insurancePayment">
+				<mat-error>{{validate.numberValidate(shiftForm.get('insurancePayment'), 'حق بیمه ')}}</mat-error>
+			</mat-form-field>
+		</div>
+	</form>
+</div>
+<div mat-dialog-actions>
+	<button mat-button cdkFocusInitial  [disabled]="!shiftForm.valid" (click)="onSubmit()" color="accent">ثبت و تایید</button>
+	<button mat-button color="warn"  mat-dialog-close>انصراف</button>
+</div>

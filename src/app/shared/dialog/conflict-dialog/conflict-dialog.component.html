@@ -1,0 +1,37 @@
+<mat-dialog-content class="col-12 www">
+			<mat-accordion class="col-12">
+				
+				<mat-expansion-panel *ngFor="let element of data.conflict_arr" >
+					<mat-expansion-panel-header>
+						<mat-panel-title>
+							{{element[0].date.date |persianNumbers}}
+						</mat-panel-title>
+						<mat-panel-description>
+						<div class="col col-12 d-flex justify-content-around align-items-center w-100">
+							<div class="w-50">{{element[0].date.dayOfWeek}}</div>
+							<div class="w-50"> زمان کار:{{"  "+createHour(element[element.length-1].duration) | persianNumbers}}</div>
+						</div>
+						</mat-panel-description>
+					</mat-expansion-panel-header>
+					<table class="table  col-12 mt-3">
+						<thead>
+						<tr>
+							<th scope="col">#</th>
+							<th scope="col">ساعت</th>
+							<th scope="col">فعالیت</th>
+						</tr>
+						</thead>
+						<tbody>
+						<tr *ngFor="let item of element;let i = index">
+						<ng-container *ngIf="item._id">
+							<th scope="row">{{(i+1).toString() | persianNumbers}}</th>
+							<td>{{item.date?.time.toString()| persianNumbers}}</td>
+							<td>{{item.acceptedType == 'in'?'ورود':'خروج'}}</td>
+						</ng-container>
+						</tr>
+						</tbody>
+					</table>
+					
+				</mat-expansion-panel>
+			</mat-accordion>
+</mat-dialog-content>

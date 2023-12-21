@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from "@angular/common/http";
 import { shareReplay } from "rxjs";
+import { config } from "../../environments/config";
 
 @Injectable({
   providedIn: 'root'
@@ -12,19 +13,19 @@ export class RolesHttpService {
   
     getCompanies(){
 
-     return this.http.get('http://localhost:2020/company')
+     return this.http.get(`${config.apiRoute}/company`)
         .pipe(
             shareReplay(),
         )
   }
   createCompany(company:any){
-      return this.http.post('http://localhost:2020/company',company)
+      return this.http.post(`${config.apiRoute}/company`,company)
           .pipe(
               shareReplay(),
           )
   }
   updateCompany(company:any, id:string){
-      return this.http.post(`http://localhost:2020/company/${id}`,company,{})
+      return this.http.post(`${config.apiRoute}/company/${id}`,company,{})
           .pipe(
               shareReplay(),
           )
@@ -32,7 +33,7 @@ export class RolesHttpService {
 
  
     getCollection(company:any){
-        return this.http.get('http://localhost:2020/collection',{
+        return this.http.get(`${config.apiRoute}/collection`,{
             params:{
                 company:company
             }
@@ -42,13 +43,13 @@ export class RolesHttpService {
             );
     }
     createCollection(collection:any){
-        return this.http.post('http://localhost:2020/collection',collection)
+        return this.http.post(`${config.apiRoute}/collection`,collection)
             .pipe(
                 shareReplay(),
             )
     }
     updateCollection(collection:any, id:string){
-        return this.http.post(`http://localhost:2020/collection/${id}`,collection,{})
+        return this.http.post(`${config.apiRoute}/collection/${id}`,collection,{})
             .pipe(
                 shareReplay(),
             )
@@ -56,7 +57,7 @@ export class RolesHttpService {
 
     
     getPart(collection:any){
-        return this.http.get('http://localhost:2020/part',{
+        return this.http.get(`${config.apiRoute}/part`,{
             params:{
                 collection:collection
             }
@@ -66,13 +67,13 @@ export class RolesHttpService {
             );
     }
     createPart(part:any){
-        return this.http.post('http://localhost:2020/part',part)
+        return this.http.post(`${config.apiRoute}/part`,part)
             .pipe(
                 shareReplay(),
             )
     }
     updatePart(part:any, id:string){
-        return this.http.post(`http://localhost:2020/part/${id}`,part,{})
+        return this.http.post(`${config.apiRoute}/part/${id}`,part,{})
             .pipe(
                 shareReplay(),
             )
@@ -81,7 +82,7 @@ export class RolesHttpService {
     
     
     getRank(part:any){
-        return this.http.get('http://localhost:2020/rank',{
+        return this.http.get(`${config.apiRoute}/rank`,{
             params:{
                 part:part
             }
@@ -91,18 +92,58 @@ export class RolesHttpService {
             );
     }
     createRank(rank:any){
-        return this.http.post('http://localhost:2020/rank',rank)
+        return this.http.post(`${config.apiRoute}/rank`,rank)
             .pipe(
                 shareReplay(),
             )
     }
     updateRank(rank:any, id:string){
-        console.log(id)
-        return this.http.post(`http://localhost:2020/rank/${id}`,rank,{})
+        return this.http.post(`${config.apiRoute}/rank/${id}`,rank,{})
             .pipe(
                 shareReplay(),
             )
     }
+    
+    getShift(part:any){
+        return this.http.get(`${config.apiRoute}/shift`,{
+            params:{
+                part:part
+            }
+        })
+            .pipe(
+                shareReplay(),
+            );
+    }
+    
+    
+    createShift(shift:any){
+        return this.http.post(`${config.apiRoute}/shift`,shift)
+            .pipe(
+                shareReplay(),
+            )
+    }
+    
+    
+    
+
+    getBaseSalary(part:any){
+        return this.http.get(`${config.apiRoute}/base-salary`,{
+            params:{
+                part:part
+            }
+        })
+            .pipe(
+                shareReplay(),
+            );
+    }
+    
+    createBaseSalary(baseSalary:any){
+        return this.http.post(`${config.apiRoute}/base-salary`,baseSalary)
+            .pipe(
+                shareReplay(),
+            )
+    }
+    
 
     
     

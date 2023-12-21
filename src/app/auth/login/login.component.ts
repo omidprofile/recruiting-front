@@ -1,11 +1,16 @@
-import {Component} from '@angular/core';
-import {delay, first, of, tap} from "rxjs";
-import {animation} from "@angular/animations";
+import { Component, ViewEncapsulation } from '@angular/core';
+import { of, tap } from "rxjs";
+import { AuthHttpService } from "../../HttpServices/auth-http.service";
+import { EnglishNumberPipe } from "../../shared/pipe/english-number.pipe";
+import { PersianNumberPipe } from "../../shared/pipe/persian-number.pipe";
+import { Router } from "@angular/router";
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss']
+  styleUrls: ['./login.component.scss'],
+  providers:[EnglishNumberPipe, PersianNumberPipe],
+  encapsulation:ViewEncapsulation.None
 })
 export class LoginComponent {
   show_login = true;
@@ -13,6 +18,14 @@ export class LoginComponent {
   animation_class: string='';
   login_animation_class: string='';
   first = true;
+  error = '';
+  onSubmit= false;
+  constructor(
+      private http:AuthHttpService,
+      private englishNumber:EnglishNumberPipe,
+      private router:Router
+  ) {
+  }
 
   toggle() {
     this.first = false;
@@ -30,6 +43,29 @@ export class LoginComponent {
   change_animate_login(event:MouseEvent){
     this.login_animation_class = event.type == 'mouseenter'&&this.login_is_hide ? 'show_hover' :
     event.type == 'mouseleave'&&this.login_is_hide ? 'hide_hover' : '';
+  }
+  
+  personal_code:any = ''
+  submit(){
+    // this.personal_code = this.englishNumber.transform(this.personal_code)
+    if (this.personal_code){
+      this.onSubmit = true
+      let code = this.englishNumber.transform(this.personal_code)
+      let body = {personal_code:code}
+      this.http.login(body).subscribe({
+        next:(data:any)=>{
+          this.error = ''
+          localStorage.setItem('permission',JSON.stringify(data.permission))
+          localStorage.setItem('token',data.token.toString());
+          this.router.navigate(['/panel'])
+          this.onSubmit = false
+        },
+        error:(err)=>{
+          this.onSubmit = false
+          this.error = 'کاربر یافت نشد'
+        }
+      })
+    }
   }
 
 

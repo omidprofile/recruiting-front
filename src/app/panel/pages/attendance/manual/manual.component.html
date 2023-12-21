@@ -1,0 +1,78 @@
+<div class="dashboard col col-12">
+	<div class="headline-title col-xl-10 col-12">ثبت دستی</div>
+	<mat-card class="col col-12 col-xl-10" *ngIf="devices != undefined">
+		<mat-card-content>
+			<form [formGroup]="manualForm">
+				<div class="row">
+					<mat-card-subtitle class="mb-3"> پایه:</mat-card-subtitle>
+					<mat-form-field class="col col-12 col-md-4 mb-3">
+						<mat-label>کد پرسنلی</mat-label>
+						<input matInput placeholder="کد پرسنلی" formControlName="personal_code">
+						<mat-icon matSuffix>123</mat-icon>
+						<mat-error>{{validate.requiredValidate(manualForm.get('personal_code'),'کد پرسنلی')}}</mat-error>
+					</mat-form-field>
+					<mat-form-field class="col col-12 col-md-4 mb-3">
+						<mat-label>فعالیت</mat-label>
+						<mat-select formControlName="type">
+							<mat-option class="mat-option-design" value="in" >ورود</mat-option>
+							<mat-option class="mat-option-design" value="out" >خروج</mat-option>
+						</mat-select>
+						<mat-icon matSuffix>pending_actions</mat-icon>
+						<mat-error>{{validate.requiredValidate(manualForm.get('type'),'فعالیت')}}</mat-error>
+					</mat-form-field>
+					<mat-form-field class="col col-12 col-md-4 mb-3">
+						<mat-label>دستگاه</mat-label>
+						<mat-select formControlName="device">
+							<mat-option class="mat-option-design" [value]="device._id"
+							*ngFor="let device of devices"
+							>{{device.name}}</mat-option>
+						</mat-select>
+						<mat-icon matSuffix>device_hub</mat-icon>
+						<mat-error>{{validate.requiredValidate(manualForm.get('device'),'دستگاه')}}</mat-error>
+					</mat-form-field>
+					<mat-card-subtitle class="mb-3"> تاریخ:</mat-card-subtitle>
+					<mat-form-field class="col col-12 col-md-4 mb-3">
+						<mat-label>سال</mat-label>
+						<input matInput placeholder="سال" formControlName="year">
+						<mat-icon matSuffix>calendar_month</mat-icon>
+						<mat-error>{{validate.numberValidate(manualForm.get('year'),'سال')}}</mat-error>
+					</mat-form-field>
+					<mat-form-field class="col col-12 col-md-4 mb-3">
+						<mat-label>ماه</mat-label>
+						<input matInput placeholder="ماه" formControlName="month">
+						<mat-icon matSuffix>calendar_month</mat-icon>
+						<mat-error>{{validate.numberValidate(manualForm.get('month'),'ماه')}}</mat-error>
+					</mat-form-field>
+					<mat-form-field class="col col-12 col-md-4 mb-3">
+						<mat-label>روز</mat-label>
+						<input matInput placeholder="روز" formControlName="day">
+						<mat-icon matSuffix>calendar_month</mat-icon>
+						<mat-error>{{validate.numberValidate(manualForm.get('day'),'روز')}}</mat-error>
+					</mat-form-field>
+					<mat-card-subtitle class="mb-3"> ساعت:</mat-card-subtitle>
+					<mat-form-field class="col col-12 col-md-4 mb-3">
+						<mat-label>ساعت</mat-label>
+						<input matInput placeholder="ساعت" formControlName="hour">
+						<mat-icon matSuffix>watch_later</mat-icon>
+						<mat-error>{{validate.numberValidate(manualForm.get('hour'),'ساعت')}}</mat-error>
+					</mat-form-field>
+					<mat-form-field class="col col-12 col-md-4 mb-3">
+						<mat-label>دقیقه</mat-label>
+						<input matInput placeholder="دقیقه" formControlName="min">
+						<mat-icon matSuffix>watch_later</mat-icon>
+						<mat-error>{{validate.numberValidate(manualForm.get('min'),'دقیقه')}}</mat-error>
+					</mat-form-field>
+					<mat-form-field class="col col-12 col-md-4 mb-3">
+						<mat-label>ثانیه</mat-label>
+						<input matInput placeholder="ثانیه" formControlName="sec">
+						<mat-icon matSuffix>watch_later</mat-icon>
+						<mat-error>{{validate.numberValidate(manualForm.get('sec'),'ثانیه')}}</mat-error>
+					</mat-form-field>
+				</div>
+			</form>
+		</mat-card-content>
+		<mat-card-actions>
+			<button mat-raised-button color="primary" [disabled]="!manualForm.valid" (click)="submit()">ثبت اطلاعات</button>
+		</mat-card-actions>
+	</mat-card>
+</div>

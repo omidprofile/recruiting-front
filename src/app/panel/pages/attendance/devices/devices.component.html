@@ -4,7 +4,8 @@
 	</div>
 	<div class="col col-12 col-xl-10">
 		<button mat-raised-button color="accent" class="mb-3" (click)="openDialog('create',null)">افزودن دستگاه جدید</button>
-		<table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+		<mat-progress-bar *ngIf="dataSource == undefined" mode="query"></mat-progress-bar>
+		<table mat-table [dataSource]="dataSource" class="mat-elevation-z8" *ngIf="dataSource != undefined">
 			<ng-container matColumnDef="position">
 				<th mat-header-cell *matHeaderCellDef> شماره </th>
 				<td mat-cell *matCellDef="let element; let i = index"> {{i+1}} </td>
@@ -33,7 +34,7 @@
 			<ng-container matColumnDef="status">
 				<th mat-header-cell *matHeaderCellDef> وضعیت </th>
 				<td mat-cell *matCellDef="let element">
-					<mat-slide-toggle  [checked]="element.status" color="primary">
+					<mat-slide-toggle  [checked]="element.is_active" color="primary">
 					</mat-slide-toggle>
 <!--					{{element.status?'فعال':'غیرفعال'}}-->
 				</td>

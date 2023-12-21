@@ -1,6 +1,7 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {shareReplay} from "rxjs";
+import { config } from "../../environments/config";
 
 @Injectable({
     providedIn: 'root'
@@ -11,7 +12,7 @@ export class UsersHttpService {
     }
 
     test(data: any) {
-        return this.http.post('http://localhost:2020/attendance/test', data, {
+        return this.http.post(`${config.apiRoute}/attendance/test`, data, {
             headers: {'Access-Control-Allow-Origin': '*'}
         })
             .pipe(
@@ -20,7 +21,23 @@ export class UsersHttpService {
     }
 
     getUsers() {
-        return this.http.get('http://localhost:2020/users')
+        return this.http.get(`${config.apiRoute}/users`)
+            .pipe(
+                shareReplay(),
+            );
+    }
+    
+    getLogs(body:any) {
+        return this.http.post(`${config.apiRoute}/attendance/getLogs`,body,{})
+            .pipe(
+                shareReplay(),
+            );
+    }
+    
+    createUser( body:any){
+        return this.http.post(`${config.apiRoute}/users/create`, body, {
+            headers: {'Access-Control-Allow-Origin': '*'}
+        })
             .pipe(
                 shareReplay(),
             );

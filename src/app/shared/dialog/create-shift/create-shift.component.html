@@ -1,0 +1,72 @@
+<h2 mat-dialog-title>افزودن  شیفت کاری</h2>
+<div mat-dialog-content dir="rtl">
+	<form action="" [formGroup]="shiftForm">
+		<div class="row">
+			<mat-form-field class=" mb-3 col-6" >
+				<mat-label> عنوان</mat-label>
+				<input matInput placeholder="عنوان شیفت را وارد کنید ..." formControlName="title">
+				<mat-error *ngIf="!error">{{validate.stringValidate(shiftForm.get('title'),'عنوان')}}</mat-error>
+				<mat-error *ngIf="error">این عنوان قبلا ثبت شده است</mat-error>
+			</mat-form-field>
+			<mat-form-field class=" mb-3 col-6" >
+				<mat-label>نوع</mat-label>
+				<mat-select formControlName="work_type">
+					<mat-option class="mat-option-design" [value]="'time'">زمان محور</mat-option>
+					<mat-option class="mat-option-design" [value]="'watch'">ساعت محور</mat-option>
+				</mat-select>
+				<mat-error>{{validate.requiredValidate(shiftForm.get('work_type'), 'نوع')}}</mat-error>
+			</mat-form-field>
+		</div>
+		<div class="row">
+			<mat-card-subtitle class="col-12 mb-3">زمان شروع کار</mat-card-subtitle>
+			<mat-form-field class=" mb-3 col-6" >
+				<mat-label>ساعت  </mat-label>
+				<input matInput placeholder=" ساعت   را وارد کنید ..." formControlName="startHour">
+				<mat-error>{{validate.numberValidate(shiftForm.get('startHour'),' ساعت')}}</mat-error>
+			</mat-form-field>
+			<mat-form-field class=" mb-3 col-6" >
+				<mat-label>دقیقه</mat-label>
+				<input matInput placeholder=" دقیقه را وارد کنید ..." formControlName="startMin">
+				<mat-error>{{validate.numberValidate(shiftForm.get('startMin'), 'دقیقه ')}}</mat-error>
+			</mat-form-field>
+		</div>
+		<div class="row">
+			<mat-card-subtitle class="col-12 mb-3">زمان پایان کار</mat-card-subtitle>
+			<mat-form-field class=" mb-3 col-6" >
+				<mat-label>ساعت  </mat-label>
+				<input matInput placeholder=" ساعت   را وارد کنید ..." formControlName="endHour">
+				<mat-error>{{validate.numberValidate(shiftForm.get('endHour'),' ساعت')}}</mat-error>
+			</mat-form-field>
+			<mat-form-field class=" mb-3 col-6" >
+				<mat-label>دقیقه</mat-label>
+				<input matInput placeholder=" دقیقه را وارد کنید ..." formControlName="endMin">
+				<mat-error>{{validate.numberValidate(shiftForm.get('endMin'), 'دقیقه ')}}</mat-error>
+			</mat-form-field>
+		</div>
+		<div class="row">
+			<mat-card-subtitle class="col-12 mb-3">اطلاعات زمان کار</mat-card-subtitle>
+			<mat-form-field class=" mb-3 col-6" >
+				<mat-label>ساعت کار عادی </mat-label>
+				<input matInput placeholder=" ساعت کار عادی  را وارد کنید ..." formControlName="force_time">
+				<mat-error>{{validate.numberValidate(shiftForm.get('force_time'),' ساعت کار عادی')}}</mat-error>
+			</mat-form-field>
+			<mat-form-field class=" mb-3 col-6" >
+				<mat-label>اضافه کاری موظفی</mat-label>
+				<input matInput placeholder=" اضافه کاری موظفی را وارد کنید ..." formControlName="force_extra_time">
+				<mat-error>{{validate.numberValidate(shiftForm.get('force_extra_time'), 'اضافه کاری موظفی ')}}</mat-error>
+			</mat-form-field>
+		</div>
+		<div class="d-flex justify-content-around flex-wrap ">
+			<mat-form-field class=" mb-3 col-12 " >
+				<mat-label>حداکثر ساعت کار  </mat-label>
+				<input matInput placeholder="حداکثر ساعت کار   را وارد کنید ..." formControlName="max_time">
+				<mat-error>{{validate.numberValidate(shiftForm.get('max_time'),'حداکثر ساعت کار ')}}</mat-error>
+			</mat-form-field>
+		</div>
+
+	</form>
+</div>
+<div mat-dialog-actions>
+	<button mat-button cdkFocusInitial  [disabled]="!shiftForm.valid" (click)="onSubmit()" color="accent">ثبت و تایید</button>
+	<button mat-button color="warn"  mat-dialog-close>انصراف</button>
+</div>

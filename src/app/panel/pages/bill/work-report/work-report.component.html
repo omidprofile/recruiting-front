@@ -4,20 +4,28 @@
         <mat-card-header class="mb-3">
             <mat-card-subtitle>جستجو بر اساس:</mat-card-subtitle>
         </mat-card-header>
-        <mat-card-content>
+        <mat-card-content *ngIf="options != undefined">
             <form action="">
                 <div class="row col-12">
                     <mat-form-field class="col col-6 col-lg-3">
                         <mat-label>فرد</mat-label>
                         <input matInput placeholder="همه ی افراد"
                                #input
+                               [(ngModel)]="user"
+                               [ngModelOptions]="{standalone: true}"
                                [matAutocomplete]="auto"
                                (input)="filter()"
                                (focus)="filter()"
                         >
                         <mat-autocomplete requireSelection #auto="matAutocomplete">
+                            <mat-option class="mat-option-design"
+                                        [value]="" aria-selected="true">
+                                <div class="d-flex justify-content-between " style="width: 16vw">
+                                    <div>همه ی افراد</div>
+                                </div>
+                            </mat-option>
                             <mat-option class="mat-option-design" *ngFor="let option of filteredOptions"
-                                        [value]="option['name']">
+                                        [value]="option['id']">
                                 <div class="d-flex justify-content-between " style="width: 16vw">
                                     <div>{{option['name']}}</div>
                                     <div>{{option['code'] |persianNumbers}}</div>
@@ -28,17 +36,17 @@
                     </mat-form-field>
                     <mat-form-field class="col col-6 col-lg-3">
                         <mat-label>سال</mat-label>
-                        <input matInput placeholder="همه ی سال ها">
+                        <input matInput [(ngModel)]="year" [ngModelOptions]="{standalone: true}" placeholder="همه ی سال ها">
                         <mat-error></mat-error>
                     </mat-form-field>
                     <mat-form-field class="col col-6 col-lg-3">
                         <mat-label>ماه</mat-label>
-                        <input matInput placeholder="همه ی ماه ها">
+                        <input matInput [(ngModel)]="month" [ngModelOptions]="{standalone: true}" placeholder="همه ی ماه ها">
                         <mat-error></mat-error>
                     </mat-form-field>
                     <mat-form-field class="col col-6 col-lg-3">
                         <mat-label>روز</mat-label>
-                        <input matInput placeholder="همه ی روز ها">
+                        <input matInput [(ngModel)]="day" [ngModelOptions]="{standalone: true}" placeholder="همه ی روز ها">
                         <mat-error></mat-error>
                     </mat-form-field>
                 </div>
@@ -57,11 +65,11 @@
     <div class="headline-title col col-12 col-xl-10 mb-3" *ngIf="report">
         گزارش
     </div>
+    <div class="col-12 col-xl-10">
+        <mat-progress-bar *ngIf="loading" mode="query"></mat-progress-bar>
+    </div>
     <div class="col col-12 col-xl-10 mb-3" *ngIf="report">
-        <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
-
-            <!--- Note that these columns can be defined in any order.
-                  The actual rendered columns are set as a property on the row definition" -->
+        <table mat-table [dataSource]="dataSource" *ngIf="dataSource != undefined" class="mat-elevation-z8">
 
             <!-- Position Column -->
             <ng-container matColumnDef="No">
@@ -86,16 +94,16 @@
                 <th mat-header-cell *matHeaderCellDef> مجموع ساعات</th>
                 <td mat-cell *matCellDef="let element">
                     <div *ngIf="+element.total_time == 0">-</div>
-                    <div *ngIf="+element.total_time != 0"> {{element.total_time |persianNumbers}} </div>
+                    <div *ngIf="+element.total_time != 0"> {{createHour(element.total_time) |persianNumbers}} </div>
                 </td>
             </ng-container>
 
             <ng-container matColumnDef="total_work">
                 <th mat-header-cell *matHeaderCellDef> مجموع کار</th>
                 <td mat-cell *matCellDef="let element"
-                    [ngClass]="+element.total_work >= 184?'extra-design':'delay-design'">
+                    [ngClass]="+element.total_work >= element.total_time?'extra-design':'delay-design'">
                     <div *ngIf="+element.total_work == 0">-</div>
-                    <div *ngIf="+element.total_work != 0"> {{element.total_work |persianNumbers}} </div>
+                    <div *ngIf="+element.total_work != 0"> {{createHour(element.total_work) |persianNumbers}} </div>
                 </td>
             </ng-container>
 
@@ -103,7 +111,7 @@
                 <th mat-header-cell *matHeaderCellDef> مجموع کار عادی</th>
                 <td mat-cell *matCellDef="let element" class="normal-design">
                     <div *ngIf="+element.total_normal == 0">-</div>
-                    <div *ngIf="+element.total_normal != 0"> {{element.total_normal |persianNumbers}} </div>
+                    <div *ngIf="+element.total_normal != 0"> {{createHour(element.total_normal) |persianNumbers}} </div>
                 </td>
             </ng-container>
 
@@ -111,7 +119,7 @@
                 <th mat-header-cell *matHeaderCellDef> مجموع اضافه کار</th>
                 <td mat-cell *matCellDef="let element" class="extra-design">
                     <div *ngIf="+element.total_extra == 0">-</div>
-                    <div *ngIf="+element.total_extra != 0"> {{element.total_extra |persianNumbers}} </div>
+                    <div *ngIf="+element.total_extra != 0"> {{createHour(element.total_extra) |persianNumbers}} </div>
                 </td>
             </ng-container>
 
@@ -119,7 +127,16 @@
                 <th mat-header-cell *matHeaderCellDef> مجموع تاخیر</th>
                 <td mat-cell *matCellDef="let element" class="delay-design">
                     <div *ngIf="+element.total_delay == 0">-</div>
-                    <div *ngIf="+element.total_delay != 0"> {{element.total_delay |persianNumbers}} </div>
+                    <div *ngIf="+element.total_delay != 0"> {{createHour(element.total_delay) |persianNumbers}} </div>
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="conflict">
+                <th mat-header-cell *matHeaderCellDef>وضعیت</th>
+                <td mat-cell *matCellDef="let element" class="delay-design"
+                    [ngClass]="!element.conflict?'extra-design':'delay-design'">
+                    <button mat-stroked-button color="accent" *ngIf="element.conflict == false">کامل</button>
+                    <button mat-stroked-button color="warn" [matTooltip]="'مشاهده نواقص'" *ngIf="element.conflict == true" (click)="conflict(element)"> ناقص </button>
                 </td>
             </ng-container>
 

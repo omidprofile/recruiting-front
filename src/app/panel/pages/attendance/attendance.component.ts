@@ -3,6 +3,7 @@ import { Component } from '@angular/core';
 
 const items = [
   {title:'حضور غیاب روزانه', logo:'daily', link:'daily',is_active:true},
+  {title:'ثبت دستی', logo:'manual', link:'manual',is_active:true},
   {title:'مغایرت', logo:'conflict', link:'conflict',is_active:true},
   {title:'در حال بررسی', logo:'pending', link:'pending',is_active:false},
   {title:'تایید شده', logo:'accepted', link:'accepted',is_active:true},

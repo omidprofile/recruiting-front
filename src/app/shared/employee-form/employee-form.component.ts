@@ -8,6 +8,11 @@ import {ValidationFormService} from "../../services/validation-form.service";
 import {DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE} from '@angular/material/core';
 import {MaterialPersianDateAdapter, PERSIAN_DATE_FORMATS} from "src/app/services/material.persian-date.adapter.service";
 import { UsersHttpService } from "../../HttpServices/users-http.service";
+import { RolesHttpService } from "../../HttpServices/roles-http.service";
+import { RoleFormComponent } from "../role-form/role-form.component";
+import { MatDialog } from "@angular/material/dialog";
+import { BaseSalary } from "../dialog/create-baseSalary/base-salary.component";
+import { CreateShiftComponent } from "../dialog/create-shift/create-shift.component";
 
 @Component({
     selector: 'app-employee-form',
@@ -31,12 +36,18 @@ export class EmployeeFormComponent implements OnInit {
     baseInfo: FormGroup
     employeeInfo: FormGroup
     stepperOrientation: Observable<StepperOrientation>;
-
-
+    companies:any
+    collections:any;
+    parts:any;
+    ranks:any
+    shifts:any;
+    baseSalaries:any;
     constructor(public validate: FormValidateService,
                 breakpointObserver: BreakpointObserver,
                 private validator: ValidationFormService,
-                private http:UsersHttpService
+                private http:UsersHttpService,
+                private roleHttp:RolesHttpService,
+                public dialog: MatDialog
     ) {
         this.stepperOrientation = breakpointObserver
             .observe('(min-width: 800px)')
@@ -74,7 +85,6 @@ export class EmployeeFormComponent implements OnInit {
                     new FormControl(null, [Validators.required, Validators.email])
                 ]),
             }),
-
             address: new FormGroup({
                 province: new FormControl(null, [Validators.required,]),
                 city: new FormControl(null, [Validators.required,]),
@@ -90,7 +100,6 @@ export class EmployeeFormComponent implements OnInit {
                 full_address: new FormControl(null, [Validators.required])
 
             }),
-
             is_active: new FormControl(null, [Validators.required]),
         })
         this.employeeInfo = new FormGroup({
@@ -99,6 +108,8 @@ export class EmployeeFormComponent implements OnInit {
                 sector: new FormControl(null, [Validators.required]),
                 rank: new FormControl(null, [Validators.required]),
                 title: new FormControl(null, [Validators.required]),
+                shift: new FormControl(null, [Validators.required]),
+                baseSalary: new FormControl(null, [Validators.required]),
                 start: new FormControl(null, [Validators.required]),
                 education: new FormControl(null, [Validators.required, validator.persianString.bind(this)]),
                 personal_code: new FormControl(null, [Validators.required, validator.number.bind(this)]),
@@ -106,10 +117,10 @@ export class EmployeeFormComponent implements OnInit {
             }),
             insurance: new FormGroup({
                 status: new FormControl(null, [Validators.required]),
-                per_month: new FormControl(null, [Validators.required, validator.number.bind(this)]),
+                per_month: new FormControl(0, [Validators.required, validator.number.bind(this)]),
                 history: new FormControl(null, [Validators.required]),
-                start: new FormControl(null, [Validators.required]),
-                code: new FormControl(null, [Validators.required, validator.number.bind(this)]),
+                start: new FormControl(0, [Validators.required]),
+                code: new FormControl(0, [Validators.required, validator.number.bind(this)]),
             }),
             bank: new FormGroup({
                 account: new FormControl(null, [Validators.required, validator.number.bind(this)]),
@@ -134,7 +145,170 @@ export class EmployeeFormComponent implements OnInit {
             }),
         })
     }
+    
+    async ngOnInit() {
+        await this.getCompany();
+    }
+    
+    async getCompany(){
+      await this.roleHttp.getCompanies().subscribe({
+          next:(data:any)=>{
+              this.companies = data.companies
+          },
+          error:(err)=>{
+              console.log(err)}
+      })
+    }
+    
+    async getCollection(){
+        await this.roleHttp.getCollection(this.job.value.section).subscribe({
+            next:(data:any)=>{
+                this.collections = data.collections
+            },
+            error:(err)=>{
+                console.log(err)}
+        })
+    }
+    async getPart(){
+        await this.roleHttp.getPart(this.job.value.sector).subscribe({
+            next:(data:any)=>{
+                this.parts = data.parts
+            },
+            error:(err)=>{
+                console.log(err)}
+        })
+    }
 
+    async getRank(){
+        await this.roleHttp.getRank(this.job.value.rank).subscribe({
+            next:(data:any)=>{
+                this.ranks = data.ranks
+            },
+            error:(err)=>{
+                console.log(err)}
+        })
+        await this.getShift();
+        await this.getBaseSalary();
+    }
+
+    async getShift(){
+        await this.roleHttp.getShift(this.job.value.rank).subscribe({
+            next:(data:any)=>{
+                this.shifts = data.shifts
+            },
+            error:(err)=>{
+                console.log(err)}
+        })
+    }
+
+    async getBaseSalary(){
+        await this.roleHttp.getBaseSalary(this.job.value.rank).subscribe({
+            next:(data:any)=>{
+                this.baseSalaries = data.baseSalaries
+            },
+            error:(err)=>{
+                console.log(err)}
+        })
+    }
+    
+     createShift(){
+        const dialogRef = this.dialog.open(CreateShiftComponent, {
+            data: {part:this.job.value.rank},
+        });
+        dialogRef.afterClosed().subscribe(async (result) => {
+            if (result.created)
+                await this.getShift()
+    })
+    }
+    
+    createBaseSalary(){
+        const dialogRef = this.dialog.open(BaseSalary, {
+            data: {part:this.job.value.rank},
+        });
+        dialogRef.afterClosed().subscribe(async (result) => {
+            if (result.created)
+               await this.getBaseSalary()
+        })
+    }
+    
+    
+    onSubmit() {
+        let formData = new FormData();
+        formData.append('name',this.baseInfo.value.person?.name)
+        formData.append('last_name',this.baseInfo.value.person?.last_name)
+        formData.append('father',this.baseInfo.value.person?.father)
+        formData.append('gender',this.baseInfo.value.person?.gender)
+        formData.append('national_code',this.baseInfo.value.person?.national_code)
+        formData.append('certificate_code',this.baseInfo.value.person?.certificate_code)
+        formData.append('birth_day',(+new Date(this.baseInfo.value.person?.birth_day)).toString())
+        formData.append('child',this.baseInfo.value.person?.children)
+        formData.append('marital_status',this.baseInfo.value.person?.marital_status)
+        formData.append('military_service',this.baseInfo.value.person?.military_service)
+        formData.append('mobile',this.baseInfo.value.connection?.mobile)
+        formData.append('phone',this.baseInfo.value.connection?.phone)
+        formData.append('email',this.baseInfo.value.connection?.email)
+        let address :any={};
+        address.province=this.baseInfo.value.address?.province
+        address.city=this.baseInfo.value.address?.city
+        address.Village=this.baseInfo.value.address?.Village
+        address.street=this.baseInfo.value.address?.street
+        address.alley=this.baseInfo.value.address?.alley
+        address.Plaque=this.baseInfo.value.address?.Plaque
+        address.building=this.baseInfo.value.address?.building
+        address.postal_code=this.baseInfo.value.address?.postal_code
+        address.full_address=this.baseInfo.value.address?.full_address
+        // formData.append('province',this.baseInfo.value.address?.province)
+        // formData.append('city',this.baseInfo.value.address?.city)
+        // formData.append('Village',this.baseInfo.value.address?.Village)
+        // formData.append('street',this.baseInfo.value.address?.street)
+        // formData.append('alley',this.baseInfo.value.address?.alley)
+        // formData.append('Plaque',this.baseInfo.value.address?.Plaque)
+        // formData.append('building',this.baseInfo.value.address?.building)
+        // formData.append('postal_code',this.baseInfo.value.address?.postal_code)
+        // formData.append('full_address',this.baseInfo.value.address?.full_address)
+
+        formData.append('address',JSON.stringify(address));
+        formData.append('is_active',this.baseInfo.value.is_active)
+        formData.append('company_info',this.employeeInfo.value.job?.section)
+        formData.append('collection_info',this.employeeInfo.value.job?.sector)
+        formData.append('part_info',this.employeeInfo.value.job?.rank)
+        formData.append('rank_info',this.employeeInfo.value.job?.title)
+        formData.append('shift_info',this.employeeInfo.value.job?.shift)
+        formData.append('baseSalary_info',this.employeeInfo.value.job?.baseSalary)
+        formData.append('start_work',this.employeeInfo.value.job?.start)
+        formData.append('education',this.employeeInfo.value.job?.education)
+        formData.append('personal_code',this.employeeInfo.value.job?.personal_code)
+        formData.append('insurance_status',this.employeeInfo.value.insurance?.status)
+        formData.append('insurance_day',this.employeeInfo.value.insurance?.per_month)
+        formData.append('insurance_history',this.employeeInfo.value.insurance?.history)
+        formData.append('insurance_start',this.employeeInfo.value.insurance?.start)
+        formData.append('insurance_code',this.employeeInfo.value.insurance?.code)
+        formData.append('bank_account_number',this.employeeInfo.value.bank?.account)
+        formData.append('bank_card',this.employeeInfo.value.bank?.card)
+        formData.append('permission','')
+        let experimentCounter = 0;
+        
+        for (let file of this.employeeInfo.value.experiment.data){
+            formData.append(`experiment`,file.date)
+            for(let img of file.img)
+                formData.append(`experiment_${file.date}`, img);
+            experimentCounter++;
+        }
+        let guaranteeCounter = 0
+        for (let file of this.employeeInfo.value.guaranty.data){
+            formData.append(`guarantee`,file.code)
+            for(let img of file.img)
+                formData.append(`guarantee_${file.code}`, img);
+            guaranteeCounter++
+        }
+        
+        this.http.createUser(formData).subscribe({
+            next:(data)=>{
+                console.log(data)},
+            error:(err)=>{
+                console.log(err)},
+        })
+    }
 
     get job() {
         return this.employeeInfo.get('job') as FormGroup
@@ -145,10 +319,12 @@ export class EmployeeFormComponent implements OnInit {
     }
 
     rmInsurance(){
-
         this.insurance.get('per_month')?.setValidators([])
+        this.insurance.get('per_month')?.setValue(0)
         this.insurance.get('start')?.setValidators([])
+        this.insurance.get('start')?.setValue(0)
         this.insurance.get('code')?.setValidators([])
+        this.insurance.get('code')?.setValue('')
         this.insurance.get('per_month')?.updateValueAndValidity()
         this.insurance.get('start')?.updateValueAndValidity()
         this.insurance.get('code')?.updateValueAndValidity()
@@ -345,8 +521,7 @@ export class EmployeeFormComponent implements OnInit {
             remove.removeAt(i)
     }
 
-    ngOnInit() {
-    }
+
 
     test(value:any) {
         const formData = new FormData();
@@ -367,10 +542,6 @@ export class EmployeeFormComponent implements OnInit {
     }
 
 
-    onSubmit() {
-        console.log(this.employeeInfo.value)
-        console.log(this.baseInfo.value)
-    }
 
 
 }

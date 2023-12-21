@@ -4,8 +4,8 @@ import { Pipe, PipeTransform } from '@angular/core';
   name: 'persianNumbers'
 })
 export class PersianNumberPipe implements PipeTransform {
-  
-  transform(value: string): string {
+  transform(value: string): string
+  {
     let str = value.toString();
     str = str.replace(/0/g, '۰');
     str = str.replace(/1/g, '۱');

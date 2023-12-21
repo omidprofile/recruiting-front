@@ -1,6 +1,6 @@
 <!--<h1 mat-dialog-title>تاییدیه</h1>-->
 <div mat-dialog-content [innerHTML]="data.message"></div>
 <div mat-dialog-actions>
-	<button mat-button [mat-dialog-close]="'success'" cdkFocusInitial color="accent">بله، اطمینان دارم</button>
+	<button mat-button  cdkFocusInitial color="accent" (click)="submit()">بله، اطمینان دارم</button>
 	<button mat-button mat-dialog-close  color="warn">خیر</button>
 </div>

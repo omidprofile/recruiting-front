@@ -1,139 +1,149 @@
-
-		<table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
-
-			
-			<!-- Position Column -->
-			<ng-container matColumnDef="name">
-				<th mat-header-cell *matHeaderCellDef> نام </th>
-				<td mat-cell *matCellDef="let element"> {{element.name}} </td>
-			</ng-container>
-			
-			<!-- Name Column -->
-			<ng-container matColumnDef="personal_code">
-				<th mat-header-cell *matHeaderCellDef> کدپرسنلی </th>
-				<td mat-cell *matCellDef="let element"> {{element.personal_code |persianNumbers}} </td>
-			</ng-container>
-			
-			<ng-container matColumnDef="device">
-				<th mat-header-cell *matHeaderCellDef> دستگاه </th>
-				<td mat-cell *matCellDef="let element"> {{element.device |persianNumbers}} </td>
-			</ng-container>
-			
-			<!-- Weight Column -->
-			<ng-container matColumnDef="date">
-				<th mat-header-cell *matHeaderCellDef> تاریخ </th>
-				<td mat-cell *matCellDef="let element"> {{element.date |persianNumbers}} </td>
-			</ng-container>
-			
-			<!-- Symbol Column -->
-			<ng-container matColumnDef="day">
-				<th mat-header-cell *matHeaderCellDef> روز </th>
-				<td mat-cell *matCellDef="let element"> {{element.day}} </td>
-			</ng-container>
-			
-			<ng-container matColumnDef="device_type" *ngIf="type != 'report'">
-				<th mat-header-cell *matHeaderCellDef> نوع فعالیت دستگاه: </th>
-				<td mat-cell *matCellDef="let element">
-					<div *ngIf="element.device_type == 'ورود'" class="in">ورود</div>
-					<div *ngIf="element.device_type == 'خروج'" class="out">خروج</div>
+<mat-progress-bar *ngIf="dataSource == undefined" mode="query"></mat-progress-bar>
+<table mat-table [dataSource]="dataShow" class="mat-elevation-z8" *ngIf="dataShow != undefined">
+	<!-- Position Column -->
+	<ng-container matColumnDef="name">
+		<th mat-header-cell *matHeaderCellDef> نام</th>
+		<td mat-cell *matCellDef="let element"> {{element.name}} </td>
+	</ng-container>
+	
+	<!-- Name Column -->
+	<ng-container matColumnDef="personal_code">
+		<th mat-header-cell *matHeaderCellDef> کدپرسنلی</th>
+		<td mat-cell *matCellDef="let element"> {{element.personal_code |persianNumbers}} </td>
+	</ng-container>
+	
+	<ng-container matColumnDef="device">
+		<th mat-header-cell *matHeaderCellDef> دستگاه</th>
+		<td mat-cell *matCellDef="let element"> {{element.device |persianNumbers}} </td>
+	</ng-container>
+	
+	<!-- Weight Column -->
+	<ng-container matColumnDef="date">
+		<th mat-header-cell *matHeaderCellDef> تاریخ</th>
+		<td mat-cell *matCellDef="let element"> {{element.date |persianNumbers}} </td>
+	</ng-container>
+	
+	<!-- Symbol Column -->
+	<ng-container matColumnDef="day">
+		<th mat-header-cell *matHeaderCellDef> روز</th>
+		<td mat-cell *matCellDef="let element"> {{element.day}} </td>
+	</ng-container>
+	
+	<ng-container matColumnDef="device_type" *ngIf="type != 'report'">
+		<th mat-header-cell *matHeaderCellDef> نوع فعالیت دستگاه:</th>
+		<td mat-cell *matCellDef="let element">
+			<div *ngIf="element.device_type == 'in'" class="in">ورود</div>
+			<div *ngIf="element.device_type == 'out'" class="out">خروج</div>
+		
+		</td>
+	</ng-container>
+	
+	<ng-container matColumnDef="device_time" *ngIf="type != 'report'">
+		<th mat-header-cell *matHeaderCellDef> ساعت دستگاه</th>
+		<td mat-cell *matCellDef="let element"> {{element.device_time |persianNumbers}} </td>
+	</ng-container>
+	
+	<ng-container matColumnDef="guard" *ngIf="type == 'conflict'">
+		<th mat-header-cell *matHeaderCellDef> نگهبان</th>
+		<td mat-cell *matCellDef="let element"> {{element.guard |persianNumbers}} </td>
+	</ng-container>
+	
+	<ng-container matColumnDef="guard_time" *ngIf="type == 'conflict'">
+		<th mat-header-cell *matHeaderCellDef> ساعت نگهبانی</th>
+		<td mat-cell *matCellDef="let element"> {{element.guard_time |persianNumbers}} </td>
+	</ng-container>
+	
+	<ng-container matColumnDef='guard_type' *ngIf="type == 'conflict'">
+		<th mat-header-cell *matHeaderCellDef> نوع فعالیت نگهبانی:</th>
+		<td mat-cell *matCellDef="let element">
+			<div *ngIf="element.guard_type == 'ورود'" class="in">ورود</div>
+			<div *ngIf="element.guard_type == 'خروج'" class="out">خروج</div>
+		
+		</td>
+	</ng-container>
+	
+	<ng-container matColumnDef="reason" *ngIf="type == 'conflict'">
+		<th mat-header-cell *matHeaderCellDef> علت</th>
+		<td mat-cell *matCellDef="let element">
+			<b>
 				
-				</td>
-			</ng-container>
+				{{element.reason |persianNumbers}}
 			
-			<ng-container matColumnDef="device_time" *ngIf="type != 'report'">
-				<th mat-header-cell *matHeaderCellDef> ساعت دستگاه </th>
-				<td mat-cell *matCellDef="let element"> {{element.device_time |persianNumbers}} </td>
-			</ng-container>
-			
-			<ng-container matColumnDef="guard" *ngIf="type == 'conflict'">
-				<th mat-header-cell *matHeaderCellDef>  نگهبان </th>
-				<td mat-cell *matCellDef="let element"> {{element.guard |persianNumbers}} </td>
-			</ng-container>
-			
-			<ng-container matColumnDef="guard_time" *ngIf="type == 'conflict'">
-				<th mat-header-cell *matHeaderCellDef> ساعت نگهبانی </th>
-				<td mat-cell *matCellDef="let element"> {{element.guard_time |persianNumbers}} </td>
-			</ng-container>
-			
-			<ng-container matColumnDef='guard_type' *ngIf="type == 'conflict'">
-				<th mat-header-cell *matHeaderCellDef> نوع فعالیت نگهبانی: </th>
-				<td mat-cell *matCellDef="let element">
-					<div *ngIf="element.guard_type == 'ورود'" class="in">ورود</div>
-					<div *ngIf="element.guard_type == 'خروج'" class="out">خروج</div>
-				
-				</td>
-			</ng-container>
-			
-			<ng-container matColumnDef="reason" *ngIf="type == 'conflict'">
-				<th mat-header-cell *matHeaderCellDef> علت </th>
-				<td mat-cell *matCellDef="let element">
-					<b>
-						
-						{{element.reason |persianNumbers}}
-					
-					</b>
-				</td>
-			</ng-container>
+			</b>
+		</td>
+	</ng-container>
+	
+	<ng-container matColumnDef="normal_work" *ngIf="type == 'report'">
+		<th mat-header-cell *matHeaderCellDef> کار عادی</th>
+		<td mat-cell *matCellDef="let element" class="normal-design">
+			<div *ngIf="+element.normal_work == 0">-</div>
+			<div *ngIf="+element.normal_work != 0">{{element.normal_work}}</div>
+		</td>
+	</ng-container>
+	
+	<ng-container matColumnDef="extra_work" *ngIf="type == 'report'">
+		<th mat-header-cell *matHeaderCellDef> اضافه کاری</th>
+		<td mat-cell *matCellDef="let element" class="extra-design">
+			<div *ngIf="+element.extra_work == 0">-</div>
+			<div *ngIf="+element.extra_work != 0">{{element.extra_work}}</div>
+		</td>
+	</ng-container>
+	
+	<ng-container matColumnDef="delay_work" *ngIf="type == 'report'">
+		<th mat-header-cell *matHeaderCellDef> تاخیر</th>
+		<td mat-cell *matCellDef="let element" class="delay-design">
+			<div *ngIf="+element.delay_work == 0">-</div>
+			<div *ngIf="+element.delay_work != 0">{{element.delay_work}}</div>
+		</td>
+	</ng-container>
+	
+	<ng-container matColumnDef="total_work" *ngIf="type == 'report'">
+		<th mat-header-cell *matHeaderCellDef> مجموع</th>
+		<td mat-cell *matCellDef="let element" [ngClass]="+element.total_work >= 8?'extra-design':'delay-design'">
+			<div *ngIf="+element.total_work == 0">-</div>
+			<div *ngIf="+element.total_work != 0">{{element.total_work}}</div>
+		</td>
+	</ng-container>
+	
+	<ng-container matColumnDef="action">
+		<th mat-header-cell *matHeaderCellDef></th>
+		<td mat-cell *matCellDef="let element">
+			<div class="d-flex justify-content-start align-items-baseline" *ngIf="type == 'conflict'">
+				<button mat-stroked-button color="accent" class="me-3" (click)="openAcceptDialog(element)">تایید
+				</button>
+				<button mat-stroked-button color="warn" (click)="openEditDialog(element)">اصلاح</button>
+			</div>
+			<div class="d-flex justify-content-start align-items-baseline" *ngIf="type == 'daily'">
+				<button mat-stroked-button color="accent" class="me-3" (click)="openAcceptDialog(element)">تایید
+				</button>
+				<button mat-stroked-button color="warn" (click)="openEditDialog(element)">گزارش</button>
+			</div>
+			<div class="d-flex justify-content-start align-items-baseline" *ngIf="type == 'accepted'">
+<!--				<button mat-stroked-button color="accent" class="me-3" (click)="openAcceptDialog(element)">جزئیات-->
+<!--				</button>-->
+				<button mat-stroked-button color="warn" disabled  (click)="openEditDialog(element)">بررسی مجدد</button>
+			</div>
+			<div class="d-flex justify-content-start align-items-baseline" *ngIf="type == 'report'">
+				<button mat-stroked-button color="accent" class="me-3" (click)="viewMoreInfo()">جزئیات بیشتر</button>
+			</div>
+		</td>
+	</ng-container>
+	
+	<ng-container matColumnDef="paginator">
+		<td mat-footer-cell *matFooterCellDef colspan="100">
+			<app-paginator
+				[dataSource]="dataSource"
+				(changeData)="paginator($event)"
+			>
+			</app-paginator>
+		</td>
+	</ng-container>
+	
+	<tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+	<tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+	<tr mat-footer-row *matFooterRowDef="['paginator']" class="example-second-footer-row"></tr>
 
-			<ng-container matColumnDef="normal_work" *ngIf="type == 'report'">
-				<th mat-header-cell *matHeaderCellDef>  کار عادی </th>
-				<td mat-cell *matCellDef="let element" class="normal-design">
-					<div *ngIf="+element.normal_work == 0">-</div>
-					<div *ngIf="+element.normal_work != 0">{{element.normal_work}}</div>
-				</td>
-			</ng-container>
-
-			<ng-container matColumnDef="extra_work" *ngIf="type == 'report'">
-				<th mat-header-cell *matHeaderCellDef> اضافه کاری </th>
-				<td mat-cell *matCellDef="let element" class="extra-design">
-					<div *ngIf="+element.extra_work == 0">-</div>
-					<div *ngIf="+element.extra_work != 0">{{element.extra_work}}</div>
-				</td>
-			</ng-container>
-
-			<ng-container matColumnDef="delay_work" *ngIf="type == 'report'">
-				<th mat-header-cell *matHeaderCellDef> تاخیر </th>
-				<td mat-cell *matCellDef="let element" class="delay-design">
-					<div *ngIf="+element.delay_work == 0">-</div>
-					<div *ngIf="+element.delay_work != 0">{{element.delay_work}}</div>
-				</td>
-			</ng-container>
-
-			<ng-container matColumnDef="total_work" *ngIf="type == 'report'">
-				<th mat-header-cell *matHeaderCellDef> مجموع </th>
-				<td mat-cell *matCellDef="let element" [ngClass]="+element.total_work >= 8?'extra-design':'delay-design'">
-					<div *ngIf="+element.total_work == 0">-</div>
-					<div *ngIf="+element.total_work != 0">{{element.total_work}}</div>
-				</td>
-			</ng-container>
-
-			<ng-container matColumnDef="action">
-				<th mat-header-cell *matHeaderCellDef>  </th>
-				<td mat-cell *matCellDef="let element">
-					<div class="d-flex justify-content-start align-items-baseline" *ngIf="type == 'conflict'">
-						<button mat-stroked-button color="accent"  class="me-3" (click)="openAcceptDialog(element)"  >تایید</button>
-						<button mat-stroked-button color="warn" (click)="openEditDialog(element)">اصلاح</button>
-					</div>
-					<div class="d-flex justify-content-start align-items-baseline" *ngIf="type == 'daily'">
-						<button mat-stroked-button color="accent"  class="me-3" (click)="openAcceptDialog(element)"  >تایید</button>
-						<button mat-stroked-button color="warn" (click)="openEditDialog(element)">گزارش</button>
-					</div>
-					<div class="d-flex justify-content-start align-items-baseline" *ngIf="type == 'accepted'">
-						<button mat-stroked-button color="accent"  class="me-3" (click)="openAcceptDialog(element)"  >جزئیات</button>
-						<button mat-stroked-button color="warn" (click)="openEditDialog(element)">بررسی مجدد</button>
-					</div>
-					<div class="d-flex justify-content-start align-items-baseline" *ngIf="type == 'report'">
-						<button mat-stroked-button color="accent"  class="me-3" (click)="viewMoreInfo()"  >جزئیات بیشتر</button>
-					</div>
-				</td>
-			</ng-container>
-			
-			<tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-			<tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-		</table>
-
-
-
+</table>
 
 <ng-container matColumnDef="reason">
 	<th mat-header-cell *matHeaderCellDef> علت </th>

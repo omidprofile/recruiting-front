@@ -99,7 +99,6 @@ export class RoleFormComponent implements OnInit{
 				error:(e)=>{
 					this.rol.get('title')?.setErrors({'duplicate': true})
 					this.error = true
-					console.log(e)
 				}
 			})
 		}
@@ -135,7 +134,6 @@ export class RoleFormComponent implements OnInit{
 				error:(e)=>{
 					this.rol.get('title')?.setErrors({'duplicate': true})
 					this.error = true
-					console.log(e)
 				}
 			})
 		}

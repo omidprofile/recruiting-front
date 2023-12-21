@@ -30,6 +30,7 @@ export class DashboardCardComponent {
     iconRegistry.addSvgIconLiteral('rights', sanitizer.bypassSecurityTrustHtml(icon.rights));
     iconRegistry.addSvgIconLiteral('receipt', sanitizer.bypassSecurityTrustHtml(icon.receipt));
     iconRegistry.addSvgIconLiteral('baseInfo', sanitizer.bypassSecurityTrustHtml(icon.baseInfo));
+    iconRegistry.addSvgIconLiteral('manual', sanitizer.bypassSecurityTrustHtml(icon.manual));
   }
 
 }

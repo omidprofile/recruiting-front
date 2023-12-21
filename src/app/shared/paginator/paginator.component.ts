@@ -1,11 +1,11 @@
-import { AfterViewInit, Component, EventEmitter, Input, Output } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 
 @Component({
 	selector: 'app-paginator',
 	templateUrl: './paginator.component.html',
 	styleUrls: ['./paginator.component.scss']
 })
-export class PaginatorComponent implements AfterViewInit {
+export class PaginatorComponent implements AfterViewInit, OnChanges {
 	
 	@Input({required:true}) dataSource: any;
 	@Output() changeData = new EventEmitter()
@@ -20,9 +20,13 @@ export class PaginatorComponent implements AfterViewInit {
 	ngAfterViewInit() {
 		setTimeout(()=>{
 			this.itemTotal = this.dataSource.length;
-			this.dataTable = this.dataSource;
+			this.dataTable = JSON.parse(JSON.stringify(this.dataSource));
 			this.renderTable()
 		},10)
+	}
+	
+	ngOnChanges(changes: any) {
+		this.renderTable()
 	}
 	
 	next() {
@@ -54,8 +58,8 @@ export class PaginatorComponent implements AfterViewInit {
 	
 	goLast() {
 		if (this.itemTotal - this.perPageItem > 0) {
-			this.pageNumber = Math.ceil(this.itemTotal / this.endPageItem);
-			this.startPageItem = this.itemTotal - this.perPageItem + 1;
+			this.pageNumber = Math.ceil(this.itemTotal / this.perPageItem);
+			this.startPageItem = (this.pageNumber-1) * this.perPageItem +1 ;
 			this.endPageItem = this.itemTotal;
 		}
 		
@@ -75,14 +79,17 @@ export class PaginatorComponent implements AfterViewInit {
 		this.perPageItem = value;
 		this.endPageItem = value;
 		this.renderTable();
+		this.goFirst();
 	}
 	
 	
 	renderTable() {
+		this.dataTable = JSON.parse(JSON.stringify(this.dataSource));
+		this.itemTotal = this.dataSource.length;
 		this.endPageItem > this.itemTotal ? this.endPageItem = this.itemTotal : ''
-		this.dataSource = this.dataTable.filter((value: any, index: any) =>
+		this.dataTable = this.dataTable.filter((value: any, index: any) =>
 			(index + 1) >= this.startPageItem && (index + 1) <= this.endPageItem
 		)
-		this.changeData.emit(this.dataSource);
+		this.changeData.emit(this.dataTable);
 	}
 }

@@ -70,6 +70,8 @@ section .bg {
 }
 
 .info_login {
+
+position: fixed;
   margin-bottom: 20px;
   display: flex;
   flex-direction: row;
@@ -81,7 +83,7 @@ section .bg {
   height: 60px;
   width: 400px;
   background: rgba(23, 18, 17, 0.95);
-  right: -340px;
+  right: -340px ;
 }
 
 .info_login span {
@@ -98,12 +100,13 @@ section .bg {
 
 .info_login p {
   padding-right: 5px;
-  font-size: 1.5em;
-  margin-top: 15px;
+  font-size: 16px;
   color: #fff;
 }
 
 .login_btn {
+  top: 220px;
+  position: fixed;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -133,7 +136,7 @@ section .bg {
 .login_btn a {
   color: #fff;
   padding-right: 20px;
-  font-size: 1.5em;
+  font-size: 16px;
 }
 
 .login-content .inputBox i,
@@ -440,3 +443,35 @@ z-index: 1;
 }
 
 
+///////////////////
+.loader {
+  position: relative;
+  width: 32px;
+  height: 32px;
+  background-color: rgba(0, 0, 0, 0.5);
+  transform: rotate(45deg);
+  overflow: hidden;
+}
+.loader:after{
+  content: '';
+  position: absolute;
+  inset: 8px;
+  margin: auto;
+  background: #222b32;
+}
+.loader:before{
+  content: '';
+  position: absolute;
+  inset: -15px;
+  margin: auto;
+  background: #FFBA00;
+  animation: diamondLoader 2s linear infinite;
+}
+@keyframes diamondLoader {
+  0%  ,10% {
+    transform: translate(-32px , -32px) rotate(-45deg)
+  }
+  90% , 100% {
+    transform: translate(0px , 0px) rotate(-45deg)
+  }
+}

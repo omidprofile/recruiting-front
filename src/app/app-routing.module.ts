@@ -20,6 +20,9 @@ import { AcceptedComponent } from "./panel/pages/attendance/accepted/accepted.co
 import { DevicesComponent } from "./panel/pages/attendance/devices/devices.component";
 import { BillComponent } from "./panel/pages/bill/bill.component";
 import { WorkReportComponent } from "./panel/pages/bill/work-report/work-report.component";
+import { checkTokenGuard } from "./guard/check-token.guard";
+import { accessGuard } from "./guard/access.guard";
+import { ManualComponent } from "./panel/pages/attendance/manual/manual.component";
 
 const routes: Routes = [
 
@@ -38,9 +41,14 @@ const routes: Routes = [
     // Panel :
     {
         path: 'panel', component: PanelComponent,
+        canActivateChild:[checkTokenGuard],
         children: [
             {path: 'test', component: TestComponent},
-            {path: '', component: DashboardComponent, pathMatch: 'full'},
+            {path: '', component: DashboardComponent,
+                pathMatch: 'full',
+                data:{permission:['superAdmin','attendance-admin']},
+                // canActivate:[accessGuard]
+            },
             /*users route*/
 			{path: 'users', component: UsersComponent},
 			{path: 'users/list', component: UsersListComponent},
@@ -49,6 +57,7 @@ const routes: Routes = [
             /*attendance route*/
             {path: 'attendance', component: AttendanceComponent},
             {path: 'attendance/daily', component: DailyComponent},
+            {path: 'attendance/manual', component: ManualComponent},
             {path: 'attendance/conflict', component: ConflictComponent},
             {path: 'attendance/pending', component: PendingComponent},
             {path: 'attendance/accepted', component: AcceptedComponent},

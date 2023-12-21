@@ -1,6 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MatDialog } from "@angular/material/dialog";
 import { CreateDeviceComponent } from "../../../../shared/dialog/create-device/create-device.component";
+import { AttendanceService } from "../../../../HttpServices/attendance.service";
+import { MatSnackBar } from "@angular/material/snack-bar";
+import { SnackbarComponent } from "../../../../shared/snackbar/snackbar.component";
 export interface PeriodicElement {
   name: string;
   ip: string;
@@ -19,11 +22,39 @@ const ELEMENT_DATA: PeriodicElement[] = [
   templateUrl: './devices.component.html',
   styleUrls: ['./devices.component.scss']
 })
-export class DevicesComponent {
+export class DevicesComponent implements OnInit{
   displayedColumns: string[] = ['position','name', 'ip', 'port', 'serial', 'status','action'];
-  dataSource = ELEMENT_DATA;
+  dataSource :any;
   
-  constructor(public dialog: MatDialog) {
+  constructor(public dialog: MatDialog,
+              private http:AttendanceService,
+              private _snackBar: MatSnackBar,
+              ) {
+  }
+  
+  ngOnInit() {
+    setTimeout(()=>{
+      this.getDevices()
+    })
+  }
+  
+  getDevices(){
+    let params ={};
+    this.http.getDevices(params).subscribe({
+      next:(data:any)=>{
+        this.dataSource = data.devices
+        this._snackBar.openFromComponent(SnackbarComponent, {
+          data: `اطلاعات با موفقیت بروز رسانی شد`,
+          duration: 1500
+        })
+      },
+      error:(e)=>{
+        this._snackBar.openFromComponent(SnackbarComponent, {
+          data: `خطا در بروز رسانی اطلاعات`,
+          duration: 1500
+        })
+      }
+    })
   }
   openDialog(type:string,item:any){
   const dialogRef = this.dialog.open(CreateDeviceComponent,{
@@ -32,7 +63,9 @@ export class DevicesComponent {
     }
   });
     dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed',result);
+      if (result == 'success'){
+        this.getDevices()
+      }
     });
   }
 }

@@ -15,12 +15,12 @@
 				<mat-error>{{validate.numberValidate(form.get('hour'),'ساعت')}}</mat-error>
 			</mat-form-field>
 		</div>
-		<p class="mb-3">نوع فعالیت ثبت شده:<b class="mx-3">{{data.type}}</b> </p>
+		<p class="mb-3">نوع فعالیت ثبت شده:<b class="mx-3">{{data.type == 'in'?'ورود':'خروج'}}</b> </p>
 		<mat-form-field class=" col-12 mb-3">
 			<mat-label>نوع فعالیت:</mat-label>
 			<mat-select formControlName="type">
-				<mat-option class="mat-option-design" value="ورود" >ورود</mat-option>
-				<mat-option class="mat-option-design" value="خروج" >خروج</mat-option>
+				<mat-option class="mat-option-design" value="in" >ورود</mat-option>
+				<mat-option class="mat-option-design" value="out" >خروج</mat-option>
 			</mat-select>
 			<mat-error>{{validate.requiredValidate(form.get('type'), 'نوع فعالیت')}}</mat-error>
 		</mat-form-field>
@@ -34,6 +34,6 @@
 
 </div>
 <div mat-dialog-actions>
-	<button mat-button cdkFocusInitial [mat-dialog-close]="form.value" [disabled]="!form.valid" color="accent">ثبت و تایید</button>
+	<button mat-button cdkFocusInitial [mat-dialog-close]="form.value" [disabled]="!form.valid" (click)="updateLog()" color="accent">ثبت و تایید</button>
 	<button mat-button color="warn"  mat-dialog-close>انصراف</button>
 </div>

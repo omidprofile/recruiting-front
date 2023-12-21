@@ -10,7 +10,7 @@ export class ValidationFormService {
 	}
 	
 	public number(control: FormControl): { [s: string]: boolean } | null {
-		if (+control.value<0 && control.value) {
+		if (isNaN(+control.value) && control.value) {
 			return {numberValidator: true}
 		}
 		return null
