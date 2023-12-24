@@ -54,6 +54,7 @@ export class LoginComponent {
       let body = {personal_code:code}
       this.http.login(body).subscribe({
         next:(data:any)=>{
+          console.log(data.token)
           this.error = ''
           localStorage.setItem('permission',JSON.stringify(data.permission))
           localStorage.setItem('token',data.token.toString());

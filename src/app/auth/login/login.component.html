@@ -1,8 +1,8 @@
 
-<div class="navbar_login">
+<div class="navbar_login col-12">
   <div class="d-flex flex-row align-items-center justify-content-center logobox">
-    <div class="col col-auto logo_login">
-      <img src="./assets/images/logo.png" height="95" width="95px" alt="">
+    <div class="col col-auto d-flex justify-content-center align-items-center logo_login">
+      <img src="./assets/images/logo.png" height="65" width="65px" alt="">
     </div>
     <div class="col col-auto  m-0 p-0 header-text_login">
       <a class="h3 p-0 m-0" style="color: var(--header_text_color)">
@@ -11,10 +11,7 @@
       </a>
     </div>
   </div>
-
 </div>
-
-
 
 <div class="sidebar_login">
   <div class="info_login" [ngClass]="animation_class" (mouseenter)="change_animate($event)"
@@ -38,14 +35,12 @@
   </div>
 </div>
 
-
-
-<section>
+<section class="d-flex justify-content-center align-items-center">
   <img src="/assets/images/login_bg.png" class="bg" alt="">
-  <div class="login" [ngClass]="show_login?'come':'back'">
+  <div class="login col-10 col-sm-6 col-md-4 col-lg-4 col-xl-3" [ngClass]="show_login?'come':'back'">
       <div class="header_login d-flex justify-content-around align-items-baseline s">
         <p> سامانه کارکنان صنعت پروفیل آرش</p>
-        <a class="fas fa-times" style="color: var(--logo_color);" (click)="toggle()"></a>
+        <a class="fas fa-times dismiss" style="color: var(--logo_color);" (click)="toggle()"></a>
       </div>
       <div class="login-content">
         <div class="login_logo">
