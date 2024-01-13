@@ -1,17 +1,31 @@
 import { Injectable } from '@angular/core';
 import { FormControl } from "@angular/forms";
+import { DateService } from "./date.service";
+import { EnglishNumberPipe } from "../shared/pipe/english-number.pipe";
 
 @Injectable({
 	providedIn: 'root'
 })
 export class ValidationFormService {
 	
-	constructor() {
-	}
 	
 	public number(control: FormControl): { [s: string]: boolean } | null {
 		if (isNaN(+control.value) && control.value) {
 			return {numberValidator: true}
+		}
+		return null
+	}
+
+	public currency(control: FormControl): { [s: string]: boolean } | null {
+		if (control.value){
+			let val = control.value.replace(/[\u0660-\u0669\u06f0-\u06f9]/g,    // Detect all Persian/Arabic Digit in range of their Unicode with a global RegEx character set
+				function(a:any) {
+					return a.charCodeAt(0) & 0xf;
+				})
+			val = val.replaceAll(',','')
+			if (isNaN(val) && val) {
+				return {currency: true}
+			}
 		}
 		return null
 	}
@@ -26,9 +40,27 @@ export class ValidationFormService {
 		}
 		return null
 	}
+
+	public englishString(control:FormControl): { [s: string]: boolean } | null {
+		let regex = new RegExp('^[A-Za-z][A-Za-z]*$')
+		if (control.value){
+			let result = regex.test(control.value.toString());
+			if (!result){
+				return {englishString:true}
+			}
+		}
+		return null
+	}
+
+	public string(control:FormControl): { [s: string]: boolean } | null {
+		if (typeof control.value != 'string'){
+				return {string:true}
+		}
+		return null
+	}
 	
 	public length(control: FormControl): { [s: string]: boolean } | null {
-		if (control.value && control.value.toString().trim().length < 3) {
+		if (control.value && control.value.toString().trim().length < 2) {
 			return {lengthValidator: true}
 		}
 		return null

@@ -100,7 +100,7 @@ export class RolesComponent implements OnInit {
 		});
 		
 		dialogRef.afterClosed().subscribe(result => {
-			if (result.created){
+			if (result?.created){
 				if (type == 'company')
 					this.getCompanies()
 				if (type == 'collection')

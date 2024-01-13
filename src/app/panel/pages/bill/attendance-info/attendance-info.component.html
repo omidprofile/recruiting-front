@@ -1,0 +1,257 @@
+<div class="dashboard col col-12">
+	<div class="headline-title col col-12 col-xl-10">
+		{{report_data?.title}}
+	</div>
+	<mat-card class="col col-12 col-xl-10 mb-3">
+		<mat-card-content *ngIf="options != undefined">
+			<form action="">
+				<div class="row col-12">
+				</div>
+				<div  class="row col-12">
+					<mat-form-field class="col col-6 col-lg-3">
+						<mat-label>فرد</mat-label>
+						<input matInput placeholder="انتخاب فرد"
+							   #input
+							   [matAutocomplete]="auto"
+							   (input)="filter()"
+							   (focus)="filter()"
+						>
+						<mat-autocomplete requireSelection #auto="matAutocomplete">
+							<mat-option class="mat-option-design" (click)="setUser(option['id'])"
+										*ngFor="let option of filteredOptions"
+										[value]="option['name']">
+								<div class="d-flex justify-content-between " style="width: 16vw">
+									<div>{{option['name']}}</div>
+									<div>{{option['code'] ?? '' |persianNumbers}}</div>
+								</div>
+							</mat-option>
+						</mat-autocomplete>
+						<mat-error></mat-error>
+					</mat-form-field>
+				</div>
+				<div class="row col-12" *ngIf="user ">
+					<mat-form-field class="col col-6 col-lg-3">
+						<mat-label>سال</mat-label>
+						<input matInput [(ngModel)]="year" [ngModelOptions]="{standalone: true}"
+							   placeholder="  سال جاری ">
+						<mat-error></mat-error>
+					</mat-form-field>
+					<mat-form-field class="col col-6 col-lg-3">
+						<mat-label>ماه</mat-label>
+						<input matInput [(ngModel)]="month" [ngModelOptions]="{standalone: true}"
+							   placeholder="ماه جاری">
+						<mat-error></mat-error>
+					</mat-form-field>
+				</div>
+			</form>
+		</mat-card-content>
+		<!--        <mat-card-footer>
+					<mat-card-subtitle class="mx-3">
+						- به صورت پیش فرض همه ی اطلاعات جستجو خواهند شد.
+					</mat-card-subtitle>
+				</mat-card-footer>-->
+		<mat-card-actions>
+			<button mat-raised-button color="primary" class="mx-2" (click)="submit()" [disabled]="!user">جستجو</button>
+		</mat-card-actions>
+	</mat-card>
+	<mat-card class="col col-12 col-xl-10 mt-3" *ngIf="user_info">
+		<mat-card-content>
+			<div class="row">
+				<div class="col col-12 col-md-6 col-xl-3 d-flex justify-content-start align-items-baseline">
+					<mat-card-subtitle >کاربر:</mat-card-subtitle>
+					<div class="dashboard-caption ms-3">{{user_info.name}}</div>
+				</div>
+				<div class="col col-12 col-md-6 col-xl-3 d-flex justify-content-start align-items-baseline">
+					<mat-card-subtitle >شماره پرسنلی:</mat-card-subtitle>
+					<div class="dashboard-caption ms-3">{{user_info.code| persianNumbers}}</div>
+				</div>
+				<div class="col col-12 col-md-6 col-xl-3 d-flex justify-content-start align-items-baseline">
+					<mat-card-subtitle >نام قسمت:</mat-card-subtitle>
+					<div class="dashboard-caption ms-3">{{user_info.collection.title  | persianNumbers}}</div>
+				</div>
+				<div class="col col-12 col-md-6 col-xl-3 d-flex justify-content-start align-items-baseline">
+					<mat-card-subtitle >نام بخش:</mat-card-subtitle>
+					<div class="dashboard-caption ms-3">{{user_info.part.title  | persianNumbers}}</div>
+				</div>
+				<div class="col col-12 col-md-6 col-xl-3 d-flex justify-content-start align-items-baseline">
+					<mat-card-subtitle >سمت:</mat-card-subtitle>
+					<div class="dashboard-caption ms-3">{{user_info.rank.title  | persianNumbers}}</div>
+				</div>
+				<div class="col col-12 col-md-6 col-xl-3 d-flex justify-content-start align-items-baseline">
+					<mat-card-subtitle >نام شیفت:</mat-card-subtitle>
+					<div class="dashboard-caption ms-3">{{user_info.shift.title  | persianNumbers}}</div>
+				</div>
+				<div class="col col-12 col-md-6 col-xl-3 d-flex justify-content-start align-items-baseline">
+					<mat-card-subtitle >نوع شیفت:</mat-card-subtitle>
+					<div class="dashboard-caption ms-3">{{user_info.shift.work_type == 'watch'?'ساعت محور':'زمان محور'| persianNumbers}}</div>
+				</div>
+				<div class="col col-12 col-md-6 col-xl-3 d-flex justify-content-start align-items-baseline">
+					<mat-card-subtitle > موظف کاری روزانه:</mat-card-subtitle>
+					<div class="dashboard-caption ms-3">{{user_info.shift.force_time + ' ساعت'| persianNumbers}}</div>
+				</div>
+				<div class="col col-12 col-md-6 col-xl-3 d-flex justify-content-start align-items-baseline">
+					<mat-card-subtitle > اضافه کاری موظفی روزانه:</mat-card-subtitle>
+					<div class="dashboard-caption ms-3">{{user_info.shift.force_extra_time == 0 ? 'ندارد':user_info.shift.force_extra_time + ' ساعت' | persianNumbers}}</div>
+				</div>
+				<div class="col col-12 col-md-6 col-xl-3 d-flex justify-content-start align-items-baseline">
+					<mat-card-subtitle > حداکثر ساعت روزانه:</mat-card-subtitle>
+					<div class="dashboard-caption ms-3">{{user_info.shift.max_time + ' ساعت'  | persianNumbers}}</div>
+				</div>
+				<div class="col col-12 col-md-6 col-xl-3 d-flex justify-content-start align-items-baseline">
+					<mat-card-subtitle > ساعت کامل موظفی در این دوره:</mat-card-subtitle>
+					<div class="dashboard-caption ms-3">{{ (present_day * user_info.shift.force_time).toString() | persianNumbers}}</div>
+				</div>
+				<div class="col col-12 col-md-6 col-xl-3 d-flex justify-content-start align-items-baseline">
+					<mat-card-subtitle > کل روز های دوره:</mat-card-subtitle>
+					<div class="dashboard-caption ms-3">{{ total_day + ' روز' | persianNumbers}}</div>
+				</div>
+				<div class="col col-12 col-md-6 col-xl-3 d-flex justify-content-start align-items-baseline">
+					<mat-card-subtitle > روز های کاری دوره:</mat-card-subtitle>
+					<div class="dashboard-caption ms-3">{{ work_days + ' روز' | persianNumbers}}</div>
+				</div>
+				<div class="col col-12 col-md-6 col-xl-3 d-flex justify-content-start align-items-baseline">
+					<mat-card-subtitle > روز های تعطیل دوره:</mat-card-subtitle>
+					<div class="dashboard-caption ms-3">{{ holidays + ' روز' | persianNumbers}}</div>
+				</div>
+				<div class="col col-12 col-md-6 col-xl-3 d-flex justify-content-start align-items-baseline">
+					<mat-card-subtitle > روز های حضور:</mat-card-subtitle>
+					<div class="dashboard-caption ms-3">{{ present_day + ' روز'| persianNumbers}}</div>
+				</div>
+				<div class="col col-12 col-md-6 col-xl-3 d-flex justify-content-start align-items-baseline">
+					<mat-card-subtitle > روز های تعطیل کاری:</mat-card-subtitle>
+					<div class="dashboard-caption ms-3">{{ holiday_work + ' روز'| persianNumbers}}</div>
+				</div>
+				<div class="col col-12 col-md-6 col-xl-3 d-flex justify-content-start align-items-baseline">
+					<mat-card-subtitle >روز های غیبت:</mat-card-subtitle>
+					<div class="dashboard-caption ms-3">{{ absent_day + ' روز'| persianNumbers}}</div>
+				</div>
+				<div class="col col-12 col-md-6 col-xl-3 d-flex justify-content-start align-items-baseline">
+					<mat-card-subtitle > جمع کارکرد موظفی دوره:</mat-card-subtitle>
+					<div class="dashboard-caption ms-3">{{(total_work- ((present_day) * user_info.shift.force_time)>0?createHour((present_day * user_info.shift.force_time)):createHour(total_work))| persianNumbers}}</div>
+				</div>
+				<div class="col col-12 col-md-6 col-xl-3 d-flex justify-content-start align-items-baseline">
+					<mat-card-subtitle > جمع کسر کار دوره:</mat-card-subtitle>
+					<div class="dashboard-caption ms-3">{{((present_day * user_info.shift.force_time)-total_work >0?(createHour((present_day * user_info.shift.force_time)-total_work) +' ساعت'):'ندارد')| persianNumbers}}</div>
+				</div>
+				<div class="col col-12 col-md-6 col-xl-3 d-flex justify-content-start align-items-baseline">
+					<mat-card-subtitle > جمع  اضافه کار دوره:</mat-card-subtitle>
+					<div class="dashboard-caption ms-3">{{(total_work- (present_day * user_info.shift.force_time)>0?createHour(total_work- (present_day * user_info.shift.force_time))+' ساعت':'ندارد' )| persianNumbers}}</div>
+				</div>
+				<div class="col col-12 col-md-6 col-xl-3 d-flex justify-content-start align-items-baseline">
+					<mat-card-subtitle > جمع  کل کارکرد دوره:</mat-card-subtitle>
+					<div class="dashboard-caption ms-3">{{createHour(total_work) + ' ساعت' | persianNumbers}}</div>
+				</div>
+				
+				
+			</div>
+		</mat-card-content>
+	</mat-card>
+	<div class="col col-12 col-xl-10 mt-3">
+		<table mat-table [dataSource]="dataSource" class="" *ngIf="dataSource.length">
+			
+			<ng-container matColumnDef="day">
+				<th mat-header-cell *matHeaderCellDef>{{displayedColumnsPersian[0] | persianNumbers}}</th>
+				<td mat-cell *matCellDef="let element"> {{element.day}} </td>
+			</ng-container>
+			
+			<ng-container matColumnDef="date">
+				<th mat-header-cell *matHeaderCellDef> {{displayedColumnsPersian[1] | persianNumbers}} </th>
+				<td mat-cell *matCellDef="let element"> {{element.date | persianNumbers}} </td>
+			</ng-container>
+			
+			<ng-container matColumnDef="day_status">
+				<th mat-header-cell *matHeaderCellDef> {{displayedColumnsPersian[2] | persianNumbers}} </th>
+				<td mat-cell *matCellDef="let element">
+					<mat-chip  class="active-user" *ngIf="element.day_status == 'normal'">
+						عادی
+					</mat-chip>
+					<mat-chip  class="disable-user" *ngIf="element.day_status == 'holiday'">
+						تعطیل
+					</mat-chip>
+				</td>
+			</ng-container>
+			
+			<ng-container matColumnDef="traffic1">
+				<th mat-header-cell *matHeaderCellDef> {{displayedColumnsPersian[3] | persianNumbers}} </th>
+				<td mat-cell *matCellDef="let element"
+					[ngClass]="element.traffic1?.type?element.traffic1?.type == 'in'?'in-design':'out-design':''"
+				> {{element.traffic1?.time ?? '' | persianNumbers}} </td>
+			</ng-container>
+			<ng-container matColumnDef="traffic2">
+				<th mat-header-cell *matHeaderCellDef> {{displayedColumnsPersian[4] | persianNumbers}} </th>
+				<td mat-cell *matCellDef="let element"
+					[ngClass]="element.traffic2?.type?element.traffic2?.type == 'in'?'in-design':'out-design':''"
+				> {{element.traffic2?.time ?? '' | persianNumbers}} </td>
+			</ng-container>
+			<ng-container matColumnDef="traffic3">
+				<th mat-header-cell *matHeaderCellDef> {{displayedColumnsPersian[5] | persianNumbers}} </th>
+				<td mat-cell *matCellDef="let element"
+					[ngClass]="element.traffic3?.type?element.traffic3?.type == 'in'?'in-design':'out-design':''"
+				> {{element.traffic3?.time ?? '' | persianNumbers}} </td>
+			</ng-container>
+			<ng-container matColumnDef="traffic4">
+				<th mat-header-cell *matHeaderCellDef> {{displayedColumnsPersian[6] | persianNumbers}} </th>
+				<td mat-cell *matCellDef="let element"
+					[ngClass]="element.traffic4?.type?element.traffic4?.type == 'in'?'in-design':'out-design':''"
+				> {{element.traffic4?.time ?? '' | persianNumbers}} </td>
+			</ng-container>
+			<ng-container matColumnDef="traffic5">
+				<th mat-header-cell *matHeaderCellDef> {{displayedColumnsPersian[7] | persianNumbers}} </th>
+				<td mat-cell *matCellDef="let element"
+					[ngClass]="element.traffic5?.type?element.traffic5?.type == 'in'?'in-design':'out-design':''"
+				> {{element.traffic5?.time ?? '' | persianNumbers}} </td>
+			</ng-container>
+			<ng-container matColumnDef="traffic6">
+				<th mat-header-cell *matHeaderCellDef> {{displayedColumnsPersian[8] | persianNumbers}} </th>
+				<td mat-cell *matCellDef="let element"
+					[ngClass]="element.traffic6?.type?element.traffic6?.type == 'in'?'in-design':'out-design':''"
+				> {{element.traffic6?.time ?? '' | persianNumbers}} </td>
+			</ng-container>
+			<ng-container matColumnDef="traffic7">
+				<th mat-header-cell *matHeaderCellDef> {{displayedColumnsPersian[9] | persianNumbers}} </th>
+				<td mat-cell *matCellDef="let element"
+					[ngClass]="element.traffic7?.type?element.traffic7?.type == 'in'?'in-design':'out-design':''"
+				> {{element.traffic7?.time ?? '' | persianNumbers}} </td>
+			</ng-container>
+			<ng-container matColumnDef="traffic8">
+				<th mat-header-cell *matHeaderCellDef> {{displayedColumnsPersian[10] | persianNumbers}} </th>
+				<td mat-cell *matCellDef="let element"
+					[ngClass]="element.traffic8?.type?element.traffic8?.type == 'in'?'in-design':'out-design':''"
+				> {{element.traffic8?.time ?? '' | persianNumbers}} </td>
+			</ng-container>
+			
+			<ng-container matColumnDef="user_status">
+				<th mat-header-cell *matHeaderCellDef> {{displayedColumnsPersian[11] | persianNumbers}} </th>
+				<td mat-cell *matCellDef="let element">
+					<mat-chip  class="active-user" *ngIf="element.user_status == 'present'">
+						<mat-icon  matChipAvatar >done_all</mat-icon>
+						حاضر
+					</mat-chip>
+					<mat-chip  class="disable-user" *ngIf="element.user_status == 'absent'">
+						<mat-icon  matChipAvatar >cancel</mat-icon>
+						غایب
+					</mat-chip>
+				</td>
+			</ng-container>
+			
+			<ng-container matColumnDef="conflict">
+				<th mat-header-cell *matHeaderCellDef> {{displayedColumnsPersian[12] | persianNumbers}} </th>
+				<td mat-cell *matCellDef="let element">
+					<mat-chip  class="active-user" *ngIf="element.conflict == false">
+						معتبر
+					</mat-chip>
+					<mat-chip  class="disable-user" *ngIf="element.conflict == true">
+						نامعتبر
+					</mat-chip>
+				</td>
+			</ng-container>
+			<ng-container matColumnDef="time">
+				<th mat-header-cell *matHeaderCellDef> {{displayedColumnsPersian[13] | persianNumbers}} </th>
+				<td mat-cell *matCellDef="let element"> {{createHour(element.time) |persianNumbers}} </td>
+			</ng-container>
+			
+			<tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+			<tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+		</table>
+	</div>
+</div>

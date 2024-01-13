@@ -4,64 +4,17 @@ import { UsersHttpService } from "../../../../HttpServices/users-http.service";
 import { MatDialog } from "@angular/material/dialog";
 import { ConflictDialogComponent } from "../../../../shared/dialog/conflict-dialog/conflict-dialog.component";
 import { tap } from "rxjs";
-
-export interface PeriodicElement {
-	name: string;
-	personal_code: string;
-	total_time: string;
-	total_normal: string;
-	total_work: string;
-	total_extra: string;
-	total_delay: string
-}
-
-const ELEMENT_DATA: PeriodicElement[] = [
-	{
-		name: 'امید بیات',
-		personal_code: '123465',
-		total_time: '184',
-		total_work: '192',
-		total_normal: '184',
-		total_extra: '8',
-		total_delay: '0'
-	},
-	{
-		name: 'امین عادل',
-		personal_code: '254856',
-		total_time: '184',
-		total_work: '204',
-		total_normal: '184',
-		total_extra: '20',
-		total_delay: '0'
-	},
-	{
-		name: 'ایوب طعته',
-		personal_code: '874585',
-		total_time: '184',
-		total_work: '194',
-		total_normal: '184',
-		total_extra: '10',
-		total_delay: '0'
-	},
-	{
-		name: 'اکبر صادق پور',
-		personal_code: '874685',
-		total_time: '184',
-		total_work: '180',
-		total_normal: '180',
-		total_extra: '0',
-		total_delay: '4'
-	},
-	{
-		name: 'وجیهه محمدرضا پور',
-		personal_code: '985275',
-		total_time: '184',
-		total_work: '154',
-		total_normal: '154',
-		total_extra: '0',
-		total_delay: '30'
-	},
-];
+import { RolesHttpService } from "../../../../HttpServices/roles-http.service";
+import { CdkDragDrop, moveItemInArray } from "@angular/cdk/drag-drop";
+import { ReportsService } from "../../../../services/reports.service";
+import { Router } from "@angular/router";
+import { SnackbarComponent } from "../../../../shared/snackbar/snackbar.component";
+import { MatSnackBar } from "@angular/material/snack-bar";
+import { DateService } from "../../../../services/date.service";
+import _default from "chart.js/dist/plugins/plugin.filler";
+import beforeDatasetDraw = _default.beforeDatasetDraw;
+import { CalendarHttpService } from "../../../../HttpServices/calendar-http.service";
+import { CalendarService } from "../../../../services/calendar.service";
 
 @Component({
 	selector: 'app-work-report',
@@ -70,45 +23,72 @@ const ELEMENT_DATA: PeriodicElement[] = [
 })
 export class WorkReportComponent implements OnInit {
 	@ViewChild('input') input: ElementRef<HTMLInputElement>;
-	myControl = new FormControl('');
 	
 	options: any;
+	companies:any;
+	collections:any;
+	parts:any;
+	ranks:any;
+	report_data:any;
+	report_base:any;
+	report_type:any;
+	
+	company_selected:any;
+	collection_selected:any;
+	part_selected:any;
+	rank_selected:any;
+	
 	filteredOptions: any[];
 	
+	monthLogs:any;
+	
 	displayedColumns: string[] = [
-		'No',
-		'name',
-		'personal_code',
-		'total_time',
-		'total_normal',
-		'total_extra',
-		'total_delay',
-		'total_work',
-		'conflict',
-		'action',
 	];
 	dataSource :any;
-	
 	report = false;
 	info = false;
 	moreInfo = false;
 	loading = false;
 	constructor(
 		private http: UsersHttpService,
-		public dialog: MatDialog,	) {
+		private roleHttp: RolesHttpService,
+		public dialog: MatDialog,
+		public Report:ReportsService,
+		private route:Router,
+		private _snackBar: MatSnackBar,
+		private date:DateService,
+		private calendar:CalendarHttpService,
+		private PCalendar:CalendarService
+		) {
 	}
 	
 	ngOnInit() {
+		if(this.Report.report().title) {
+			this.report_data = this.Report.report();
+			this.displayedColumns = this.report_data.cols
+		}else {
+			this.route.navigate(['panel/report/reports']).then(()=>{
+					this._snackBar.openFromComponent(SnackbarComponent, {
+						data: `ابتدا نوع گزارش را انتخاب نمایید`,
+						duration: 1500
+					})
+				})
+		}
+		let today = this.date.dateInfo(Date.now())
+		this.year = today.year;
+		this.month = today.month
+		this.day = today.day
 		this.getUsers()
 	}
 	
 	getUsers() {
 		this.http.getUsers().subscribe((data: any) => {
 			this.options = []
+			
 			for (let item of data) {
 				let person: any = {}
-				person.name = item.user_id.name + " " + item.user_id.last_name
-				person.code = item.personal_code
+				person.name = item.name + " " + item.last_name
+				person.code = item.jobs_id[0].personal_code
 				person.id = item._id
 				this.options.push(person)
 			}
@@ -127,69 +107,99 @@ export class WorkReportComponent implements OnInit {
 	user: any;
 	
 	viewReport() {
+		this.monthLogs = [];
 		this.report = true;
 		this.moreInfo = false;
 		this.info = false;
-		let body: any = {}
-		body.type = 'report'
-		body.day = this.day;
+		let body: any = {};
+		body.type = 'report';
+		// body.day = this.day;
 		body.month = this.month;
 		body.year = this.year;
 		body.user = this.user;
 		this.loading = true;
-		this.http.getLogs(body)
-			.subscribe({
-			next: (data: any) => {
-				this.loading = false
-				this.dataSource = []
-				data = data.data;
-				let item: any = {}
-				for (let user in data) {
-					let month = data[user]
-                    item = {}
-                    item.total_time = 0
-                    item.total_normal = 0
-					item.total_work = 0
-					item.holidays = 0
-					item.dayLength = Object.keys(month).length
-					item.conflict = false;
-					item.conflict_arr = []
-     
-					for (let day in month) {
-						let logs = month[day]
-                        
-                        if (logs[0]?.shift && !logs[0]?.is_holiday)
-	                        item.total_time += logs[0].shift.force_time
-                        
-                        
-						if(logs[0]?.is_holiday)
-							item.holidays++
-						
-						for (let log of logs) {
-                            if (item.name == undefined && log.user)
-								item.name = log.user.user_id.name+" "+log.user.user_id.last_name
-							
-							if (item.personal_code == undefined)
-								item.personal_code = log.personal_code
-							
-							if (log?.duration)
-								item.total_work += +log.duration
-							
-							if (log?.conflict == true){
-								item.conflict = true
-								item.conflict_arr.push(logs)
+		let mLog = new Promise((resolve, reject) => {
+			this.calendar.getCalendar({
+				year:this.year,
+				month:this.month
+			}).subscribe(data=> resolve(data));
+		})
+		mLog.then((data:any)=>{
+			this.monthLogs = data.calendars;
+			this.http.getLogs(body)
+				.subscribe({
+					next: (data: any) => {
+						this.loading = false
+						this.dataSource = []
+						let temp :any= [];
+						data = data.data;
+						let item: any = {}
+						let today = this.date.dateInfo(Date.now())
+						let currentDate:any='';
+						currentDate += (this.year ? `${this.year}/` : `${today.year}/`);
+						currentDate += (this.month ? `${this.month}/` : `${today.month}/`);
+						currentDate += '1'
+						this.PCalendar.preparingDay(this.year, this.month, currentDate).then((dc:any)=>{
+							for (let user in data) {
+								let month = data[user]
+								item = {}
+								item.course_name = currentDate.slice(0,-2)
+								item.total_time = 0
+								item.total_normal = 0
+								item.total_work = 0
+								item.holidays = 0
+								item.total_day = Object.keys(month).length
+								item.conflict = false;
+								item.conflict_arr = []
+								for (let day in month) {
+									let logs = month[day]
+									if (logs[0]?.shift && !logs[0]?.is_holiday ){
+										if (this.monthLogs.filter((e:any)=>{return e.day == logs[0].date.day}).length == 0)
+											item.total_time += logs[0].shift.force_time;
+									}
+									
+									
+									if(logs[0]?.is_holiday || this.monthLogs.filter((e:any)=>{
+										return 	e.day == logs[0].date.day
+									}).length)
+										item.holidays++
+									
+									
+									for (let log of logs) {
+										if (item.name == undefined && log.user){
+											item.name = log.user.name
+											item.last_name = log.user.last_name
+											item.user_id = log.user._id
+										}
+										
+										if (item.personal_code == undefined)
+											item.personal_code = log.personal_code
+										
+										if (log?.duration)
+											item.total_work += +log.duration
+										
+										if (log?.conflict == true){
+											item.conflict = true
+											item.conflict_arr.push(logs)
+										}
+									}
+								}
+								item.total_normal = item.total_work >= item.total_time ?item.total_time:item.total_work
+								item.total_extra = item.total_work-item.total_time > 0?item.total_work-item.total_time:0
+								item.total_delay = item.total_time -item.total_work>0 ?item.total_time -item.total_work: 0
+								item.holiday_work = item.holidays
+								item.holidays = dc[1].holidays;
+								item.all_day = dc[1].days;
+								item.absent_days = item.all_day - (item.total_day + item.holidays - item.holiday_work );
+								temp.push(item)
 							}
-						}
+							this.dataSource = temp;
+						})
+					},
+					error: (e) => {
+						console.log(e)
 					}
-					item.total_normal = item.total_work >= item.total_time ?item.total_time:item.total_work
-					item.total_extra = item.total_work-item.total_time > 0?item.total_work-item.total_time:0
-					item.total_delay = item.total_time -item.total_work>0 ?item.total_time -item.total_work: 0
-					this.dataSource.push(item)
-				}
-			},
-			error: (e) => {
-				console.log(e)
-			}
+				})
 		})
 	}
 	
@@ -217,7 +227,6 @@ export class WorkReportComponent implements OnInit {
 	}
 	
 	conflict(element:any){
-		console.log(element)
 		
 		const dialogRef = this.dialog.open(ConflictDialogComponent, {
 			data: element,
@@ -227,4 +236,87 @@ export class WorkReportComponent implements OnInit {
 		});
 	}
 	
+	setUser(id:any){
+		this.user = id
+	}
+	
+	async getCompanies(){
+		await this.roleHttp.getCompanies().subscribe((data:any) => {
+			this.companies = data.companies
+		})
+	}
+	
+	async getCollections(){
+		this.roleHttp.getCollection(this.company_selected).subscribe({
+			next: (data: any) => {
+				this.collections = data.collections
+			},
+			error: (error) => {
+				console.log(error)
+			}
+		})
+	}
+	
+	getParts(){
+		this.roleHttp.getPart(this.collection_selected).subscribe({
+			next: (data: any) => {
+				this.parts = data.parts
+			},
+			error: (error) => {
+				console.log(error)
+			}
+		})
+	}
+	
+	getRanks(){
+		this.roleHttp.getRank(this.part_selected).subscribe({
+			next: (data: any) => {
+				this.ranks = data.ranks
+			},
+			error: (error) => {
+				console.log(error)
+			}
+		})
+	}
+	
+	saveLog(row:any){
+		console.log(row)
+		if (!this.year || !this.month){
+			this._snackBar.openFromComponent(SnackbarComponent, {
+				data: `سال و ماه بایستی وارد شوند`,
+				duration: 1500
+			})
+			return
+		}
+		else {
+			let title = '';
+			title += `${this.year}/` ?? ''
+			title +=`${this.month}` ?? ''
+			// title += `${this.day}` ?? ''
+			let body:any = {}
+			body.title = title;
+			body.type = this.Report.report().type;
+			body.info = row;
+			body.creator='';
+			body.personal_code=row.personal_code;
+			this.http.saveWorkReports(body).subscribe({
+				next:(data)=>{
+					this._snackBar.openFromComponent(SnackbarComponent, {
+						data: `با موفقیت ذخیره شد`,
+						duration: 1500
+					})
+				},
+				error:(err)=>{
+					this._snackBar.openFromComponent(SnackbarComponent, {
+						data: `خطا در ذخیره اطلاعات`,
+						duration: 1500
+					})
+					console.log(err)
+				},
+			})
+		}
+
+	}
+
+	protected readonly Object = Object;
 }

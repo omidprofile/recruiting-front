@@ -1,170 +1,252 @@
-<div class="dashboard col-12">
-    <div class="headline-title col col-12 col-xl-10 mb-3">میزان کارکرد</div>
-    <mat-card class="col col-12 col-xl-10 mb-3">
-        <mat-card-header class="mb-3">
-            <mat-card-subtitle>جستجو بر اساس:</mat-card-subtitle>
-        </mat-card-header>
-        <mat-card-content *ngIf="options != undefined">
-            <form action="">
-                <div class="row col-12">
-                    <mat-form-field class="col col-6 col-lg-3">
-                        <mat-label>فرد</mat-label>
-                        <input matInput placeholder="همه ی افراد"
-                               #input
-                               [(ngModel)]="user"
-                               [ngModelOptions]="{standalone: true}"
-                               [matAutocomplete]="auto"
-                               (input)="filter()"
-                               (focus)="filter()"
-                        >
-                        <mat-autocomplete requireSelection #auto="matAutocomplete">
-                            <mat-option class="mat-option-design"
-                                        [value]="" aria-selected="true">
-                                <div class="d-flex justify-content-between " style="width: 16vw">
-                                    <div>همه ی افراد</div>
-                                </div>
-                            </mat-option>
-                            <mat-option class="mat-option-design" *ngFor="let option of filteredOptions"
-                                        [value]="option['id']">
-                                <div class="d-flex justify-content-between " style="width: 16vw">
-                                    <div>{{option['name']}}</div>
-                                    <div>{{option['code'] |persianNumbers}}</div>
-                                </div>
-                            </mat-option>
-                        </mat-autocomplete>
-                        <mat-error></mat-error>
-                    </mat-form-field>
-                    <mat-form-field class="col col-6 col-lg-3">
-                        <mat-label>سال</mat-label>
-                        <input matInput [(ngModel)]="year" [ngModelOptions]="{standalone: true}" placeholder="همه ی سال ها">
-                        <mat-error></mat-error>
-                    </mat-form-field>
-                    <mat-form-field class="col col-6 col-lg-3">
-                        <mat-label>ماه</mat-label>
-                        <input matInput [(ngModel)]="month" [ngModelOptions]="{standalone: true}" placeholder="همه ی ماه ها">
-                        <mat-error></mat-error>
-                    </mat-form-field>
-                    <mat-form-field class="col col-6 col-lg-3">
-                        <mat-label>روز</mat-label>
-                        <input matInput [(ngModel)]="day" [ngModelOptions]="{standalone: true}" placeholder="همه ی روز ها">
-                        <mat-error></mat-error>
-                    </mat-form-field>
-                </div>
-            </form>
-        </mat-card-content>
-        <mat-card-footer>
-            <mat-card-subtitle class="mx-3">
-                - به صورت پیش فرض همه ی اطلاعات جستجو خواهند شد.
-            </mat-card-subtitle>
-        </mat-card-footer>
-        <mat-card-actions>
-            <button mat-raised-button color="primary" class="mx-2" (click)="viewReport()">جستجو</button>
-        </mat-card-actions>
-    </mat-card>
+<div class="dashboard col-12" *ngIf="report_data">
+	<div class="headline-title col col-12 col-xl-10 mb-3">{{report_data.title}}</div>
+	<mat-card class="col col-12 col-xl-10 mb-3">
+		<!--        <mat-card-header class="mb-3">
+					<mat-card-subtitle>جستجو بر اساس:</mat-card-subtitle>
+				</mat-card-header>-->
+		
+		<mat-card-content *ngIf="options != undefined">
+			<form action="">
+				<div class="row col-12">
+					<mat-form-field class="col col-6 col-lg-3">
+						<mat-label>گزارش بر اساس:</mat-label>
+						<mat-select [(ngModel)]="report_base" name="report_base">
+							<mat-option class="mat-option-design" value="person">فرد</mat-option>
+							<mat-option class="mat-option-design" value="group" (click)="getCompanies()">گروه
+							</mat-option>
+							<mat-option class="mat-option-design" value="all">همه ی پرسنل</mat-option>
+						</mat-select>
+					</mat-form-field>
+				</div>
+				<div *ngIf="report_type == 'details' || report_base=='person'" class="row col-12">
+					<mat-form-field class="col col-6 col-lg-3">
+						<mat-label>فرد</mat-label>
+						<input matInput placeholder="انتخاب فرد"
+							   #input
+							   [matAutocomplete]="auto"
+							   (input)="filter()"
+							   (focus)="filter()"
+						>
+						<mat-autocomplete requireSelection #auto="matAutocomplete">
+							<!--                            <mat-option class="mat-option-design"
+																	[value]="" aria-selected="true">
+															<div class="d-flex justify-content-between " style="width: 16vw">
+																<div>همه ی افراد</div>
+															</div>
+														</mat-option>-->
+							<mat-option class="mat-option-design" (click)="setUser(option['id'])"
+										*ngFor="let option of filteredOptions"
+										[value]="option['name']">
+								<div class="d-flex justify-content-between " style="width: 16vw">
+									<div>{{option['name']}}</div>
+									<div>{{option['code'] |persianNumbers}}</div>
+								</div>
+							</mat-option>
+						</mat-autocomplete>
+						<mat-error></mat-error>
+					</mat-form-field>
+				</div>
+				<div *ngIf="report_base == 'group'" class="row col-12">
+					<mat-form-field class="col col-6 col-lg-3" *ngIf="companies">
+						<mat-label>شرکت :</mat-label>
+						<mat-select [(ngModel)]="company_selected" name="company">
+							<mat-option class="mat-option-design" (click)="getCollections()" [value]="company._id"
+										*ngFor="let company of companies">{{company.title}}</mat-option>
+						</mat-select>
+					</mat-form-field>
+					<mat-form-field class="col col-6 col-lg-3" *ngIf="collections">
+						<mat-label>بخش:</mat-label>
+						<mat-select [(ngModel)]="collection_selected" name="collection">
+							<mat-option class="mat-option-design" *ngFor="let collection of collections"
+										[value]="collection._id" (click)="getParts()">{{collection.title}}</mat-option>
+						</mat-select>
+					</mat-form-field>
+					<mat-form-field class="col col-6 col-lg-3" *ngIf="parts">
+						<mat-label>قسمت:</mat-label>
+						<mat-select [(ngModel)]="part_selected" name="part">
+							<mat-option class="mat-option-design" *ngFor="let part of parts" [value]="part._id"
+										(click)="getRanks()">{{part.title}}</mat-option>
+						</mat-select>
+					</mat-form-field>
+					<mat-form-field class="col col-6 col-lg-3" *ngIf="ranks">
+						<mat-label>سمت:</mat-label>
+						<mat-select [(ngModel)]="rank_selected" name="rank">
+							<mat-option class="mat-option-design" *ngFor="let rank of ranks"
+										[value]="rank._id">{{rank.title}}</mat-option>
+						
+						</mat-select>
+					</mat-form-field>
+				</div>
+				<div class="row col-12" *ngIf="company_selected || user || report_base == 'all'">
+					<mat-form-field class="col col-6 col-lg-3">
+						<mat-label>سال</mat-label>
+						<input matInput [(ngModel)]="year" [ngModelOptions]="{standalone: true}"
+							   placeholder="همه ی سال ها">
+						<mat-error></mat-error>
+					</mat-form-field>
+					<mat-form-field class="col col-6 col-lg-3">
+						<mat-label>ماه</mat-label>
+						<input matInput [(ngModel)]="month" [ngModelOptions]="{standalone: true}"
+							   placeholder="همه ی ماه ها">
+						<mat-error></mat-error>
+					</mat-form-field>
+<!--					<mat-form-field class="col col-6 col-lg-3">
+						<mat-label>روز</mat-label>
+						<input matInput [(ngModel)]="day" [ngModelOptions]="{standalone: true}"
+							   placeholder="همه ی روز ها">
+						<mat-error></mat-error>
+					</mat-form-field>-->
+				</div>
+			</form>
+		</mat-card-content>
+		<!--        <mat-card-footer>
+					<mat-card-subtitle class="mx-3">
+						- به صورت پیش فرض همه ی اطلاعات جستجو خواهند شد.
+					</mat-card-subtitle>
+				</mat-card-footer>-->
+		<mat-card-actions>
+			<button mat-raised-button color="primary" class="mx-2" (click)="viewReport()">جستجو</button>
+		</mat-card-actions>
+	</mat-card>
+	
+	<div class="headline-title col col-12 col-xl-10 mb-3" *ngIf="report">
+		گزارش
+	</div>
+	<div class="col-12 col-xl-10">
+		<mat-progress-bar *ngIf="loading" mode="query"></mat-progress-bar>
+	</div>
+	<div class="col col-12 col-xl-10 mb-3" *ngIf="report">
+		<table mat-table [dataSource]="dataSource" *ngIf="dataSource != undefined" class="mat-elevation-z8">
+			
+			<!-- Position Column -->
+			<ng-container matColumnDef="No">
+				<th mat-header-cell *matHeaderCellDef> شماره</th>
+				<td mat-cell *matCellDef="let element;let i =index"> {{i + 1 |persianNumbers}} </td>
+			</ng-container>
+			
+			<ng-container matColumnDef="personal_code">
+				<th mat-header-cell *matHeaderCellDef> کدپرسنلی</th>
+				<td mat-cell *matCellDef="let element"> {{element.personal_code |persianNumbers}} </td>
+			</ng-container>
+			
+			<ng-container matColumnDef="name">
+				<th mat-header-cell *matHeaderCellDef> نام</th>
+				<td mat-cell *matCellDef="let element"> {{element.name}} </td>
+			</ng-container>
+			
+			<ng-container matColumnDef="last_name">
+				<th mat-header-cell *matHeaderCellDef> نام خانوادگی</th>
+				<td mat-cell *matCellDef="let element"> {{element.last_name}} </td>
+			</ng-container>
+			
+			<ng-container matColumnDef="course_name">
+				<th mat-header-cell *matHeaderCellDef> نام دوره</th>
+				<td mat-cell *matCellDef="let element"> {{element.course_name |persianNumbers}} </td>
+			</ng-container>
+			
+			<ng-container matColumnDef="all_day">
+				<th mat-header-cell *matHeaderCellDef> تعداد روز ها</th>
+				<td mat-cell *matCellDef="let element"> {{element.all_day ?? '' |persianNumbers}} </td>
+			</ng-container>
+			
+			<ng-container matColumnDef="holidays">
+				<th mat-header-cell *matHeaderCellDef>روز های تعطیل</th>
+				<td mat-cell *matCellDef="let element"> {{element.holidays ?? '' |persianNumbers}} </td>
+			</ng-container>
+			
+			<ng-container matColumnDef="total_day">
+				<th mat-header-cell *matHeaderCellDef> تعداد حضور</th>
+				<td mat-cell *matCellDef="let element"> {{element.total_day ?? '' |persianNumbers}} </td>
+			</ng-container>
 
-    <div class="headline-title col col-12 col-xl-10 mb-3" *ngIf="report">
-        گزارش
-    </div>
-    <div class="col-12 col-xl-10">
-        <mat-progress-bar *ngIf="loading" mode="query"></mat-progress-bar>
-    </div>
-    <div class="col col-12 col-xl-10 mb-3" *ngIf="report">
-        <table mat-table [dataSource]="dataSource" *ngIf="dataSource != undefined" class="mat-elevation-z8">
-
-            <!-- Position Column -->
-            <ng-container matColumnDef="No">
-                <th mat-header-cell *matHeaderCellDef> شماره</th>
-                <td mat-cell *matCellDef="let element;let i =index"> {{i + 1 |persianNumbers}} </td>
-            </ng-container>
-
-            <!-- Name Column -->
-            <ng-container matColumnDef="name">
-                <th mat-header-cell *matHeaderCellDef> نام</th>
-                <td mat-cell *matCellDef="let element"> {{element.name}} </td>
-            </ng-container>
-
-            <!-- Weight Column -->
-            <ng-container matColumnDef="personal_code">
-                <th mat-header-cell *matHeaderCellDef> کدپرسنلی</th>
-                <td mat-cell *matCellDef="let element"> {{element.personal_code |persianNumbers}} </td>
-            </ng-container>
-
-            <!-- Symbol Column -->
-            <ng-container matColumnDef="total_time">
-                <th mat-header-cell *matHeaderCellDef> مجموع ساعات</th>
-                <td mat-cell *matCellDef="let element">
-                    <div *ngIf="+element.total_time == 0">-</div>
-                    <div *ngIf="+element.total_time != 0"> {{createHour(element.total_time) |persianNumbers}} </div>
-                </td>
-            </ng-container>
-
-            <ng-container matColumnDef="total_work">
-                <th mat-header-cell *matHeaderCellDef> مجموع کار</th>
-                <td mat-cell *matCellDef="let element"
-                    [ngClass]="+element.total_work >= element.total_time?'extra-design':'delay-design'">
-                    <div *ngIf="+element.total_work == 0">-</div>
-                    <div *ngIf="+element.total_work != 0"> {{createHour(element.total_work) |persianNumbers}} </div>
-                </td>
-            </ng-container>
-
-            <ng-container matColumnDef="total_normal">
-                <th mat-header-cell *matHeaderCellDef> مجموع کار عادی</th>
-                <td mat-cell *matCellDef="let element" class="normal-design">
-                    <div *ngIf="+element.total_normal == 0">-</div>
-                    <div *ngIf="+element.total_normal != 0"> {{createHour(element.total_normal) |persianNumbers}} </div>
-                </td>
-            </ng-container>
-
-            <ng-container matColumnDef="total_extra">
-                <th mat-header-cell *matHeaderCellDef> مجموع اضافه کار</th>
-                <td mat-cell *matCellDef="let element" class="extra-design">
-                    <div *ngIf="+element.total_extra == 0">-</div>
-                    <div *ngIf="+element.total_extra != 0"> {{createHour(element.total_extra) |persianNumbers}} </div>
-                </td>
-            </ng-container>
-
-            <ng-container matColumnDef="total_delay">
-                <th mat-header-cell *matHeaderCellDef> مجموع تاخیر</th>
-                <td mat-cell *matCellDef="let element" class="delay-design">
-                    <div *ngIf="+element.total_delay == 0">-</div>
-                    <div *ngIf="+element.total_delay != 0"> {{createHour(element.total_delay) |persianNumbers}} </div>
-                </td>
-            </ng-container>
-
-            <ng-container matColumnDef="conflict">
-                <th mat-header-cell *matHeaderCellDef>وضعیت</th>
-                <td mat-cell *matCellDef="let element" class="delay-design"
-                    [ngClass]="!element.conflict?'extra-design':'delay-design'">
-                    <button mat-stroked-button color="accent" *ngIf="element.conflict == false">کامل</button>
-                    <button mat-stroked-button color="warn" [matTooltip]="'مشاهده نواقص'" *ngIf="element.conflict == true" (click)="conflict(element)"> ناقص </button>
-                </td>
-            </ng-container>
-
-            <ng-container matColumnDef="action">
-                <th mat-header-cell *matHeaderCellDef></th>
-                <td mat-cell *matCellDef="let element">
-                    <button mat-stroked-button color="accent" (click)="viewInfo()">جزئیات</button>
-                </td>
-            </ng-container>
-
-            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-        </table>
-    </div>
-
-    <div class="headline-title col col-12 col-xl-10 mb-3" *ngIf="info">
-        جزئیات
-    </div>
-    <div class="col col-12 col-xl-10 mb-3" *ngIf="info">
-        <app-attendance-table type="report" (moreInfo)="viewMoreInfo()"></app-attendance-table>
-        <button mat-raised-button color="primary" (click)="viewReport()" class="mt-3">بازگشت</button>
-    </div>
-
-    <div class="headline-title col col-12 col-xl-10 mb-3" *ngIf="moreInfo">
-        جزئیات بیشتر
-    </div>
-    <div class="col col-12 col-xl-10" *ngIf="moreInfo">
-        <app-attendance-table type="accepted"></app-attendance-table>
-        <button mat-raised-button color="primary" (click)="viewInfo()" class="mt-3">بازگشت</button>
-    </div>
+			<ng-container matColumnDef="absent_day">
+				<th mat-header-cell *matHeaderCellDef> تعداد غیبت</th>
+				<td mat-cell *matCellDef="let element"> {{element.absent_days ?? '' |persianNumbers}} </td>
+			</ng-container>
+			
+			<ng-container matColumnDef="holiday_work">
+				<th mat-header-cell *matHeaderCellDef>تعطیل کاری</th>
+				<td mat-cell *matCellDef="let element"> {{element.holiday_work ?? '' |persianNumbers}} </td>
+			</ng-container>
+			
+			<!--            <ng-container matColumnDef="total_time">
+							<th mat-header-cell *matHeaderCellDef> مجموع ساعات</th>
+							<td mat-cell *matCellDef="let element">
+								<div *ngIf="+element.total_time == 0">-</div>
+								<div *ngIf="+element.total_time != 0"> {{createHour(element.total_time) |persianNumbers}} </div>
+							</td>
+						</ng-container>-->
+			
+			<ng-container matColumnDef="total_work">
+				<th mat-header-cell *matHeaderCellDef> کارکرد کل</th>
+				<td mat-cell class="delay-design" *matCellDef="let element"
+					[ngClass]="+element.total_work >= element.total_time?'extra-design':'delay-design'">
+					<div *ngIf="+element.total_work == 0">-</div>
+					<div *ngIf="+element.total_work != 0"> {{createHour(element.total_work) |persianNumbers}} </div>
+				</td>
+			</ng-container>
+			
+			<ng-container matColumnDef="total_normal">
+				<th mat-header-cell *matHeaderCellDef> موظف کاری</th>
+				<td mat-cell *matCellDef="let element" class="normal-design">
+					<div *ngIf="+element.total_normal == 0">-</div>
+					<div *ngIf="+element.total_normal != 0"> {{createHour(element.total_normal) |persianNumbers}} </div>
+				</td>
+			</ng-container>
+			
+			<ng-container matColumnDef="total_extra">
+				<th mat-header-cell *matHeaderCellDef> اضافه کار</th>
+				<td mat-cell *matCellDef="let element" class="extra-design">
+					<div *ngIf="+element.total_extra == 0">-</div>
+					<div *ngIf="+element.total_extra != 0"> {{createHour(element.total_extra) |persianNumbers}} </div>
+				</td>
+			</ng-container>
+			
+			<ng-container matColumnDef="total_delay">
+				<th mat-header-cell *matHeaderCellDef> کسر کار</th>
+				<td mat-cell *matCellDef="let element" class="delay-design">
+					<div *ngIf="+element.total_delay == 0">-</div>
+					<div *ngIf="+element.total_delay != 0"> {{createHour(element.total_delay) |persianNumbers}} </div>
+				</td>
+			</ng-container>
+			
+			<ng-container matColumnDef="conflict">
+				<th mat-header-cell *matHeaderCellDef>وضعیت</th>
+				<td mat-cell *matCellDef="let element" class="delay-design"
+					[ngClass]="!element.conflict?'extra-design':'delay-design'">
+					<button mat-stroked-button color="accent" *ngIf="element.conflict == false">کامل</button>
+					<button mat-stroked-button color="warn" [matTooltip]="'مشاهده نواقص'"
+							*ngIf="element.conflict == true" (click)="conflict(element)"> ناقص
+					</button>
+				</td>
+			</ng-container>
+			
+			<ng-container matColumnDef="action">
+				<th mat-header-cell *matHeaderCellDef></th>
+				<td mat-cell *matCellDef="let element">
+<!--					<button mat-stroked-button color="accent" (click)="viewInfo()">جزئیات</button>-->
+					<button mat-stroked-button color="accent" [disabled]="element.conflict == true"  (click)="saveLog(element)" *ngIf="element.conflict == false">ثبت</button>
+				</td>
+			</ng-container>
+			
+			<tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+			<tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+		</table>
+	</div>
+	
+	<div class="headline-title col col-12 col-xl-10 mb-3" *ngIf="info">
+		جزئیات
+	</div>
+	<div class="col col-12 col-xl-10 mb-3" *ngIf="info">
+		<app-attendance-table type="report" (moreInfo)="viewMoreInfo()"></app-attendance-table>
+		<button mat-raised-button color="primary" (click)="viewReport()" class="mt-3">بازگشت</button>
+	</div>
+	
+	<div class="headline-title col col-12 col-xl-10 mb-3" *ngIf="moreInfo">
+		جزئیات بیشتر
+	</div>
+	<div class="col col-12 col-xl-10" *ngIf="moreInfo">
+		<app-attendance-table type="accepted"></app-attendance-table>
+		<button mat-raised-button color="primary" (click)="viewInfo()" class="mt-3">بازگشت</button>
+	</div>
 </div>

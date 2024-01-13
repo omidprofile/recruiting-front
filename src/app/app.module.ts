@@ -65,6 +65,24 @@ import { ManualComponent } from './panel/pages/attendance/manual/manual.componen
 import { ConflictDialogComponent } from './shared/dialog/conflict-dialog/conflict-dialog.component';
 import { BaseSalary } from "./shared/dialog/create-baseSalary/base-salary.component";
 import { CreateShiftComponent } from './shared/dialog/create-shift/create-shift.component';
+import { EmployeeComponent } from './panel/pages/users/employee/employee.component';
+import { IdentityComponent } from './shared/forms/identity/identity.component';
+import { GlobalErrorHandlerInterceptor } from "./interceptor/global-error-handler.interceptor";
+import { InsuranceComponent } from './shared/dialog/insurance/insurance.component';
+import { CdkDrag, CdkDropList } from "@angular/cdk/drag-drop";
+import { ReportMakerComponent } from './panel/pages/bill/report-maker/report-maker.component';
+import { ReportsComponent } from './panel/pages/bill/reports/reports.component';
+import { AttendanceInfoComponent } from './panel/pages/bill/attendance-info/attendance-info.component';
+import { PersianCurrencyPipe } from "./shared/pipe/persian-currency.pipe";
+import { PaySlipComponent } from './panel/pages/bill/pay-slip/pay-slip.component';
+import { BreadcrumbComponent } from './shared/breadcrumb/breadcrumb.component';
+import { CalendarComponent } from './panel/pages/calendar/calendar.component';
+import { UsercreatedComponent } from './shared/dialog/usercreated/usercreated.component';
+import { MonthComponent } from './shared/dialog/month/month.component';
+import { YearComponent } from './shared/dialog/year/year.component';
+import { DayEventsComponent } from './shared/dialog/day-events/day-events.component';
+import { DayStatusChangeComponent } from './shared/dialog/day-status-change/day-status-change.component';
+import { DayCreateEventComponent } from './shared/dialog/day-create-event/day-create-event.component';
 
 
 @NgModule({
@@ -82,6 +100,7 @@ import { CreateShiftComponent } from './shared/dialog/create-shift/create-shift.
 		SnackbarComponent,
 		PersonalFormComponent,
 		PersianNumberPipe,
+		PersianCurrencyPipe,
 		Info3Component,
 		TestComponent,
 		DashboardCardComponent,
@@ -110,34 +129,56 @@ import { CreateShiftComponent } from './shared/dialog/create-shift/create-shift.
   ManualComponent,
   ConflictDialogComponent,
 	BaseSalary,
- CreateShiftComponent
+ CreateShiftComponent,
+ EmployeeComponent,
+ IdentityComponent,
+ InsuranceComponent,
+ ReportMakerComponent,
+ ReportsComponent,
+ AttendanceInfoComponent,
+ PaySlipComponent,
+ BreadcrumbComponent,
+ CalendarComponent,
+ UsercreatedComponent,
+ MonthComponent,
+ YearComponent,
+ DayEventsComponent,
+ DayStatusChangeComponent,
+ DayCreateEventComponent,
 	],
-    imports: [
-        BrowserModule,
-        AppRoutingModule,
-        RouterModule,
-        NgOptimizedImage,
-        BrowserAnimationsModule,
-        MaterialModule,
-        MatExpansionModule,
-        MatBadgeModule,
-        FormsModule,
-        HttpClientModule,
-        MatSlideToggleModule,
-        MatPaginatorModule,
-        ReactiveFormsModule,
-        MatRadioModule,
-        MatStepperModule,
-        MatDatepickerModule,
-        MatFormFieldModule,
-        MatDatepickerModule,
-        MatNativeDateModule,
-        FormsModule,
-        ReactiveFormsModule,
-        MatGridListModule,
-        MatAutocompleteModule,
-    ],
+	imports: [
+		BrowserModule,
+		AppRoutingModule,
+		RouterModule,
+		NgOptimizedImage,
+		BrowserAnimationsModule,
+		MaterialModule,
+		MatExpansionModule,
+		MatBadgeModule,
+		FormsModule,
+		HttpClientModule,
+		MatSlideToggleModule,
+		MatPaginatorModule,
+		ReactiveFormsModule,
+		MatRadioModule,
+		MatStepperModule,
+		MatDatepickerModule,
+		MatFormFieldModule,
+		MatDatepickerModule,
+		MatNativeDateModule,
+		FormsModule,
+		ReactiveFormsModule,
+		MatGridListModule,
+		MatAutocompleteModule,
+		CdkDropList,
+		CdkDrag,
+	],
 	providers: [
+		{
+			provide:HTTP_INTERCEPTORS,
+			useClass:GlobalErrorHandlerInterceptor,
+			multi:true
+		},
 		{
 			provide:HTTP_INTERCEPTORS,
 			useClass:SetTokenInterceptor,
@@ -146,6 +187,7 @@ import { CreateShiftComponent } from './shared/dialog/create-shift/create-shift.
 		Sidenav_model,
 		MapService,
 		MatDatepickerModule,
+		EnglishNumberPipe,
 		{ provide: JWT_OPTIONS, useValue: JWT_OPTIONS },
 		JwtHelperService
 	],

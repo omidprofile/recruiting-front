@@ -1,0 +1,13 @@
+<div class="dashboard col col-12">
+	<div class="headline-title col col-12 col-xl-10">فیش حقوق</div>
+	<mat-card class="col col-12 col-xl-10 mt-3">
+		<mat-card-content>
+			<mat-form-field>
+				<mat-label>انتخاب دوره</mat-label>
+				<mat-select [(ngModel)]="selectCourse" name="select">
+					<mat-option class="mat-option-design" (click)="getCourses({title:title})" *ngFor="let title of allCourses" [value]="title">{{title  |persianNumbers}}</mat-option>
+				</mat-select>
+			</mat-form-field>
+		</mat-card-content>
+	</mat-card>
+</div>

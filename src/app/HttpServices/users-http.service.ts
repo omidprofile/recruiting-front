@@ -20,8 +20,19 @@ export class UsersHttpService {
             );
     }
 
-    getUsers() {
-        return this.http.get(`${config.apiRoute}/users`)
+    getUsers(params?:any) {
+        return this.http.get(`${config.apiRoute}/users`,{
+            params:params
+        })
+            .pipe(
+                shareReplay(),
+            );
+    }
+
+    getJob(param?:any) {
+        return this.http.get(`${config.apiRoute}/users/job`,{
+            params:param
+        })
             .pipe(
                 shareReplay(),
             );
@@ -38,6 +49,30 @@ export class UsersHttpService {
         return this.http.post(`${config.apiRoute}/users/create`, body, {
             headers: {'Access-Control-Allow-Origin': '*'}
         })
+            .pipe(
+                shareReplay(),
+            );
+    }
+
+    validateUser( body:any,param:string){
+        return this.http.post(`${config.apiRoute}/users/validate/${param}`, body, {
+            headers: {'Access-Control-Allow-Origin': '*'}
+        })
+            .pipe(
+                shareReplay(),
+            );
+    }
+    
+    getWorkReport(params?:any){
+       return this.http.get(`${config.apiRoute}/workReport`,{
+            params:params
+        }).pipe(
+            shareReplay()
+        )
+    }
+    
+    saveWorkReports(report:any){
+       return this.http.post(`${config.apiRoute}/workReport`,report)
             .pipe(
                 shareReplay(),
             );

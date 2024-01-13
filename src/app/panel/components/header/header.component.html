@@ -1,9 +1,9 @@
 <mat-toolbar>
-	<button mat-icon-button class="example-icon" aria-label="Example icon-button with menu icon"
-			(click)="toggle_sidenav()"
-	>
-		<mat-icon>menu</mat-icon>
-	</button>
+<!--	<button mat-icon-button class="example-icon" aria-label="Example icon-button with menu icon"-->
+<!--			(click)="toggle_sidenav()"-->
+<!--	>-->
+<!--		<mat-icon>menu</mat-icon>-->
+<!--	</button>-->
 	<span class="header-title">صنعت پروفیل آرش</span>
 	<span class="example-spacer">
 	
@@ -22,7 +22,7 @@
 			<mat-icon>lock</mat-icon>
 			<span>تغییر رمز عبور</span>
 		</button>
-		<button mat-menu-item>
+		<button mat-menu-item (click)="logout()">
 			<mat-icon>power_settings_new</mat-icon>
 			<span>خروج</span>
 		</button>

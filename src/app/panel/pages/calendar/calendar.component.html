@@ -1,0 +1,46 @@
+<div class="dashboard col col-12">
+	<div class="headline-title col col-12 col-xl-10">تقویم</div>
+	<mat-card class="col col-12 col-xl-10">
+		<mat-card-content class="d-flex justify-content-center align-items-center col col-12">
+			<div class="month d-flex justify-content-center align-items-center col col-12 col-xl-2">
+				<mat-card-subtitle class="me-3">ماه</mat-card-subtitle>
+				<button mat-stroked-button color="accent"
+						(click)="setMonth(thisMonth)">{{months[thisMonth - 1]}}</button>
+			</div>
+			<div class="year month d-flex justify-content-center align-items-center col col-12 col-xl-2">
+				<mat-card-subtitle class="me-3">سال</mat-card-subtitle>
+				<button mat-stroked-button color="accent" (click)="setYear()">{{thisYear|persianNumbers}}</button>
+			</div>
+		</mat-card-content>
+	</mat-card>
+	<mat-card class="col col-12 col-xl-10 mt-3" *ngIf="weeks">
+		<mat-card-content class="d-flex flex-row justify-content-around align-items-center my-3">
+			<div class="col " *ngFor="let day of days; let i = index">
+				<mat-label class="day-header mb-3"
+						   [ngClass]="thisYear == currentDate.year && thisMonth == currentDate.month && currentDate.dayOfWeek == day?'currentDay':''"
+				>
+					{{day}}</mat-label>
+				<mat-divider></mat-divider>
+				<ng-container *ngFor="let week of weeks">
+					<div class="BaseDayOfWeek col col-auto d-flex justify-content-center align-items-center"
+						 [ngClass]="[(day == 'جمعه' && week[i] != '-')||week[i].is_holiday?'weekend':week[i]!= '-'?'DayOfWeek':'nonDay',
+						 thisYear == currentDate.year && thisMonth == currentDate.month && currentDate.day == week[i]?.day ?'currentDay':'']"
+						 (click)="setEvents(week[i].day)"
+						 
+					>
+						<div class="d-flex justify-content-center flex-wrap flex-column">
+							<div>{{week[i].day ?? '-' | persianNumbers}}</div>
+							<sub *ngIf="week[i]?.events?.length">...</sub>
+						</div>
+					</div>
+				</ng-container>
+			</div>
+		</mat-card-content>
+		<mat-card-actions>
+			<mat-divider></mat-divider>
+			<div class="year month d-flex justify-content-center align-items-center col col-12 col-xl-2 mx-3">
+				<button mat-stroked-button color="accent" (click)="reset()" *ngIf="thisYear != today.year || thisMonth != today.month">بازگشت به تاریخ جاری</button>
+			</div>
+		</mat-card-actions>
+	</mat-card>
+</div>

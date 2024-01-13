@@ -10,6 +10,8 @@ export const accessGuard: CanActivateFn = (route, state) => {
   if (route.data)
      routePermission = route.data[`permission`]
   
+  if (!routePermission)
+    return true;
   
   if (permission?.length && routePermission?.length){
     for (let permit of routePermission){

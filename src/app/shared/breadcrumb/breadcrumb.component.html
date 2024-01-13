@@ -1,0 +1,15 @@
+<div class="breadcrumb2 mt-3">
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col">
+				<div class="wrapper">
+					<ng-container *ngFor="let url of url.get_url()">
+						<a href="" class="item" [routerLink]="[url.url]">
+							<span class="title">{{url.title}}</span>
+						</a>
+					</ng-container>
+				</div>
+			</div>
+		</div>
+	</div>
+</div><!-- /breadcrumb2 -->

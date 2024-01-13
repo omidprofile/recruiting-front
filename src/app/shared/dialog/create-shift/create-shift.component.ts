@@ -59,7 +59,7 @@ export class CreateShiftComponent {
         error:(err)=>{
           this.shiftForm.get('title')?.setErrors({'duplicate': true})
           this.error = true
-          console.log(err)
+          // console.log(err)
         },
       })
 	}

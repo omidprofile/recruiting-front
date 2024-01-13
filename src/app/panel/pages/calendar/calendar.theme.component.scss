@@ -1,0 +1,72 @@
+@use '@angular/material' as mat;
+
+@mixin calendar($theme) {
+	$colors: mat.get-color-config($theme);
+	$background: map-get($colors, sidenav);
+	$icons: map-get($colors, accent);
+	$success: map-get($colors, success);
+	$warn: map-get($colors, warn);
+	$primary: map-get($colors, primary);
+	$background-color: mat.get-color-from-palette($background, 900);
+	$item-hover-color: mat.get-color-from-palette($icons, A400);
+	$item-active-color: mat.get-color-from-palette($icons, A400);
+	$icon-warn:mat.get-color-from-palette($warn, 300);
+	$icon-color: mat.get-color-from-palette($icons, A400);
+	$primary-color:mat.get-color-from-palette($primary, 600);
+	
+	.day-header {
+		display: flex;
+		justify-content: center;
+		margin: 5px;
+		border-radius: 5px;
+		cursor: pointer;
+		padding: 15px 30px;
+		background-color: rgba($background-color,.4);
+		color: #fff;
+	}
+	.day-header:hover {
+		background-color: rgba($item-hover-color,1);
+		color: #fff;
+	}
+	.BaseDayOfWeek{
+		height: 65px;
+		padding: 7px 30px;
+		margin: 5px;
+	}
+	
+	.DayOfWeek{
+		cursor: pointer;
+		border-radius: 5px;
+		background-color: rgba($background-color,.1);
+	}
+	
+	.DayOfWeek:hover {
+		background-color: rgba($item-hover-color,.5);
+		color: #fff;
+	}
+	
+	.weekend{
+		cursor: pointer;
+		background-color: rgba($icon-warn,.8);
+		color:#fff;
+		border-radius: 5px;
+		
+	}
+	
+	.weekend:hover{
+		background-color: rgba($icon-warn,1);
+		color: #fff;
+	}
+	
+	.nonDay{
+		border-radius: 5px;
+		cursor: default;
+		color: #aaa;
+		background-color: rgba($background-color,.035);
+	}
+	
+	.currentDay{
+		background-color: $primary-color ;
+		color: #fff;
+	}
+}

@@ -6,7 +6,9 @@
 @use "./common/mat-select-theme" as matSelect;
 @use 'src/app/panel/panel.component.scss-theme.scss' as sidenav;
 @use "src/app/panel/components/header/header.component.scss-theme.scss" as header;
+@use "src/app/panel/pages/users/users-list/theme" as userList;
 @use "component-theme/general" as general-theme;
+@use "src/app/panel/pages/calendar/calendar.theme.component" as calendar;
 
 // Plus imports for other components in your app.
 
@@ -60,6 +62,8 @@ $angular-theme: common.extra-theme($angular-theme);
 @include matSelect.mat-select-theme($angular-theme);
 @include header.header-theme($angular-theme);
 @include general-theme.general_theme($angular-theme);
+@include userList.userList($angular-theme);
+@include calendar.calendar($angular-theme);
 
 html, body {
 	direction: rtl;

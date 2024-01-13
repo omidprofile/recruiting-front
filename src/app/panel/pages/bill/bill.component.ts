@@ -1,7 +1,10 @@
 import { Component } from '@angular/core';
 const items = [
-  {title:'کارکرد پرسنل', logo:'workReport', link:'workReport',is_active:true},
-  {title:'حقوق پرسنل', logo:'rights', link:'rights',is_active:false},
+  {title:'گزارش ساز', logo:'report_maker', link:'reportMaker',is_active:true},
+  {title:'گزارشات', logo:'reports', link:'reports',is_active:true},
+  // {title:'گزارش کارکرد', logo:'workReport', link:'workReport',is_active:true},
+  // {title:'گزارش روزانه', logo:'workReport', link:'workInfo',is_active:true},
+  {title:'حقوق پرسنل', logo:'rights', link:'paySlip',is_active:true},
   {title:'دریافتی پرسنل', logo:'receipt', link:'receipt',is_active:false},
   {title:'اطلاعات پایه', logo:'baseInfo', link:'baseInfo', is_active:false},
   

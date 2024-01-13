@@ -37,145 +37,6 @@ export interface PeriodicElement {
 	
 }
 
-const ELEMENT_DATA: PeriodicElement[] = [
-	{
-		name: 'امید بیات',
-		personal_code: 1,
-		date: '1402/09/06',
-		day: 'دوشنبه',
-		device_type: 'ورود',
-		device_time: '7:59',
-		guard_time: '8:59',
-		guard_type: 'ورود',
-		reason: 'خرابی ساعت دستگاه',
-		guard: 'حمید حاجیلری',
-		device: ' اداری ',
-		normal_work: '8',
-		extra_work: '2',
-		delay_work: '0',
-		total_work: '10'
-	},
-	{
-		name: 'امین عادل',
-		personal_code: 2,
-		date: '1402/09/06',
-		day: 'دوشنبه',
-		device_type: 'ورود',
-		device_time: '8:00',
-		guard_time: '7:00',
-		guard_type: 'ورود',
-		reason: 'خرابی ساعت دستگاه',
-		guard: 'حمید حاجیلری',
-		device: ' اداری ',
-		normal_work: '8',
-		extra_work: '1',
-		delay_work: '0',
-		total_work: '9'
-	},
-	{
-		name: 'ایوب طعنه',
-		personal_code: 3,
-		date: '1402/09/06',
-		day: 'دوشنبه',
-		device_type: 'خروج',
-		device_time: '9:00',
-		guard_time: '7:00',
-		guard_type: 'خروج',
-		reason: 'خرابی ساعت دستگاه',
-		guard: 'حمید حاجیلری',
-		device: ' اداری ',
-		normal_work: '8',
-		extra_work: '1',
-		delay_work: '0',
-		total_work: '9'
-	},
-	{
-		name: 'اکبر صادقپور',
-		personal_code: 4,
-		date: '1402/09/06',
-		day: 'دوشنبه',
-		device_type: 'ورود',
-		device_time: '10:00',
-		guard_time: '8:00',
-		guard_type: 'ورود',
-		reason: 'خرابی ساعت دستگاه',
-		guard: 'حمید حاجیلری',
-		device: ' اداری ',
-		normal_work: '8',
-		extra_work: '4',
-		delay_work: '0',
-		total_work: '12'
-	},
-	{
-		name: 'وجیهه محمدرضاپور',
-		personal_code: 5,
-		date: '1402/09/06',
-		day: 'دوشنبه',
-		device_type: 'ورود',
-		device_time: '9:00',
-		guard_time: '9:00',
-		guard_type: 'خروج',
-		reason: 'مغایرت ورود و خروج',
-		guard: 'حمید حاجیلری',
-		device: ' اداری ',
-		normal_work: '8',
-		extra_work: '0',
-		delay_work: '0',
-		total_work: '8'
-	},
-	{
-		name: 'حمید حاجیلری',
-		personal_code: 6,
-		date: '1402/09/06',
-		day: 'دوشنبه',
-		device_type: 'خروج',
-		device_time: '9:55',
-		guard_time: '9:55',
-		guard_type: 'ورود',
-		reason: 'مغایرت ورود و خروج',
-		guard: 'حمید حاجیلری',
-		device: ' اداری ',
-		normal_work: '7',
-		extra_work: '0',
-		delay_work: '1',
-		total_work: '7'
-	},
-	{
-		name: 'ابولفضل غریب',
-		personal_code: 7,
-		date: '1402/09/06',
-		day: 'دوشنبه',
-		device_type: 'ورود',
-		device_time: '7:10',
-		guard_time: '6:10',
-		guard_type: 'ورود',
-		reason: 'فراموشی کاربر برای ثبت زمان',
-		guard: 'حمید حاجیلری',
-		device: ' اداری ',
-		normal_work: '8',
-		extra_work: '2',
-		delay_work: '0',
-		total_work: '10'
-	},
-	{
-		name: 'اکبر اکبری',
-		personal_code: 8,
-		date: '1402/09/06',
-		day: 'دوشنبه',
-		device_type: 'خروج',
-		device_time: '6:53',
-		guard_time: '7:53',
-		guard_type: 'خروج',
-		reason: 'فراموشی کاربر برای ثبت زمان',
-		guard: ' حمید حاجیلری',
-		device: ' اداری',
-		normal_work: '6',
-		extra_work: '0',
-		delay_work: '2',
-		total_work: '6'
-	}
-
-];
 
 @Component({
 	selector: 'app-attendance-table',
@@ -224,12 +85,12 @@ export class AttendanceTableComponent implements OnInit, AfterViewInit {
 		this.changeDetectorRef.detectChanges();
 	}
 	
-	readFromDevice() {
+	async readFromDevice() {
 		this._snackBar.openFromComponent(SnackbarComponent, {
 			data: `در حال خواندن اطلاعات از دستگاه`,
 		})
 		let user = '656eecea5d4c6ea271177c8f'
-		this.http.readFromDevice({guard: user}).subscribe({
+		await this.http.readFromDevice({guard: user}).subscribe({
 			next: (data) => {
 				this.getDaily(false)
 			},
@@ -270,7 +131,7 @@ export class AttendanceTableComponent implements OnInit, AfterViewInit {
 				for (let index of data) {
 					let item: any = {}
 					item.id = index._id
-					item.name = index.user.user_id.name + " " + index.user.user_id.last_name
+					item.name = index.user.name + " " + index.user.last_name
 					item.personal_code = index.personal_code
 					item.device = index.device_ip.name
 					item.date = index.date.date

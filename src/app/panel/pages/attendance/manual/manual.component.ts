@@ -4,6 +4,7 @@ import { ValidationFormService } from "../../../../services/validation-form.serv
 import { FormValidateService } from "../../../../services/form-validate.service";
 import { AttendanceService } from "../../../../HttpServices/attendance.service";
 import { MatSnackBar } from "@angular/material/snack-bar";
+import { SnackbarComponent } from "../../../../shared/snackbar/snackbar.component";
 
 @Component({
 	selector: 'app-manual',
@@ -46,7 +47,7 @@ export class ManualComponent implements OnInit {
 				this.devices = data.devices
 			},
 			error: (err) => {
-				console.log(err)
+
 			},
 		})
 	}
@@ -61,9 +62,19 @@ export class ManualComponent implements OnInit {
 		
 		this.http.createAttendances(body).subscribe({
 			next:(data)=>{
-				console.log(data)},
+				this.manualForm.reset()
+				this.ngOnInit();
+				this._snackBar.openFromComponent(SnackbarComponent, {
+					data: `اطلاعات با موفقیت ثبت شد`,
+					duration: 1500
+				})
+			},
 			error:(err)=>{
-				console.log(err)},
+				this._snackBar.openFromComponent(SnackbarComponent, {
+					data: `خطا در ثبت`,
+					duration: 1500
+				})
+			},
 		})
 	}
 }

@@ -1,0 +1,10 @@
+<mat-card-title mat-dialog-title>ماه ها</mat-card-title>
+<mat-card mat-dialog-content>
+	<mat-card-content class="col-12">
+		<div class="d-flex justify-content-around flex-wrap" >
+			<div class="col col-4 d-flex justify-content-center" *ngFor="let month of months; let i = index">
+				<div class="month-design dashboard-caption col" (click)="dialogRef.close({month:i})" [ngClass]="data?.month-1 == i?'selected':''">{{month}}</div>
+			</div>
+		</div>
+	</mat-card-content>
+</mat-card>

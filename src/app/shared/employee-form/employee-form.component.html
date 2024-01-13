@@ -5,7 +5,12 @@
         [linear]="true"
 >
     
-
+    
+    
+    
+    
+    
+    
     <mat-step [completed]="person.valid" [stepControl]="person" label="اطلاعات هویتی" errorMessage="کامل شود!"
               state="person">
         <form [formGroup]="person" class="mt-5">
@@ -21,6 +26,18 @@
                     <input matInput placeholder="نام خانوادگی را وارد کنید..." formControlName="last_name">
 <!--                    <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>-->
                     <mat-error>{{validate.stringValidate(person.get('last_name'),'نام خانوادگی')}}</mat-error>
+                </mat-form-field>
+                <mat-form-field class="col col-12 col-md-6 mb-3">
+                    <mat-label>نام لاتین</mat-label>
+                    <input matInput placeholder="نام لاتین را وارد کنید..." formControlName="name_en">
+<!--                    <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>-->
+                    <mat-error>{{validate.stringValidate(person.get('name_en'),'نام لاتین')}}</mat-error>
+                </mat-form-field>
+                <mat-form-field class="col col-12 col-md-6 mb-3">
+                    <mat-label>نام خانوادگی لاتین</mat-label>
+                    <input matInput placeholder="نام خانوادگی لاتین را وارد کنید..." formControlName="last_name_en">
+<!--                    <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>-->
+                    <mat-error>{{validate.stringValidate(person.get('last_name_en'),'نام خانوادگی لاتین')}}</mat-error>
                 </mat-form-field>
                 <mat-form-field class="col col-12 col-md-6 mb-3">
                     <mat-label>نام پدر</mat-label>
@@ -57,6 +74,22 @@
                     </mat-select>
                     <mat-error>{{validate.requiredValidate(person.get('gender'), 'جنسیت')}}</mat-error>
                 </mat-form-field>
+                <mat-form-field class="col col-12 col-md-6 mb-3">
+                    <mat-label>مدرک تحصیلی</mat-label>
+                    <mat-select formControlName="education">
+                        <mat-option class="mat-option-design" value="ابتدایی" >ابتدایی</mat-option>
+                        <mat-option class="mat-option-design" value="راهنمایی" >راهنمایی</mat-option>
+                        <mat-option class="mat-option-design" value="راهنمایی" >راهنمایی</mat-option>
+                        <mat-option class="mat-option-design" value="سیکل" >سیکل</mat-option>
+                        <mat-option class="mat-option-design" value="دیپلم" >دیپلم</mat-option>
+                        <mat-option class="mat-option-design" value="فوق دیپلم" >فوق دیپلم</mat-option>
+                        <mat-option class="mat-option-design" value="لیسانس" >لیسانس</mat-option>
+                        <mat-option class="mat-option-design" value="فوق لیسانس" >فوق لیسانس</mat-option>
+                        <mat-option class="mat-option-design" value="دکتری" >دکتری</mat-option>
+                        <mat-option class="mat-option-design" value="فوق دکتری" >فوق دکتری</mat-option>
+                    </mat-select>
+                    <mat-error>{{validate.requiredValidate(person.get('education'), 'مدرک تحصیلی')}}</mat-error>
+                </mat-form-field>
                 <mat-form-field class="col col-12 col-md-6 mb-3" *ngIf="person.get('gender')?.value == 'آقا'">
                     <mat-label> پایان خدمت</mat-label>
                     <mat-select formControlName="military_service">
@@ -79,10 +112,37 @@
 <!--                    <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>-->
                     <mat-error>{{validate.numberValidate(person.get('children'),'تعداد فرزرندان')}}</mat-error>
                 </mat-form-field>
-
+                <mat-form-field class="col col-12 col-md-6 mb-3">
+                    <a type="submit" mat-flat-button style="width: 100%"   (click)="inv_u.click()">
+                        <mat-icon>add_box</mat-icon>
+                        افزودن تصویر
+                    </a>
+                    <input type="text" #inv_u (click)="f_input_u.click()" style="height: 0px" readonly matInput formControlName="user_img" />
+                    <input
+                        type="file"
+                        multiple
+                        hidden
+                        #f_input_u
+                        (change)="handleUserFileInputChange(f_input_u.files)"
+                    />
+                    <mat-error>{{validate.requiredValidate(person.get('user_img'),'تصویر')}}</mat-error>
+                </mat-form-field>
+                <mat-grid-list *ngIf="userUrls.length"  [cols]="userUrls.length >4 ?userUrls.length:4" rowHeight="150px">
+                    <mat-grid-tile *ngFor="let url of userUrls">
+                        <div class="d-flex flex-column">
+                            <mat-chip class="d-flex flex-row-reverse" >
+                                <button matChipRemove matPrefix  (click)="deleteUserImage(url.name)">
+                                    <mat-icon>cancel</mat-icon>
+                                </button>
+                                {{url.name}}
+                            </mat-chip>
+                            <img  [src]="url.url"  height="100px">
+                        </div>
+                    </mat-grid-tile>
+                </mat-grid-list>
             </div>
             <div class="col-12 d-flex justify-content-end">
-                <button mat-flat-button color="accent" matStepperNext [disabled]="!person.valid"
+                <button mat-flat-button color="accent" (click)="validateUser(stepper)" [disabled]="!person.valid"
                         >ثبت و ادامه
                 </button>
             </div>
@@ -99,7 +159,7 @@
                         <mat-form-field class="col col-6 mb-3">
                             <mat-label>شماره همراه</mat-label>
                             <input matInput placeholder="شماره همراه را وارد کنید..." [formControlName]="i">
-<!--                            <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>-->
+                            <!--                            <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>-->
                             <mat-error>{{validate.mobileValidate(item)}}</mat-error>
                         </mat-form-field>
                         <div class="col-6 d-flex justify-content-start mx-3">
@@ -118,7 +178,7 @@
                         <mat-form-field class="col col-6 mb-3">
                             <mat-label>شماره ثابت</mat-label>
                             <input matInput placeholder="شماره ثابت را وارد کنید..." [formControlName]="i">
-<!--                            <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>-->
+                            <!--                            <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>-->
                             <mat-error>{{validate.phoneValidate(item)}}</mat-error>
                         </mat-form-field>
                         <div class="col-6 d-flex justify-content-start mx-3">
@@ -137,7 +197,7 @@
                         <mat-form-field class="col col-6 mb-3">
                             <mat-label>ایمیل</mat-label>
                             <input matInput placeholder="ایمیل را وارد کنید..." [formControlName]="i">
-<!--                            <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>-->
+                            <!--                            <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>-->
                             <mat-error>{{validate.emailValidate(item)}}</mat-error>
                         </mat-form-field>
                         <div class="col-6 d-flex justify-content-start mx-3">
@@ -153,7 +213,7 @@
             </div>
             <div class="col-12 d-flex justify-content-between">
                 <button mat-flat-button color="warn" matStepperPrevious>بازگشت</button>
-                <button mat-flat-button color="accent" matStepperNext [disabled]="!connection.valid">ثبت و
+                <button mat-flat-button color="accent" (click)="validateUser(stepper)" [disabled]="!connection.valid">ثبت و
                     ادامه
                 </button>
             </div>
@@ -166,49 +226,49 @@
                 <mat-form-field class="col col-12 col-md-6 mb-3">
                     <mat-label>استان</mat-label>
                     <input matInput placeholder="نام استان را وارد کنید..." formControlName="province">
-<!--                    <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>-->
+                    <!--                    <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>-->
                     <mat-error>{{validate.notEmptyValidate(address.get('province'), 'استان')}}</mat-error>
                 </mat-form-field>
                 <mat-form-field class="col col-12 col-md-6 mb-3">
                     <mat-label>شهر</mat-label>
                     <input matInput placeholder="نام شهر را وارد کنید..." formControlName="city">
-<!--                    <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>-->
+                    <!--                    <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>-->
                     <mat-error>{{validate.notEmptyValidate(address.get('city'), 'شهر')}}</mat-error>
                 </mat-form-field>
                 <mat-form-field class="col col-12 col-md-6 mb-3">
                     <mat-label>روستا</mat-label>
                     <input matInput placeholder="نام روستا را وارد کنید..." formControlName="Village">
-<!--                    <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>-->
+                    <!--                    <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>-->
                     <mat-error>{{validate.notEmptyValidate(address.get('Village'), 'روستا')}}</mat-error>
                 </mat-form-field>
                 <mat-form-field class="col col-12 col-md-6 mb-3">
                     <mat-label>خیابان</mat-label>
                     <input matInput placeholder="نام خیابان را وارد کنید..." formControlName="street">
-<!--                    <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>-->
+                    <!--                    <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>-->
                     <mat-error>{{validate.notEmptyValidate(address.get('street'), 'خیابان')}}</mat-error>
                 </mat-form-field>
                 <mat-form-field class="col col-12 col-md-6 mb-3">
                     <mat-label>کوچه</mat-label>
                     <input matInput placeholder="نام کوچه را وارد کنید..." formControlName="alley">
-<!--                    <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>-->
+                    <!--                    <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>-->
                     <mat-error>{{validate.notEmptyValidate(address.get('alley'), 'کوچه')}}</mat-error>
                 </mat-form-field>
                 <mat-form-field class="col col-12 col-md-6 mb-3">
                     <mat-label>پلاک</mat-label>
                     <input matInput placeholder=" پلاک را وارد کنید..." formControlName="Plaque">
-<!--                    <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>-->
+                    <!--                    <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>-->
                     <mat-error>{{validate.plaqueValidate(address.get('Plaque'))}}</mat-error>
                 </mat-form-field>
                 <mat-form-field class="col col-12 col-md-6 mb-3">
                     <mat-label>ساختمان</mat-label>
                     <input matInput placeholder=" ساختمان را وارد کنید..." formControlName="building">
-<!--                    <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>-->
+                    <!--                    <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>-->
                     <mat-error>{{validate.notEmptyValidate(address.get('building'), 'ساختمان')}}</mat-error>
                 </mat-form-field>
                 <mat-form-field class="col col-12 col-md-6 mb-3">
                     <mat-label>کدپستی</mat-label>
                     <input matInput placeholder=" کدپستی را وارد کنید..." formControlName="postal_code">
-<!--                    <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>-->
+                    <!--                    <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>-->
                     <mat-error>{{validate.postalCodeValidate(address.get('postal_code'))}}</mat-error>
                 </mat-form-field>
                 <mat-form-field class="col col-12  mb-3">
@@ -217,15 +277,15 @@
 							</textarea>
                     <mat-error>{{validate.notEmptyValidate(address.get('full_address'), 'آدرس کامل')}}</mat-error>
                 </mat-form-field>
-
+            
             </div>
             <div class="col-12 d-flex justify-content-between">
                 <button mat-flat-button color="warn" matStepperPrevious>بازگشت</button>
-                <button mat-flat-button color="accent" matStepperNext [disabled]="!address.valid">ثبت و ادامه
+                <button mat-flat-button color="accent" (click)="validateUser(stepper)" [disabled]="!address.valid">ثبت و ادامه
                 </button>
             </div>
         </form>
-
+    
     </mat-step>
     <mat-step [completed]="job.valid" [stepControl]="job" label="اطلاعات شغلی" state="job"
               errorMessage="کامل شود!">
@@ -234,6 +294,7 @@
                 <mat-form-field class="col col-12 col-md-6 mb-3">
                     <mat-label>شرکت</mat-label>
                     <mat-select formControlName="section">
+                        <mat-option class="mat-option-design"  (click)="openDialog('company','شرکت')">افزودن شرکت<mat-icon color="primary">playlist_add</mat-icon></mat-option>
                         <mat-option class="mat-option-design" (click)="getCollection()" value="{{company._id}}" *ngFor="let company of companies">{{company.title}}</mat-option>
                     </mat-select>
                     <mat-error>{{validate.requiredValidate(job.get('section'), 'شرکت')}}</mat-error>
@@ -242,6 +303,7 @@
                     <mat-label>قسمت</mat-label>
                     <mat-select formControlName="sector">
                         <ng-container *ngIf="collections !== undefined">
+                            <mat-option class="mat-option-design" (click)="openDialog('collection','قسمت',job.value.section)">افزودن قسمت<mat-icon color="primary">playlist_add</mat-icon></mat-option>
                             <mat-option class="mat-option-design" (click)="getPart()" value="{{collection._id}}" *ngFor="let collection of collections">{{collection.title}}</mat-option>
                         </ng-container>
                     </mat-select>
@@ -251,6 +313,7 @@
                     <mat-label>بخش</mat-label>
                     <mat-select formControlName="rank">
                         <ng-container *ngIf="parts !== undefined">
+                            <mat-option class="mat-option-design" (click)="openDialog('part','بخش',job.value.sector)">افزودن بخش<mat-icon color="primary">playlist_add</mat-icon></mat-option>
                             <mat-option class="mat-option-design" (click)="getRank()" value="{{part._id}}" *ngFor="let part of parts">{{part.title}}</mat-option>
                         </ng-container>
                     </mat-select>
@@ -260,6 +323,7 @@
                     <mat-label>عنوان شغلی</mat-label>
                     <mat-select formControlName="title">
                         <ng-container *ngIf="ranks !== undefined">
+                            <mat-option class="mat-option-design" (click)="openDialog('rank','رده',job.value.rank)">افزودن عنوان شغلی<mat-icon color="primary">playlist_add</mat-icon></mat-option>
                             <mat-option class="mat-option-design" value="{{rank._id}}" *ngFor="let rank of ranks">{{rank.title}}</mat-option>
                         </ng-container>
                     </mat-select>
@@ -280,12 +344,23 @@
                 <mat-form-field class="col col-12 col-md-6 mb-3">
                     <mat-label>پایه حقوق</mat-label>
                     <mat-select formControlName="baseSalary">
-                        <ng-container *ngIf="shifts !== undefined">
-                            <mat-option class="mat-option-design"  (click)="createBaseSalary()">افزودن حقوق<mat-icon color="primary">playlist_add</mat-icon></mat-option>
+                        <ng-container *ngIf="baseSalaries !== undefined">
+                            <mat-option class="mat-option-design"  (click)="createBaseSalary()">افزودن پایه حقوق<mat-icon color="primary">playlist_add</mat-icon></mat-option>
                             <mat-option class="mat-option-design" value="{{bs._id}}" *ngFor="let bs of baseSalaries">{{bs.title}}</mat-option>
                         </ng-container>
                     </mat-select>
                     <mat-error>{{validate.requiredValidate(job.get('rank'), 'پایه حقوق')}}</mat-error>
+                
+                </mat-form-field>
+                <mat-form-field class="col col-12 col-md-6 mb-3">
+                    <mat-label>بیمه</mat-label>
+                    <mat-select formControlName="insurance">
+                        <ng-container *ngIf="insurances != undefined">
+                            <mat-option class="mat-option-design"  (click)="createInsurance()">افزودن حقوق<mat-icon color="primary">playlist_add</mat-icon></mat-option>
+                            <mat-option class="mat-option-design" value="{{insurance._id}}" *ngFor="let insurance of insurances">{{insurance.title}}</mat-option>
+                        </ng-container>
+                    </mat-select>
+                    <mat-error>{{validate.requiredValidate(job.get('insurance'), 'بیمه')}}</mat-error>
                 
                 </mat-form-field>
                 <mat-form-field class="col col-12 col-md-6 mb-3">
@@ -296,32 +371,38 @@
                     <mat-error>{{validate.stringValidate(job.get('start'),'شروع به کار')}}</mat-error>
                 </mat-form-field>
                 <mat-form-field class="col col-12 col-md-6 mb-3">
-                    <mat-label>مدرک تحصیلی</mat-label>
-                    <mat-select formControlName="education">
-                        <mat-option class="mat-option-design" value="دیپلم" >دیپلم</mat-option>
-                        <mat-option class="mat-option-design" value="فوق دیپلم" >فوق دیپلم</mat-option>
-                        <mat-option class="mat-option-design" value="لیسانس" >لیسانس</mat-option>
-                    </mat-select>
-                    <mat-error>{{validate.requiredValidate(job.get('education'), 'مدرک تحصیلی')}}</mat-error>
+                    <mat-label>افزایش پایه حقوق</mat-label>
+                    <input matInput [value]="job.value.increaseSalary | persianpurrencypipe" placeholder="افزایش پایه حقوق را وارد نمایید ..." formControlName="increaseSalary">
+                    <mat-error>{{validate.numberValidate(job.get('increaseSalary'),'افزایش پایه حقوق')}}</mat-error>
                 </mat-form-field>
                 <mat-form-field class="col col-12 col-md-6 mb-3">
-                    <mat-label>کدپرسنلی</mat-label>
-                    <input matInput placeholder="کدپرسنلی را وارد نمایید ..." formControlName="personal_code">
-                    <mat-error>{{validate.numberValidate(job.get('personal_code'),'کدپرسنلی')}}</mat-error>
+                    <mat-label>کاهش پایه حقوق</mat-label>
+                    <input matInput [value]="job.value.decreaseSalary | persianpurrencypipe" placeholder="کاهش پایه حقوق را وارد نمایید ..." formControlName="decreaseSalary">
+                    <mat-error>{{validate.numberValidate(job.get('decreaseSalary'),'کاهش پایه حقوق')}}</mat-error>
                 </mat-form-field>
                 <mat-form-field class="col col-12 col-md-6 mb-3">
-                    <mat-label>وضعیت</mat-label>
-                    <mat-select formControlName="is_active">
-                        <mat-option class="mat-option-design" value="فعال" >فعال</mat-option>
-                        <mat-option class="mat-option-design" value="غیرفعال" >غیرفعال</mat-option>
-                    </mat-select>
-                    <mat-error>{{validate.requiredValidate(job.get('is_active'), 'وضعیت')}}</mat-error>
+                    <mat-label>پاداش ماهانه</mat-label>
+                    <input matInput [value]="job.value.rewardMonthly | persianpurrencypipe" placeholder="پاداش ماهانه را وارد نمایید ..." formControlName="rewardMonthly">
+                    <mat-error>{{validate.numberValidate(job.get('rewardMonthly'),'پاداش ماهانه')}}</mat-error>
                 </mat-form-field>
+                <mat-form-field class="col col-12 col-md-6 mb-3">
+                    <mat-label>کد کاربر در دستگاه</mat-label>
+                    <input matInput placeholder="کد کاربر در دستگاه را وارد نمایید ..." formControlName="device_id">
+                    <mat-error>{{validate.stringValidate(job.get('device_id'),'کد کاربر در دستگاه')}}</mat-error>
+                </mat-form-field>
+                <!--                <mat-form-field class="col col-12 col-md-6 mb-3">
+									<mat-label>وضعیت</mat-label>
+									<mat-select formControlName="is_active">
+										<mat-option class="mat-option-design" value="فعال" >فعال</mat-option>
+										<mat-option class="mat-option-design" value="غیرفعال" >غیرفعال</mat-option>
+									</mat-select>
+									<mat-error>{{validate.requiredValidate(job.get('is_active'), 'وضعیت')}}</mat-error>
+								</mat-form-field>-->
             
             </div>
             <div class="col-12 d-flex justify-content-between">
                 <button mat-flat-button color="warn" matStepperPrevious>بازگشت</button>
-                <button mat-flat-button color="accent" matStepperNext [disabled]="!job.valid">ثبت و ادامه
+                <button mat-flat-button color="accent" matStepperNext (click)="test()" [disabled]="!job.valid">ثبت و ادامه
                 </button>
             </div>
         </form>
@@ -339,7 +420,7 @@
                     </mat-select>
                     <mat-error>{{validate.requiredValidate(insurance.get('status'), 'وضعیت بیمه')}}</mat-error>
                 </mat-form-field>
-
+                
                 <ng-container *ngIf="insurance.get('status')?.value == 'دارد'">
                     <mat-form-field class="col col-12 col-md-6 mb-3">
                         <mat-label>روز بیمه ای</mat-label>
@@ -359,7 +440,7 @@
                         <mat-error>{{validate.numberValidate(insurance.get('code'),'کد بیمه')}}</mat-error>
                     </mat-form-field>
                 </ng-container>
-
+                
                 <mat-form-field class="col col-12 col-md-6 mb-3">
                     <mat-label>سابق بیمه </mat-label>
                     <mat-select formControlName="history">
@@ -368,17 +449,15 @@
                     </mat-select>
                     <mat-error>{{validate.requiredValidate(insurance.get('history'), 'سابق بیمه ')}}</mat-error>
                 </mat-form-field>
-
-
-
+            
             </div>
             <div class="col-12 d-flex justify-content-between">
                 <button mat-flat-button color="warn" matStepperPrevious>بازگشت</button>
-                <button mat-flat-button color="accent" matStepperNext [disabled]="!insurance.valid">ثبت و ادامه
+                <button mat-flat-button color="accent" (click)="validateEmployee(stepper)" [disabled]="!insurance.valid">ثبت و ادامه
                 </button>
             </div>
         </form>
-
+    
     </mat-step>
     <mat-step [completed]="experiment.valid" [stepControl]="experiment" label="اطلاعات سلامت" state="experiment"
               errorMessage="کامل شود!">
@@ -457,16 +536,16 @@
                     <input matInput placeholder="شماره کارت را وارد نمایید ..." formControlName="card">
                     <mat-error>{{validate.numberValidate(bank.get('card'),'شماره کارت')}}</mat-error>
                 </mat-form-field>
-
-
+            
+            
             </div>
             <div class="col-12 d-flex justify-content-between">
                 <button mat-flat-button color="warn" matStepperPrevious>بازگشت</button>
-                <button mat-flat-button color="accent" matStepperNext [disabled]="!bank.valid">ثبت و ادامه
+                <button mat-flat-button color="accent" (click)="validateEmployee(stepper)" [disabled]="!bank.valid">ثبت و ادامه
                 </button>
             </div>
         </form>
-
+    
     </mat-step>
     <mat-step [completed]="guaranty.valid" [stepControl]="guaranty" label="اطلاعات وثیقه" state="guaranty"
               errorMessage="کامل شود!">
@@ -486,11 +565,11 @@
                             </a>
                             <input type="text" #inv_g (click)="f_input_g.click()" style="height: 0px" readonly matInput formControlName="img" />
                             <input
-                                    type="file"
-                                    multiple
-                                    hidden
-                                    #f_input_g
-                                    (change)="handleGuarantyFileInputChange(f_input_g.files, i)"
+                                type="file"
+                                multiple
+                                hidden
+                                #f_input_g
+                                (change)="handleGuarantyFileInputChange(f_input_g.files, i)"
                             />
                             <mat-error>{{validate.requiredValidate(item.get('img'),'تصاویر')}}</mat-error>
                         </mat-form-field>
@@ -511,20 +590,20 @@
                         </div>
                     </ng-container>
                 </ng-container>
-
+            
             </div>
             <div class="col-12 d-flex justify-content-between">
                 <button mat-flat-button color="warn" matStepperPrevious>بازگشت</button>
-                <button mat-flat-button color="accent" matStepperNext  [disabled]="!experiment.valid">ثبت و ادامه
+                <button mat-flat-button color="accent" (click)="validateEmployee(stepper)"  [disabled]="!guaranty.valid">ثبت و ادامه
                 </button>
             </div>
         </form>
-
+    
     </mat-step>
     <mat-step state="done">
         <ng-template matStepLabel>ثبت</ng-template>
         <div class="d-flex justify-content-center">
-            <button mat-flat-button color="accent" (click)="onSubmit()">ذخیره و ثبت کاربر</button>
+            <button mat-flat-button color="accent" (click)="onSubmit(stepper)">ذخیره و ثبت کاربر</button>
         </div>
     </mat-step>
     ///////////////////////////////////////

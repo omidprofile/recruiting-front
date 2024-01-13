@@ -11,11 +11,11 @@ export class AttendanceService {
   constructor(private http: HttpClient) {
   }
   
-   readFromDevice(body:any){
+    readFromDevice(body:any){
     return this.http.post(`${config.apiRoute}/attendance/readDevice`, body)
         .pipe(
             shareReplay(),
-        )
+        );
   }
   
   getAttendances(body:any){

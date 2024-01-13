@@ -1,6 +1,7 @@
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { MatTable } from "@angular/material/table";
 import { UsersHttpService } from "../../../../HttpServices/users-http.service";
+import { Router } from "@angular/router";
 
 export interface PeriodicElement {
 	name: string;
@@ -9,24 +10,6 @@ export interface PeriodicElement {
 	status: boolean;
 }
 
-let ELEMENT_DATA: PeriodicElement[] = [
-	{personal_code: "1", name: 'Hydrogen', roll: "مدیر تولید", status: true},
-	{personal_code: "2", name: 'Helium', roll: "مدیر تولید", status: true},
-	{personal_code: "3", name: 'Lithium', roll: "مدیر تولید", status: true},
-	{personal_code: "4", name: 'Beryllium', roll: "مدیر تولید", status: true},
-	{personal_code: "5", name: 'Boron', roll: "مدیر تولید", status: true},
-	{personal_code: "6", name: 'Carbon', roll: "مدیر تولید", status: true},
-	{personal_code: "7", name: 'Nitrogen', roll: "مدیر تولید", status: true},
-	{personal_code: "8", name: 'Oxygen', roll: "مدیر تولید", status: true},
-	{personal_code: "9", name: 'Fluorine', roll: "مدیر تولید", status: true},
-	{personal_code: "10", name: 'Neon', roll: "مدیر تولید", status: true},
-	{personal_code: "11", name: 'Neon', roll: "مدیر تولید", status: true},
-	{personal_code: "11", name: 'Neon', roll: "مدیر تولید", status: true},
-	{personal_code: "11", name: 'Neon', roll: "مدیر تولید", status: true},
-	{personal_code: "11", name: 'Neon', roll: "مدیر تولید", status: true},
-	{personal_code: "11", name: 'Neon', roll: "مدیر تولید", status: true},
-
-];
 
 @Component({
 	selector: 'app-users-list',
@@ -34,14 +17,15 @@ let ELEMENT_DATA: PeriodicElement[] = [
 	styleUrls: ['./users-list.component.scss']
 })
 export class UsersListComponent implements OnInit, AfterViewInit {
-	displayedColumns: string[] = ['personal_code', 'name', 'roll', 'status'];
+	title='لیست کاربران'
+	displayedColumns: string[] = ['national_code', 'name', 'roll', 'status'];
 	dataSource: any;
 	show_data:any;
 	searchKey: string = '';
 	searchValue: string = '';
 	@ViewChild(MatTable) table: MatTable<PeriodicElement>;
 	
-	constructor(private http: UsersHttpService) {
+	constructor(private http: UsersHttpService, public router: Router) {
 	}
 	
 	
@@ -61,9 +45,12 @@ export class UsersListComponent implements OnInit, AfterViewInit {
 				let item: any = {}
 				this.dataSource = []
 				for (let user of data) {
-					item.personal_code = user.user_id.personal_code??user.personal_code
-					item.name = user.user_id.name + ' ' + user.user_id.last_name
-					item.roll = user.title ?? user.rank_info?.title
+					item.national_code = user.national_code
+					item.name = user.name + ' ' + user.last_name
+					let roles:any = []
+					for (let rol of user.jobs_id)
+						roles.push(rol.rank_info.title)
+					item.roll = roles
 					item.status = user.is_active
 					this.dataSource.push(item)
 					item = {}

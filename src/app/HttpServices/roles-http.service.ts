@@ -124,12 +124,10 @@ export class RolesHttpService {
     }
     
     
-    
 
-    getBaseSalary(part:any){
+    getBaseSalary(){
         return this.http.get(`${config.apiRoute}/base-salary`,{
             params:{
-                part:part
             }
         })
             .pipe(
@@ -144,7 +142,23 @@ export class RolesHttpService {
             )
     }
     
-
+    getInsurance(part:any){
+        return this.http.get(`${config.apiRoute}/insurance`,{
+            params:{
+                part:part
+            }
+        })
+            .pipe(
+                shareReplay(),
+            );
+    }
+    
+    createInsurance(insurance:any){
+        return this.http.post(`${config.apiRoute}/insurance`,insurance)
+            .pipe(
+                shareReplay(),
+            )
+    }
     
     
 }

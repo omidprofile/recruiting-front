@@ -1,0 +1,24 @@
+<mat-card-subtitle mat-dialog-title>عملیات با موفقیت انجام شد</mat-card-subtitle>
+<mat-card>
+	<mat-card-content mat-dialog-content>
+		<div class="row col-12">
+			<mat-card-subtitle class="col-6">کاربر:</mat-card-subtitle>
+			<div class="col-6 dashboard-caption">{{name ?? ''}}</div>
+		</div>
+		<div class="row col-12">
+			<mat-card-subtitle class="col-6">کد پرسنلی:</mat-card-subtitle>
+			<div class="col-6 dashboard-caption">{{personal_code ?? '' |persianNumbers}}</div>
+		</div>
+		<div class="row col-12">
+			<mat-card-subtitle class="col-6">کد دستگاه:</mat-card-subtitle>
+			<div class="col-6 dashboard-caption">{{device_id ?? '' |persianNumbers}}</div>
+		</div>
+		<div class="row col-12">
+			<mat-card-subtitle class="col-6">ایمیل سازمانی:</mat-card-subtitle>
+			<div class="col-6 dashboard-caption">{{companyMail ?? '' |persianNumbers}}</div>
+		</div>
+	</mat-card-content>
+	<mat-card-actions mat-dialog-actions>
+		<button mat-raised-button color="accent" (click)="dialogRef.close()">تایید</button>
+	</mat-card-actions>
+</mat-card>

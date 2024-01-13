@@ -1,6 +1,7 @@
 import {Component, ElementRef, HostListener, OnInit, ViewChild} from '@angular/core';
 import { ToggleSidenavService } from "../../../services/toggle-sidenav.service";
 import { MatMenuTrigger } from "@angular/material/menu";
+import { Router } from "@angular/router";
 
 
 @Component({
@@ -17,7 +18,7 @@ export class HeaderComponent implements OnInit{
 
   // @ts-ignore
   @ViewChild('invoice') invoice: MatMenuTrigger;
-  constructor(private toggle:ToggleSidenavService) {
+  constructor(private toggle:ToggleSidenavService, private route:Router) {
   }
 
 
@@ -73,6 +74,12 @@ export class HeaderComponent implements OnInit{
       }
     },50)
 
+  }
+  
+  logout(){
+    localStorage.removeItem('token');
+    localStorage.removeItem('permission');
+    this.route.navigate(['/auth/login'])
   }
 
 }

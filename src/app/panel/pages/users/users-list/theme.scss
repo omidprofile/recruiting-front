@@ -1,0 +1,24 @@
+@use '@angular/material' as mat;
+
+@mixin userList($theme) {
+	$colors: mat.get-color-config($theme);
+	$background: map-get($colors, sidenav);
+	$icons: map-get($colors, primary);
+	$active: map-get($colors, success);
+	$disable: map-get($colors, warn);
+	$pending: map-get($colors, warning);
+	$icon-active: mat.get-color-from-palette($active, 500);
+	$icon-disable: mat.get-color-from-palette($disable, 500);
+	$icon-pending: mat.get-color-from-palette($pending, 500);
+	.active-user {
+		background-color: $icon-active !important;
+		color: #000000 !important;
+	}
+	.pending-user {
+		background-color: $icon-pending !important;
+	}
+	.disable-user  {
+		background-color: $icon-disable !important;
+	}
+}
+

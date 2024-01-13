@@ -1,0 +1,83 @@
+<h2 mat-dialog-title>افزودن بیمه</h2>
+<div mat-dialog-content dir="rtl">
+	<form action="" [formGroup]="insurance_form">
+		<div class="d-flex justify-content-around flex-wrap">
+			<mat-form-field class=" mb-3 me-3">
+				<mat-label> عنوان</mat-label>
+				<input matInput placeholder="عنوان بیمه را وارد کنید ..." formControlName="title">
+				<mat-error *ngIf="!error">{{validate.stringValidate(insurance_form.get('title'), 'عنوان')}}</mat-error>
+				<mat-error *ngIf="error">این عنوان قبلا ثبت شده است</mat-error>
+			</mat-form-field>
+			<mat-form-field class=" mb-3">
+				<mat-label>کل روز بیمه</mat-label>
+				<input matInput placeholder="کل روز بیمه را وارد کنید ..." formControlName="complete_day">
+				<mat-error>{{validate.numberValidate(insurance_form.get('complete_day'), 'کل روز بیمه')}}</mat-error>
+			</mat-form-field>
+		</div>
+		<div class="d-flex justify-content-around flex-wrap">
+			<mat-form-field class=" mb-3 me-3">
+				<mat-label>غیب مجاز ماهانه</mat-label>
+				<input matInput placeholder="غیب مجاز ماهانه را وارد کنید ..." formControlName="allowed_delay">
+				<mat-error>{{validate.numberValidate(insurance_form.get('allowed_delay'), 'غیب مجاز ماهانه')}}</mat-error>
+			</mat-form-field>
+			<mat-form-field class=" mb-3">
+				<mat-label>کل درصد کسر از حقوق</mat-label>
+				<input matInput placeholder="کل درصد کسر از حقوق را وارد کنید ..." formControlName="all_share">
+				<mat-error>{{validate.numberValidate(insurance_form.get('all_share'), 'کل درصد کسر از حقوق')}}</mat-error>
+			</mat-form-field>
+		</div>
+		<div class="d-flex justify-content-around flex-wrap">
+			<mat-form-field class=" mb-3 me-3">
+				<mat-label>سهم درصد کارفرما</mat-label>
+				<input matInput placeholder="سهم درصد کارفرما را وارد کنید ..." formControlName="admin_share">
+				<mat-error>{{validate.numberValidate(insurance_form.get('admin_share'), 'سهم درصد کارفرما')}}</mat-error>
+			</mat-form-field>
+			<mat-form-field class=" mb-3 ">
+				<mat-label>سهم درصد کارمند</mat-label>
+				<input matInput placeholder="سهم درصد کارمند را وارد کنید ..." formControlName="user_share">
+				<mat-error>{{validate.numberValidate(insurance_form.get('user_share'), 'سهم درصد کارمند')}}</mat-error>
+			</mat-form-field>
+		</div>
+<!--		<div class="d-flex justify-content-around flex-wrap col-12">
+			<mat-form-field class="mb-3 col-12">
+				<mat-label class="">حقوق مبنا ماهانه</mat-label>
+				<mat-select #salary>
+					<mat-option class="mat-option-design" (click)="rmSalaryValidator()" [value]="0">حقوق اصلی کارمند</mat-option>
+					<mat-option class="mat-option-design" (click)="addSalaryValidator()" [value]="1">حقوق جدید</mat-option>
+				</mat-select>
+			</mat-form-field>
+			
+			<mat-form-field class="mb-3 col-12" *ngIf="salary.value == '1'">
+				<input matInput placeholder="حقوق ماهانه را وارد کنید ..." formControlName="monthly_salary">
+				<mat-error>{{validate.numberValidate(insurance_form.get('monthly_salary'), 'حقوق ماهانه')}}</mat-error>
+			</mat-form-field>
+		</div>
+		<div class="d-flex justify-content-around flex-wrap col-12">
+			<mat-form-field class="mb-3 col-12">
+				<mat-label class="">حقوق مبنا ماهانه</mat-label>
+				<mat-select #advantages>
+					<mat-option class="mat-option-design" (click)="rmAdvantagesValidator()" [value]="0">مزایا اصلی کارمند</mat-option>
+					<mat-option class="mat-option-design" (click)="addAdvantagesValidator()" [value]="1">مزایا جدید</mat-option>
+				</mat-select>
+			</mat-form-field>
+			<mat-form-field class=" mb-3 col-12 " *ngIf="advantages.value == '1'">
+				<mat-label class="">مزایا ماهانه</mat-label>
+				<input matInput placeholder="مزایا ماهانه را وارد کنید ..." formControlName="monthly_advantages">
+				<mat-error>{{validate.numberValidate(insurance_form.get('monthly_advantages'), 'مزایا ماهانه')}}</mat-error>
+			</mat-form-field>
+		</div>-->
+		<div class="d-flex justify-content-around flex-wrap col-12">
+			<mat-form-field class=" mb-3 col-12">
+				<mat-label>توضیحات</mat-label>
+				<input matInput placeholder="توضیحات را وارد کنید ..." formControlName="description">
+				<mat-error>{{validate.numberValidate(insurance_form.get('description'), 'توضیحات')}}</mat-error>
+			</mat-form-field>
+		</div>
+	</form>
+</div>
+<div mat-dialog-actions>
+	<button mat-button cdkFocusInitial [disabled]="!insurance_form.valid" (click)="onSubmit()" color="accent">ثبت و
+		تایید
+	</button>
+	<button mat-button color="warn" mat-dialog-close>انصراف</button>
+</div>

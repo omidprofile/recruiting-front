@@ -1,0 +1,65 @@
+<div class="dashboard col-12">
+	<div class="headline-title col col-12 col-xl-10 mb-3">گزارش ساز</div>
+	<mat-card class="col col-12 col-xl-10 mb-3">
+		<!--        <mat-card-header class="mb-3">
+					<mat-card-subtitle>جستجو بر اساس:</mat-card-subtitle>
+				</mat-card-header>-->
+		<mat-card-content>
+			<form action="" [formGroup]="reportMaker">
+				<div class="row col-12">
+					<mat-form-field class="col col-6 col-lg-3" >
+						<mat-label>نام گزارش</mat-label>
+						<input matInput  formControlName="title">
+						<mat-error>این نام قبلا ثبت شده است</mat-error>
+					</mat-form-field>
+					<mat-form-field class="col col-6 col-lg-3" *ngIf="reportMaker.value?.title?.length>2">
+						<mat-label>نوع گزارش :</mat-label>
+						<mat-select formControlName="type">
+							<mat-option class="mat-option-design" (click)="setTypeCols()" value="general">کارکرد کل</mat-option>
+							<mat-option class="mat-option-design" (click)="setTypeCols()" value="details">جزئیات کارکرد</mat-option>
+<!--							<mat-option class="mat-option-design" value="payment">پرداختی کارکنان</mat-option>-->
+						</mat-select>
+					</mat-form-field>
+
+				</div>
+			</form>
+				
+				<div class="row col-12" *ngIf="reportMaker.value.type">
+					<mat-form-field class="col col-6 col-lg-3">
+						<mat-label>انتخاب ستون ها:</mat-label>
+						<mat-select multiple="true" [(ngModel)]="cols_show" name="cols">
+							<mat-option class="mat-option-design" (click)="setCols(col)"
+										*ngFor="let col of Object.keys(cols_name)"
+										[value]="col">{{cols_name[col] |persianNumbers}}</mat-option>
+						
+						
+						</mat-select>
+					</mat-form-field>
+					<mat-card-subtitle class="col-12 mb-3">**توجه ستون ها براساس اولویت انتخاب شما چیده می شوند.</mat-card-subtitle>
+					<div class="col col-12" *ngIf="cols.length">
+						<mat-card-subtitle>چینش ستون ها:</mat-card-subtitle>
+						<mat-chip-set
+							cdkDropList
+							cdkDropListOrientation="horizontal"
+							(cdkDropListDropped)="drop($event)"
+						>
+							<mat-chip-row class="me-1" *ngFor="let col of cols"> <!--//cdkDrag-->
+								{{cols_name[col]}}
+								<button matChipRemove (click)="rmCol(col)">
+									<mat-icon>cancel</mat-icon>
+								</button>
+							</mat-chip-row>
+						</mat-chip-set>
+					</div>
+				</div>
+		</mat-card-content>
+		<!--        <mat-card-footer>
+					<mat-card-subtitle class="mx-3">
+						- به صورت پیش فرض همه ی اطلاعات جستجو خواهند شد.
+					</mat-card-subtitle>
+				</mat-card-footer>-->
+		<mat-card-actions>
+			<button mat-raised-button color="primary" class="mx-2" (click)="onSubmit()">ثبت</button>
+		</mat-card-actions>
+	</mat-card>
+</div>

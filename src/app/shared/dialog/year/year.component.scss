@@ -1,0 +1,18 @@
+.month-design{
+	cursor: pointer;
+	display: flex;
+	justify-content: center;
+	padding: 30px 10px;
+	background-color: #aaa;
+	color: #fff !important;
+	margin: 5px;
+	border-radius: 5px;
+}
+.month-design:hover{
+	background-color: #ffb300;
+	color: #fff !important;
+}
+.selected{
+	background-color: #2196f3;
+	color: #fff !important;
+}

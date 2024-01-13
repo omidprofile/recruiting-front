@@ -16,6 +16,10 @@ export class FormValidateService {
     return !!field.hasError('persianString');
   }
 
+  englishString(field:any){
+    return !!field.hasError('englishString');
+  }
+
   lengthCheck(field:any){
     return !!field.hasError('lengthValidator');
   }
@@ -47,6 +51,17 @@ export class FormValidateService {
   isEmailValid(field:any){
     return !! field.hasError('email')
   }
+
+  isDuplicate(field:any){
+    return !! field.hasError('duplicate')
+  }
+
+  isString(field:any){
+    return !! field.hasError('string')
+  }
+  isCurrency(field:any){
+    return !! field.hasError('currency')
+  }
   
   notEmptyValidate(field:any, title:string){
     if(this.requiredCheck(field))
@@ -56,17 +71,21 @@ export class FormValidateService {
 
   stringValidate(field:any, title:string){
      if(this.requiredCheck(field))
-       return `${title} وارد شود`
+       return `${title} وارد شود`;
+     if(this.isString(field))
+       return `فرمت وارد شده صحیح نمی باشد`;
     if (this.lengthCheck(field))
-      return `طول ${title} وارد شده کمتر از حد مجاز است`
+      return `طول ${title} وارد شده کمتر از حد مجاز است`;
     if (this.persianString(field))
-      return "از کلمات فارسی استفاده نمایید"
+      return "از حروف فارسی استفاده نمایید";
+    if (this.englishString(field))
+      return "از حروف لاتین  استفاده نمایید";
     return null
   }
 
   requiredValidate(field:any, title:string){
     if (this.requiredCheck(field))
-      return `${title} را انتخاب کنید`
+      return `${title} را انتخاب کنید`;
     return null;
   }
 
@@ -74,64 +93,77 @@ export class FormValidateService {
     if (this.requiredCheck(field))
       return "کدملی را وارد نمایید";
     if(this.isNumber(field))
-      return "فرمت وارد شده صحیح نیست"
+      return "فرمت وارد شده صحیح نیست";
     if (this.isNationalCodeValidator(field)){
-      return "کد ملی وارد شده اشتباه است"
+      return "کد ملی وارد شده اشتباه است";
     }
+    if (this.isDuplicate(field))
+      return ` قبلا ثبت شده است`;
     return null;
   }
   numberValidate(field:any, title:string){
     if (this.requiredCheck(field))
       return `${title}  را وارد نمایید`;
     if(this.isNumber(field))
-      return "فرمت وارد شده صحیح نیست"
+      return "فرمت وارد شده صحیح نیست";
+    if(this.isCurrency(field))
+      return "فرمت وارد شده صحیح نیست";
     if(this.isMax(field))
-      return 'مقدار وارد شده بیشتر از حد مجاز است'
+      return 'مقدار وارد شده بیشتر از حد مجاز است';
     if (this.isMin(field))
-      return 'مقدار وارد شده کمتر از حد مجاز است'
+      return 'مقدار وارد شده کمتر از حد مجاز است';
+    if (this.isDuplicate(field))
+      return `${title} قبلا ثبت شده است`;
     return null;
   }
   
   mobileValidate(field:any){
     if (this.requiredCheck(field))
-      return "ورود شماره همراه الزامی است"
+      return "ورود شماره همراه الزامی است";
     if(this.isValidMobile(field))
-      return "قالب وارد شده صحیح نمیباشد"
+      return "قالب وارد شده صحیح نمیباشد";
+    if (this.isDuplicate(field))
+      return `شماره ی تکراری وارد کرده اید`;
     return null;
   }
   
   phoneValidate(field:any){
     if (this.requiredCheck(field))
-      return "ورود شماره ثابت الزامی است"
+      return "ورود شماره ثابت الزامی است";
     if(this.isPhoneValid(field))
-      return "قالب وارد شده صحیح نمیباشد"
+      return "قالب وارد شده صحیح نمیباشد";
+    if (this.isDuplicate(field))
+      return `شماره ی تکراری وارد کرده اید`;
     return null;
   }
   
   emailValidate(field:any){
     if (this.requiredCheck(field))
-      return "ورود ایمیل  الزامی است"
+      return "ورود ایمیل  الزامی است";
     if(this.isEmailValid(field))
-      return "قالب وارد شده صحیح نمیباشد"
+      return "قالب وارد شده صحیح نمیباشد";
+    if (this.isDuplicate(field))
+      return ` ایمیل قبلا ثبت شده است`;
     return null;
   }
   
   plaqueValidate(field:any){
     if (this.requiredCheck(field))
-      return "پلاک وارد شود"
+      return "پلاک وارد شود";
     if (this.isNumber(field))
-      return "قالب وارد شده صحیح نمیباشد"
+      return "قالب وارد شده صحیح نمیباشد";
     return null;
   }
   
   postalCodeValidate(field:any){
     if (this.requiredCheck(field))
-      return "کدپستی وارد شود"
+      return "کدپستی وارد شود";
     if (this.isNumber(field))
-      return "قالب وارد شده صحیح نمیباشد"
+      return "قالب وارد شده صحیح نمیباشد";
     if (this.isNationalCodeValidator(field))
-      return "قالب وارد شده صحیح نمیباشد"
-
+      return "قالب وارد شده صحیح نمیباشد";
+    if (this.isDuplicate(field))
+      return `این کدپستی قبلا ثبت شده است`;
     return null;
   }
   

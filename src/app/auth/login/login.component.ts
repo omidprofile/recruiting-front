@@ -47,14 +47,12 @@ export class LoginComponent {
   
   personal_code:any = ''
   submit(){
-    // this.personal_code = this.englishNumber.transform(this.personal_code)
     if (this.personal_code){
       this.onSubmit = true
       let code = this.englishNumber.transform(this.personal_code)
       let body = {personal_code:code}
       this.http.login(body).subscribe({
         next:(data:any)=>{
-          console.log(data.token)
           this.error = ''
           localStorage.setItem('permission',JSON.stringify(data.permission))
           localStorage.setItem('token',data.token.toString());

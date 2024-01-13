@@ -1,0 +1,14 @@
+<mat-card-title mat-dialog-title>سال ها</mat-card-title>
+<mat-card mat-dialog-content>
+	<mat-card-content class="col-12">
+		<div class="d-flex justify-content-around flex-wrap" >
+			<div class="col col-3 d-flex justify-content-center" *ngFor="let year of yearsList">
+				<div class="month-design dashboard-caption col" (click)="dialogRef.close({year:year})" [ngClass]="data?.year == year?'selected':''">{{year}}</div>
+			</div>
+		</div>
+	</mat-card-content>
+	<mat-card-actions class="col-12 d-flex justify-content-around mt-3">
+		<button mat-mini-fab color="accent" matTooltip="سال های قبل" (click)="preYear()" [disabled]="startIndex <= 0"><mat-icon>keyboard_double_arrow_right</mat-icon></button>
+		<button mat-mini-fab color="accent" matTooltip="سال های بعد" (click)="nextYear()" [disabled]="lastIndex >= years.length"><mat-icon>keyboard_double_arrow_left</mat-icon></button>
+	</mat-card-actions>
+</mat-card>

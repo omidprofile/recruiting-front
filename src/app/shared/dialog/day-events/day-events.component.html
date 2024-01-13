@@ -1,0 +1,69 @@
+<mat-card-title mat-dialog-title>رویداد ها</mat-card-title>
+<mat-card mat-dialog-content>
+	<mat-card-content>
+		<mat-card-subtitle>تاریخ:</mat-card-subtitle>
+		<div class="dateInfo mt-3 d-flex">
+			<div class="col dashboard-caption">{{data.dayInfo.title}}</div>
+			<div class=" dashboard-caption d-flex align-items-stretch me-3">
+				{{data.dayInfo.day|persianNumbers}}
+			</div>
+			<div class=" dashboard-caption me-3">{{data.monthName}}  </div>
+			<div class=" dashboard-caption me-3">{{data.year|persianNumbers}} </div>
+		</div>
+		
+		<div class="col-12 d-flex justify-content-center">
+			<mat-divider class="col-12"></mat-divider>
+		</div>
+		<div class="dateStatus mt-3">
+			<div class="col col-12 d-flex justify-content-between align-items-center">
+				<div class="d-flex justify-content-start align-items-center">
+					<mat-card-subtitle class="me-3">وضعیت روز:</mat-card-subtitle>
+					<mat-chip class="active-user" *ngIf="!data.dayInfo.is_holiday">
+						<div class="mx-3">عادی</div>
+						<mat-icon matChipRemove>done</mat-icon>
+					</mat-chip>
+					<mat-chip class="disable-user" *ngIf="data.dayInfo.is_holiday">
+						<div class="mx-3">تعطیل</div>
+						<mat-icon matChipRemove>clear</mat-icon>
+					</mat-chip>
+				</div>
+				<div class="d-flex justify-content-end" >
+					<button mat-icon-button (click)="changeStatus()" [matTooltip]="'ویرایش وضعیت روز'">
+						<mat-icon>edit_note</mat-icon>
+					</button>
+				</div>
+				
+			</div>
+		</div>
+		
+		<div class="col-12 d-flex justify-content-center">
+			<mat-divider class="col-12"></mat-divider>
+		</div>
+		<mat-card-subtitle >رویداد ها:</mat-card-subtitle>
+		<div class="mt-3" *ngIf="data.dayInfo.events.length">
+			<div class="col col-12 d-flex justify-content-start align-items-center mt-3" *ngFor="let event of data.dayInfo.events">
+				<mat-icon>event</mat-icon>
+				<div class="d-flex flex-column justify-content-start align-items-start ms-1">
+					<div class="dashboard-cap-list m-0">{{event.description | persianNumbers}}</div>
+					<sub class="dashboard-sub">اضافه کننده:{{(event?.user?.name??'') + " " + (event?.user?.last_name??'')}}</sub>
+				</div>
+			</div>
+		</div>
+		<div class="mt-3 d-flex justify-content-start" *ngIf="!data.dayInfo.events.length">
+			<mat-card-subtitle class="d-flex justify-content-center align-items-center">
+				رویدادی وجود ندارد. <mat-icon class="ms-3">calendar_today</mat-icon>
+			</mat-card-subtitle>
+		</div>
+		<div class="col col-12 d-flex justify-content-end" >
+			<button mat-icon-button (click)="addEvents()" [matTooltip]="'افزودن رویداد'">
+				<mat-icon>add</mat-icon>
+			</button>
+		</div>
+	</mat-card-content>
+	<mat-card-actions class="d-flex flex-wrap">
+		<div class="col-12 d-flex justify-content-center">
+			<mat-divider class="col-12"></mat-divider>
+		</div>
+		<button  mat-stroked-button (click)="dialogRef.close({change:makeChange})">بستن</button>
+	</mat-card-actions>
+</mat-card>
