@@ -27,7 +27,9 @@ ngOnInit() {
   async setReport(report:any){
     this.Report.set(report)
     report.type == 'general'?
-        await this.router.navigate(['panel/report/workReport'])
-        :await this.router.navigate(['panel/report/workInfo'])
+        await this.router.navigate(['panel/report/workReport']):
+        report.type == 'details'?
+        await this.router.navigate(['panel/report/workInfo'])
+            :await this.router.navigate(['panel/report/paySlip'])
   }
 }

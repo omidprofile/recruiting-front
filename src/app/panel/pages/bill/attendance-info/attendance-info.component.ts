@@ -8,6 +8,9 @@ import { ReportsService } from "../../../../services/reports.service";
 import { Router } from "@angular/router";
 import { CalendarHttpService } from "../../../../HttpServices/calendar-http.service";
 import { CalendarService } from "../../../../services/calendar.service";
+import { EditLogComponent } from "../../../../shared/dialog/edit-log/edit-log.component";
+import { MatDialog } from "@angular/material/dialog";
+import { ManualAttendanceComponent } from "../../../../shared/dialog/manual-attendance/manual-attendance.component";
 
 
 @Component({
@@ -23,10 +26,12 @@ export class AttendanceInfoComponent implements OnInit {
 	            public Report: ReportsService,
 	            private route: Router,
 	            private calendar: CalendarHttpService,
-	            private PCalendar:CalendarService
+	            private PCalendar: CalendarService,
+	            public dialog: MatDialog,
 	) {
 	}
 	
+	progress = true;
 	options: any;
 	filteredOptions: any[];
 	user: any;
@@ -35,7 +40,7 @@ export class AttendanceInfoComponent implements OnInit {
 	day: any;
 	user_info: any;
 	holidays = 0;
-	holiday_work =0;
+	holiday_work = 0;
 	work_days = 0;
 	total_work = 0;
 	absent_day = 0;
@@ -93,6 +98,7 @@ export class AttendanceInfoComponent implements OnInit {
 				this.options.push(person)
 			}
 			this.filteredOptions = this.options.slice();
+			this.progress = false;
 		})
 	}
 	
@@ -106,9 +112,10 @@ export class AttendanceInfoComponent implements OnInit {
 	}
 	
 	async submit() {
+		this.progress = true;
 		this.work_days = 0;
 		this.total_work = 0;
-		this.holiday_work =0;
+		this.holiday_work = 0;
 		this.holidays = 0;
 		this.absent_day = 0;
 		this.present_day = 0;
@@ -138,27 +145,42 @@ export class AttendanceInfoComponent implements OnInit {
 						duration: 3000
 					})
 				} else {
-					await this.PCalendar.preparingDay(this.year,this.month,currentDate).then((ds: any) => {
+					await this.PCalendar.preparingDay(this.year, this.month, currentDate).then((ds: any) => {
 						data = Object.values(data)[0];
+						let device:any;
 						setTimeout(() => {
 							for (let row of ds[0]) {
 								this.total_day++;
 								row.conflict = false
 								let traffics: any = Object.keys(data).filter(key => key == row.date)
-								traffics.length ? row.user_status = 'present' : row.user_status = 'absent';
-								traffics.length && row.day_status != 'holiday'? this.present_day++ : '';
-								row.day_status =='normal' && !traffics.length?this.absent_day++:'';
-								traffics.length && row.day_status == 'holiday' ? this.holiday_work++ : '';
 								let i = 1;
 								traffics.length ? traffics = data[traffics[0]] : traffics = [];
+								if (traffics.find((e:any)=>{ return ['n','m','e'].includes(e?.status )})){
+									 row.user_status = 'present'
+									traffics.length && row.day_status != 'holiday' ? this.present_day++ : '';
+									traffics.length && row.day_status == 'holiday' ? this.holiday_work++ : '';
+								}
+								else if (traffics.find((e:any)=>{ return ['ne'].includes(e?.status )})){
+									row.day_status == 'normal' ? this.absent_day++ : '';
+									row.user_status = 'absent';
+								}
+								else {
+									row.day_status == 'normal' ? this.absent_day++ : '';
+									row.user_status = 'absent';
+								}
+								
 								for (let traffic of traffics) {
-									let day = traffic?.date?.day;
+									if(!device)
+										device = traffic.device_ip._id;
 									row[`traffic${i}`] = {
-										time: traffic.date?.time,
-										type: traffic?.acceptedType
+										time:(traffic.acceptedTime ? this.date.dateInfo(traffic.acceptedTime).time:''),
+										type: traffic?.acceptedType,
+										id: traffic?._id,
+										date:traffic.date?.date,
+										status:traffic.status
 									}
 									traffic.duration ? row.time = traffic.duration : ''
-									traffic.duration && row.day_status != 'holiday' ? this.total_work += +traffic.duration : ''
+									traffic.duration ? this.total_work += +traffic.duration : ''
 									if (traffic.conflict == true) {
 										row.conflict = true
 									}
@@ -168,7 +190,8 @@ export class AttendanceInfoComponent implements OnInit {
 							this.user_info = this.filteredOptions.filter((e: any) => {
 								return e.id == this.user
 							})
-							this.user_info = this.user_info[0]
+							this.user_info = this.user_info[0];
+							this.user_info.device = device;
 							this.holidays = ds[1].holidays;
 							this.work_days = ds[1].work_days;
 							this.dataSource = ds[0];
@@ -176,9 +199,69 @@ export class AttendanceInfoComponent implements OnInit {
 					})
 					
 				}
+				this.progress = false;
 			},
 			error: (err: any) => {
 			},
 		})
 	}
+	
+	async reset_data() {
+		this.progress = true;
+		let user = this.user_info.code;
+		this.user_info = undefined;
+		this.dataSource = []
+		await this.httpAttendance.readFromDevice({
+			watch: 'review',
+			user: user
+		})
+			.subscribe({
+				next: (data) => {
+					this.submit()
+					this.progress = false;
+				},
+				error: (err) => {
+					console.log(err)
+				},
+			})
+	}
+	
+	openEditDialog(item: any, element:any) {
+		if (!item?.id || !item){
+			const dialogRef = this.dialog.open(ManualAttendanceComponent, {
+				width:'500px',
+				direction:"rtl",
+				data: {date:element.date, user:this.user_info.code, device:this.user_info.device},
+				hasBackdrop:true,
+				disableClose:true
+			})
+			dialogRef.afterClosed().subscribe(async (result) => {
+				if (result == 'success') {
+					await this.submit();
+				}
+			});
+		}
+		else{
+			
+			let data: any = {};
+			data = {
+				subject:'edit',
+				type: item.type,
+				time: item.time,
+				item:{
+					id:item.id,
+					date:item.date
+				}
+			}
+			const dialogRef = this.dialog.open(EditLogComponent, {
+				data: data,
+			})
+			dialogRef.afterClosed().subscribe(async (result) => {
+				if (result == 'success') {
+					await this.submit();
+				}
+			});
+		}
+	}
+	
 }

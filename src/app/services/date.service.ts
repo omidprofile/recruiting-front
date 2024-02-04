@@ -16,7 +16,7 @@ export class DateService {
   }
   
   convertLocalToNum(val:any){
-    return +this.toEnDigit(val.toString()).replace(/\D/g,'');
+    return +this.toEnDigit(val.toString()).replace(/[a-zA-Z,]/g,'');
   }
   
   dateInfo(unixTime:any) {

@@ -43,19 +43,34 @@ export class CreateDeviceComponent implements OnInit{
 	}
 	
 	onSubmit(){
-		let id = this.data.data._id
+		let id = this.data?.data?._id ?? '';
 		let body = this.device.value
-		this.http.updateDevice(body,id).subscribe({
-			next:(data)=>{
-				this.dialogRef.close('success')
-			},
-			error:(err)=>{
-				this._snackBar.openFromComponent(SnackbarComponent, {
-					data: `خطا در بروز رسانی اطلاعات`,
-					duration: 1500
-				})
-			},
-		})
+		if(id){
+			this.http.updateDevice(body,id).subscribe({
+				next:(data)=>{
+					this.dialogRef.close('success')
+				},
+				error:(err)=>{
+					this._snackBar.openFromComponent(SnackbarComponent, {
+						data: `خطا در بروز رسانی اطلاعات`,
+						duration: 1500
+					})
+				},
+			})
+		}
+		else{
+			this.http.createDevice(body).subscribe({
+				next:(data)=>{
+					this.dialogRef.close('success')
+				},
+				error:(err)=>{
+					this._snackBar.openFromComponent(SnackbarComponent, {
+						data: `خطا در بروز رسانی اطلاعات`,
+						duration: 1500
+					})
+				},
+			})
+		}
 		
 	}
 	

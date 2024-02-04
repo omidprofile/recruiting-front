@@ -1,4 +1,17 @@
 <div class="dashboard col col-12">
+	<div class="breadcrumb2 mt-3 col col-12 col-xl-10">
+		<div class="items">
+			<a class="item" routerLink="/panel">
+				<span class="title">داشبورد</span>
+			</a>
+			<a class="item" routerLink="/panel/attendance">
+				<span class="title">حضورغیاب</span>
+			</a>
+			<a class="item" routerLink="/panel/attendance/manual">
+				<span class="title">ثبت دستی</span>
+			</a>
+		</div>
+	</div><!-- /breadcrumb2 -->
 	<div class="headline-title col-xl-10 col-12">ثبت دستی</div>
 	<mat-card class="col col-12 col-xl-10" *ngIf="devices != undefined">
 		<mat-card-content>
@@ -6,11 +19,33 @@
 				<div class="row">
 					<mat-card-subtitle class="mb-3"> پایه:</mat-card-subtitle>
 					<mat-form-field class="col col-12 col-md-4 mb-3">
-						<mat-label>کد پرسنلی</mat-label>
-						<input matInput placeholder="کد پرسنلی" formControlName="personal_code">
-						<mat-icon matSuffix>123</mat-icon>
-						<mat-error>{{validate.requiredValidate(manualForm.get('personal_code'),'کد پرسنلی')}}</mat-error>
+						<mat-label>فرد</mat-label>
+						<input matInput placeholder="انتخاب فرد"
+							   #input
+							   [matAutocomplete]="auto"
+							   (input)="filter()"
+							   (focus)="filter()"
+							   (keyup)="setUser('')"
+						>
+						<mat-autocomplete requireSelection #auto="matAutocomplete">
+							<mat-option class="mat-option-design" (click)="setUser(option['code'])"
+										*ngFor="let option of filteredOptions"
+										[value]="option['name']">
+								<div class="d-flex justify-content-between " style="width: 16vw">
+									<div>{{option['name']}}</div>
+									<div>{{option['code'] ?? '' |persianNumbers}}</div>
+								</div>
+							</mat-option>
+						</mat-autocomplete>
+						<mat-error></mat-error>
 					</mat-form-field>
+					
+<!--					<mat-form-field class="col col-12 col-md-4 mb-3">-->
+<!--						<mat-label>کد پرسنلی</mat-label>-->
+<!--						<input matInput placeholder="کد پرسنلی" formControlName="personal_code">-->
+<!--						<mat-icon matSuffix>123</mat-icon>-->
+<!--						<mat-error>{{validate.requiredValidate(manualForm.get('personal_code'),'کد پرسنلی')}}</mat-error>-->
+<!--					</mat-form-field>-->
 					<mat-form-field class="col col-12 col-md-4 mb-3">
 						<mat-label>فعالیت</mat-label>
 						<mat-select formControlName="type">
@@ -30,32 +65,7 @@
 						<mat-icon matSuffix>device_hub</mat-icon>
 						<mat-error>{{validate.requiredValidate(manualForm.get('device'),'دستگاه')}}</mat-error>
 					</mat-form-field>
-					<mat-card-subtitle class="mb-3"> تاریخ:</mat-card-subtitle>
-					<mat-form-field class="col col-12 col-md-4 mb-3">
-						<mat-label>سال</mat-label>
-						<input matInput placeholder="سال" formControlName="year">
-						<mat-icon matSuffix>calendar_month</mat-icon>
-						<mat-error>{{validate.numberValidate(manualForm.get('year'),'سال')}}</mat-error>
-					</mat-form-field>
-					<mat-form-field class="col col-12 col-md-4 mb-3">
-						<mat-label>ماه</mat-label>
-						<input matInput placeholder="ماه" formControlName="month">
-						<mat-icon matSuffix>calendar_month</mat-icon>
-						<mat-error>{{validate.numberValidate(manualForm.get('month'),'ماه')}}</mat-error>
-					</mat-form-field>
-					<mat-form-field class="col col-12 col-md-4 mb-3">
-						<mat-label>روز</mat-label>
-						<input matInput placeholder="روز" formControlName="day">
-						<mat-icon matSuffix>calendar_month</mat-icon>
-						<mat-error>{{validate.numberValidate(manualForm.get('day'),'روز')}}</mat-error>
-					</mat-form-field>
 					<mat-card-subtitle class="mb-3"> ساعت:</mat-card-subtitle>
-					<mat-form-field class="col col-12 col-md-4 mb-3">
-						<mat-label>ساعت</mat-label>
-						<input matInput placeholder="ساعت" formControlName="hour">
-						<mat-icon matSuffix>watch_later</mat-icon>
-						<mat-error>{{validate.numberValidate(manualForm.get('hour'),'ساعت')}}</mat-error>
-					</mat-form-field>
 					<mat-form-field class="col col-12 col-md-4 mb-3">
 						<mat-label>دقیقه</mat-label>
 						<input matInput placeholder="دقیقه" formControlName="min">
@@ -63,10 +73,18 @@
 						<mat-error>{{validate.numberValidate(manualForm.get('min'),'دقیقه')}}</mat-error>
 					</mat-form-field>
 					<mat-form-field class="col col-12 col-md-4 mb-3">
-						<mat-label>ثانیه</mat-label>
-						<input matInput placeholder="ثانیه" formControlName="sec">
+						<mat-label>ساعت</mat-label>
+						<input matInput placeholder="ساعت" formControlName="hour">
 						<mat-icon matSuffix>watch_later</mat-icon>
-						<mat-error>{{validate.numberValidate(manualForm.get('sec'),'ثانیه')}}</mat-error>
+						<mat-error>{{validate.numberValidate(manualForm.get('hour'),'ساعت')}}</mat-error>
+					</mat-form-field>
+					<mat-card-subtitle class="mb-3" *ngIf="!permit.includes('guard')"> تاریخ:</mat-card-subtitle>
+					<mat-form-field class="col col-12 col-md-4 mb-3" *ngIf="!permit.includes('guard')">
+						<mat-label>تاریخ</mat-label>
+						<input matInput [matDatepicker]="picker7" placeholder="تاریخ  را وارد نمایید ..." formControlName="date">
+						<mat-datepicker-toggle matSuffix [for]="picker7"></mat-datepicker-toggle>
+						<mat-datepicker #picker7></mat-datepicker>
+						<mat-error>{{validate.stringValidate(manualForm.get('date'),'تاریخ')}}</mat-error>
 					</mat-form-field>
 				</div>
 			</form>

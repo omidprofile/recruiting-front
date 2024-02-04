@@ -1,1 +1,17 @@
-<p>pending works!</p>
+<div class="dashboard col-12">
+	<div class="breadcrumb2 mt-3 col col-12 col-xl-10">
+		<div class="items">
+			<a class="item" routerLink="/panel">
+				<span class="title">داشبورد</span>
+			</a>
+			<a class="item" routerLink="/panel/attendance">
+				<span class="title">حضورغیاب</span>
+			</a>
+			<a class="item" routerLink="/panel/attendance/pending">
+				<span class="title">نیاز به بررسی</span>
+			</a>
+		</div>
+	</div><!-- /breadcrumb2 -->
+	<div class="headline-title col col-12 col-xl-10 mb-3">نیاز به بررسی</div>
+	<app-attendance-table type="pending" class="col col-12 col-xl-10"></app-attendance-table>
+</div>

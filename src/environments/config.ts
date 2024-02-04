@@ -1,4 +1,4 @@
-export const config={
+export const config= {
 	// apiRoute:"http://localhost:2020"
-	apiRoute:"https://api.hcm.aprofile.ir"
+	apiRoute: "https://api.hcm.aprofile.ir"
 }

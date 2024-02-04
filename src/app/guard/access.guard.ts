@@ -1,4 +1,7 @@
 import { CanActivateFn } from '@angular/router';
+import { inject, Inject, Injector } from "@angular/core";
+import { MatSnackBar } from "@angular/material/snack-bar";
+import { SnackbarComponent } from "../shared/snackbar/snackbar.component";
 
 export const accessGuard: CanActivateFn = (route, state) => {
   let permission = localStorage.getItem('permission');
@@ -19,6 +22,10 @@ export const accessGuard: CanActivateFn = (route, state) => {
         return true
     }
   }
-  
+
+  inject(MatSnackBar).openFromComponent(SnackbarComponent, {
+    data: `شما مجوز دسترسی به این بخش را ندارید`,
+    duration: 1500
+  })._open();
   return false
 };

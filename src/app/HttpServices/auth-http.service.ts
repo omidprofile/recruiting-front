@@ -16,5 +16,12 @@ export class AuthHttpService {
             shareReplay(),
         )
   }
+  sendSms(body:any){
+    return this.http.post(`${config.apiRoute}/auth/sendSms`, body,{
+        headers: {'Access-Control-Allow-Origin': '*'}})
+        .pipe(
+            shareReplay(),
+        )
+  }
   
 }

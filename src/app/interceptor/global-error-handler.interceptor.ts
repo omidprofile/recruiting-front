@@ -21,7 +21,7 @@ export class GlobalErrorHandlerInterceptor implements HttpInterceptor {
 				3,
 			),
 			catchError(err => {
-				return throwError(async () => {
+				return throwError( () => {
 					if (err.status == 400) {
 						this.newError = {
 							error: err,
@@ -32,7 +32,7 @@ export class GlobalErrorHandlerInterceptor implements HttpInterceptor {
 							message: err.error.message,
 							status: 401
 						}
-						await this.route.navigate(['/auth/login'])
+						 this.route.navigate(['/auth/login'])
 					} else if (err.status == 404)
 						this.newError = {
 							message: 'صفحه مورد نظر یافت نشد',

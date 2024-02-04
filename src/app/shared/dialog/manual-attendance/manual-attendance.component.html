@@ -1,0 +1,72 @@
+<mat-card-subtitle mat-dialog-title>
+	ثبت{{data.type == 'in'?' ورود ':' خروج '}}
+</mat-card-subtitle>
+<div mat-dialog-content>
+	<form [formGroup]="form">
+		<mat-form-field class="col col-12  mb-3" *ngIf="!data.device">
+			<mat-label>دستگاه</mat-label>
+			<mat-select formControlName="device">
+				<mat-option class="mat-option-design" [value]="device._id"
+							*ngFor="let device of devices"
+				>{{device.name}}</mat-option>
+			</mat-select>
+			<mat-icon matSuffix>device_hub</mat-icon>
+			<mat-error>{{validate.requiredValidate(form.get('device'),'دستگاه')}}</mat-error>
+		</mat-form-field>
+		<mat-form-field class="col col-12 mb-3" *ngIf="!data.user">
+			<mat-label>فرد</mat-label>
+			<input matInput placeholder="انتخاب فرد"
+				   #input
+				   [matAutocomplete]="auto"
+				   (input)="filter()"
+				   (focus)="filter()"
+				   (keyup)="setUser('')"
+			>
+			<mat-autocomplete requireSelection #auto="matAutocomplete">
+				<mat-option class="mat-option-design" (click)="setUser(option['code'])"
+							*ngFor="let option of filteredOptions"
+							[value]="option['name']">
+					<div class="d-flex justify-content-between " style="width: 16vw">
+						<div>{{option['name']}}</div>
+						<div>{{option['code'] ?? '' |persianNumbers}}</div>
+					</div>
+				</mat-option>
+			</mat-autocomplete>
+			<mat-error></mat-error>
+		</mat-form-field>
+		<mat-form-field class="col col-12 mb-3" *ngIf="!data.type">
+			<mat-label>فعالیت</mat-label>
+			<mat-select formControlName="type">
+				<mat-option class="mat-option-design" value="in" >ورود</mat-option>
+				<mat-option class="mat-option-design" value="out" >خروج</mat-option>
+			</mat-select>
+			<mat-icon matSuffix>pending_actions</mat-icon>
+			<mat-error>{{validate.requiredValidate(form.get('type'),'فعالیت')}}</mat-error>
+		</mat-form-field>
+		<mat-card-subtitle class="mb-3"> ساعت:</mat-card-subtitle>
+		<mat-form-field class="col col-12 mb-3">
+			<mat-label>ساعت</mat-label>
+			<input matInput placeholder="ساعت" formControlName="hour">
+			<mat-icon matSuffix>watch_later</mat-icon>
+			<mat-error>{{validate.numberValidate(form.get('hour'),'ساعت')}}</mat-error>
+		</mat-form-field>
+		<mat-form-field class="col col-12 mb-3">
+			<mat-label>دقیقه</mat-label>
+			<input matInput placeholder="دقیقه" formControlName="min">
+			<mat-icon matSuffix>watch_later</mat-icon>
+			<mat-error>{{validate.numberValidate(form.get('min'),'دقیقه')}}</mat-error>
+		</mat-form-field>
+		<mat-card-subtitle class="mb-3" *ngIf="!permit.includes('guard') && !data.date"> تاریخ:</mat-card-subtitle>
+		<mat-form-field class="col col-12  mb-3" *ngIf="!permit.includes('guard') && !data.date">
+			<mat-label>تاریخ</mat-label>
+			<input matInput [matDatepicker]="picker7" placeholder="تاریخ  را وارد نمایید ..." formControlName="date">
+			<mat-datepicker-toggle matSuffix [for]="picker7"></mat-datepicker-toggle>
+			<mat-datepicker #picker7></mat-datepicker>
+			<mat-error>{{validate.stringValidate(form.get('date'),'تاریخ')}}</mat-error>
+		</mat-form-field>
+	</form>
+</div>
+<div mat-dialog-actions>
+	<button mat-stroked-button color="accent" [disabled]="!form.valid" (click)="submit()">ثبت</button>
+	<button mat-stroked-button (click)="dialogRef.close()" >انصراف</button>
+</div>

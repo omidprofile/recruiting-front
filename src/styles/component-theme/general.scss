@@ -1,7 +1,6 @@
 @use '@angular/material' as mat;
 
 @mixin dashboard_typography($config) {
-	@debug $config;
 	
 	.headline-title {
 		@include mat.typography-level($config, headline);

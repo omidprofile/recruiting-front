@@ -34,6 +34,7 @@ export class RoleFormComponent implements OnInit{
 	}
 
 	ngOnInit() {
+		console.log(this.data)
 		if (this.data.parent?.length == 1){
 			this.parent.setValue(this.data.parent[0]._id)
 			this.parent.setValidators([]);
@@ -88,6 +89,7 @@ export class RoleFormComponent implements OnInit{
 		if (this.data.type == 'collection'){
 			let formData = this.rol.value
 			formData.company = this.parent.value
+			console.log(formData)
 			this.http.createCollection(formData).subscribe({
 				next:()=>{
 					this.dialogRef.close({created: true})

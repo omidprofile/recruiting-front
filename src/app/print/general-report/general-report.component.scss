@@ -1,0 +1,16 @@
+.printer{
+	width: 800px !important;
+}
+.printer-text{
+	text-align: right !important;
+}
+
+@media print {
+	.print-hidden {
+		display: none !important;
+	}
+}
+
+.mat-mdc-card-header {
+	padding: unset !important;
+}

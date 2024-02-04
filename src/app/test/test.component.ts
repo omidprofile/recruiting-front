@@ -8,12 +8,14 @@ import { UsersHttpService } from "../HttpServices/users-http.service";
 })
 export class TestComponent implements OnInit{
 imgs:any;
+exps:any;
   constructor(private http:UsersHttpService) {
   }
   ngOnInit() {
-    this.http.getUsers({_id:'659276107877cbcce496b1df'}).subscribe((data:any)=>{
-      console.log(data)
+    this.http.getUsers({_id:'659fad9cf6d2badc0d4de8ee', gImg:true}).subscribe((data:any)=>{
+      console.log(data[0])
       this.imgs = data[0].userImage;
+      this.exps = data[0].employee_info.experiment[0].img
     })
   }
 }

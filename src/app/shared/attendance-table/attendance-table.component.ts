@@ -6,7 +6,7 @@ import {
 	EventEmitter,
 	Input,
 	OnInit,
-	Output
+	Output, ViewChild
 } from '@angular/core';
 import { MatDialog } from "@angular/material/dialog";
 import { PersianNumberPipe } from "../pipe/persian-number.pipe";
@@ -17,6 +17,10 @@ import { AttendanceService } from "../../HttpServices/attendance.service";
 import { tap } from "rxjs";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { SnackbarComponent } from "../snackbar/snackbar.component";
+import { DateService } from "../../services/date.service";
+import { MatTable } from "@angular/material/table";
+import { ManualComponent } from "../../panel/pages/attendance/manual/manual.component";
+import { ManualAttendanceComponent } from "../dialog/manual-attendance/manual-attendance.component";
 
 export interface PeriodicElement {
 	name: string;
@@ -49,20 +53,47 @@ export class AttendanceTableComponent implements OnInit, AfterViewInit {
 	dataSource: any;
 	dataShow: any
 	isComplete = false
-	
+	devices: any;
+	devices_show: any;
 	@Input({required: true}) type: any;
-	@Output() moreInfo: EventEmitter<any> = new EventEmitter<any>
+	@Output() moreInfo: EventEmitter<any> = new EventEmitter<any>;
+	@ViewChild(MatTable) table: MatTable<PeriodicElement>;
 	
-	constructor(public dialog: MatDialog,
-	            private persianPip: PersianNumberPipe,
-	            private http: AttendanceService,
-	            private _snackBar: MatSnackBar,
-	            private changeDetectorRef: ChangeDetectorRef
+	constructor(
+		public dialog: MatDialog,
+		private persianPip: PersianNumberPipe,
+		private http: AttendanceService,
+		private _snackBar: MatSnackBar,
+		private changeDetectorRef: ChangeDetectorRef,
+		private date: DateService,
 	) {
 	}
 	
-	ngOnInit() {
-		if (this.type == 'conflict')
+	getDevices() {
+		this.http.getDevices().subscribe({
+			next: (data: any) => {
+				this.devices = data.devices;
+				this.devices_show = [];
+				this.devices.map((e: any) => {
+					this.devices_show.push(e.serial);
+				})
+			},
+			error: (err) => {
+				console.log(err)
+			}
+		})
+	}
+	
+	updateTable() {
+		this.dataShow = JSON.parse(JSON.stringify(this.dataSource.filter((e: any) => {
+			return this.devices_show.includes(e.device_serial)
+		})));
+		this.table.renderRows();
+	}
+	
+	async ngOnInit() {
+		await this.getDevices();
+		if (this.type == 'pending')
 			this.displayedColumns = ['name', 'personal_code', 'device', 'date', 'day', 'device_type', 'device_time', 'guard', 'guard_time', 'guard_type', 'reason', 'action'];
 		
 		if (this.type == 'report') {
@@ -81,6 +112,8 @@ export class AttendanceTableComponent implements OnInit, AfterViewInit {
 				}
 				this.displayedColumns = ['name', 'personal_code', 'device', 'date', 'day', 'device_type', 'device_time', 'action'];
 			}
+			if (this.type == 'pending')
+				this.getDaily(true, ['p'])
 		},)
 		this.changeDetectorRef.detectChanges();
 	}
@@ -90,7 +123,7 @@ export class AttendanceTableComponent implements OnInit, AfterViewInit {
 			data: `در حال خواندن اطلاعات از دستگاه`,
 		})
 		let user = '656eecea5d4c6ea271177c8f'
-		await this.http.readFromDevice({guard: user}).subscribe({
+		await this.http.readFromDevice({watch: 'daily'}).subscribe({
 			next: (data) => {
 				this.getDaily(false)
 			},
@@ -98,22 +131,30 @@ export class AttendanceTableComponent implements OnInit, AfterViewInit {
 				console.log(err)
 				this._snackBar.openFromComponent(SnackbarComponent, {
 					data: `خطا در انجام عملیات`,
-					duration:3000
+					duration: 3000
 				})
 			}
 		})
 	}
 	
-	getDaily(confirm?: boolean) {
+	getDaily(confirm: boolean, status?: any) {
 		let date = moment(Date.now()).format("jYYYY/jM/jD").split('/')
 		let body: any = {}
-		if (!confirm) {
-			body.year = date[0]
-			body.month = date[1]
-			body.day = date[2]
-		}
+		body.year = date[0]
+		body.month = date[1]
+		body.day = date[2]
 		body.type = 'daily'
+		body.status = ['n', 'e','m','ne']
 		body.guard_confirm = confirm ?? false
+		if (!confirm) {
+			body.status = ['n']
+		}
+		if (status?.length) {
+			body = {};
+			body.type = 'daily'
+			body.guard_confirm = confirm ?? false
+			body.status = status
+		}
 		this.http.getAttendances(body).pipe(
 			tap((data) => {
 				this._snackBar.openFromComponent(SnackbarComponent, {
@@ -124,21 +165,32 @@ export class AttendanceTableComponent implements OnInit, AfterViewInit {
 		).subscribe({
 			next: (data: any) => {
 				data = data.data
+				
 				data.sort((a: any, b: any) => {
 					return b.device_time - a.device_time
 				})
 				this.dataSource = []
 				for (let index of data) {
-					let item: any = {}
-					item.id = index._id
-					item.name = index.user.name + " " + index.user.last_name
-					item.personal_code = index.personal_code
-					item.device = index.device_ip.name
-					item.date = index.date.date
-					item.day = index.date.dayOfWeek
-					item.device_type = index.sysType
-					item.device_time = index.date.time
-					this.dataSource.push(item)
+					if (!index.user)
+						continue;
+					let item: any = {};
+					item.device_serial = index.device_ip.serial;
+					item.id = index._id;
+					item.name = index.user.name + " " + index.user.last_name;
+					item.personal_code = index.personal_code;
+					item.device = index.device_ip.name;
+					item.date = index.date.date;
+					item.day = index.date.dayOfWeek;
+					item.device_type = index.acceptedType;
+					item.status = index.status;
+					item.device_time = this.date.dateInfo(index.acceptedTime).time;
+					if (this.type == 'pending') {
+						item.guard = index.guard.name + " " + index.guard.last_name;
+						item.guard_time = this.date.dateInfo(index.guard_time).time;
+						item.guard_type = index.guard_type;
+						item.reason = index.guard_description;
+					}
+					this.dataSource.push(item);
 				}
 				this.dataShow = JSON.parse(JSON.stringify(this.dataSource))
 			}
@@ -169,16 +221,27 @@ export class AttendanceTableComponent implements OnInit, AfterViewInit {
 		if (this.type == 'daily') {
 			data = {
 				type: item.device_type,
-				time: item.device_time
+				time: item.device_time,
 			}
+			data.subject = 'guard_edit'
 		}
-		if (this.type == 'conflict') {
+		if (this.type == 'pending') {
 			data = {
 				type: item.guard_type,
-				time: item.guard_time
+				time: item.guard_time,
 			}
+			data.subject = 'pending'
 		}
+		if (this.type == 'accepted') {
+			data = {
+				type: item.device_type,
+				time: item.device_time,
+			}
+			data.subject = 'report'
+		}
+		
 		data.item = item
+		
 		
 		const dialogRef = this.dialog.open(EditLogComponent, {
 			data: data,
@@ -198,5 +261,20 @@ export class AttendanceTableComponent implements OnInit, AfterViewInit {
 	
 	viewMoreInfo() {
 		this.moreInfo.emit('more')
+	}
+	
+	openManual(type:string){
+		const dialogRef = this.dialog.open(ManualAttendanceComponent, {
+			width:'500px',
+			direction:"rtl",
+			data: {type:type},
+			hasBackdrop:true,
+			disableClose:true
+		})
+		dialogRef.afterClosed().subscribe(result => {
+			if (result == 'success') {
+				this.getDaily(false);
+			}
+		});
 	}
 }

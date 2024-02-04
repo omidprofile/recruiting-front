@@ -1,5 +1,19 @@
 <mat-progress-bar *ngIf="dataSource == undefined" mode="query"></mat-progress-bar>
-<table mat-table [dataSource]="dataShow" class="mat-elevation-z8" *ngIf="dataShow != undefined">
+<mat-card *ngIf="dataShow != undefined && ['daily', 'accepted','pending'].includes(this.type)">
+	<mat-card-content>
+		<mat-form-field class="col-12" >
+			<mat-label>دستگاه ها:</mat-label>
+			<mat-select multiple="true" name="devices" [(ngModel)]="devices_show" >
+				<mat-option class="mat-option-design" [value]="device.serial" *ngFor="let device of devices" (click)="updateTable()">{{device.name}}</mat-option>
+			</mat-select>
+		</mat-form-field>
+	</mat-card-content>
+	<mat-card-actions *ngIf="this.type == 'daily'">
+		<button mat-stroked-button color="accent" class="me-3" (click)="openManual('in')">ثبت ورود دستی</button>
+		<button mat-stroked-button color="warn" (click)="openManual('out')">ثبت خروج دستی</button>
+	</mat-card-actions>
+</mat-card>
+<table mat-table [dataSource]="dataShow" class="mat-elevation-z8 mt-3" *ngIf="dataShow != undefined">
 	<!-- Position Column -->
 	<ng-container matColumnDef="name">
 		<th mat-header-cell *matHeaderCellDef> نام</th>
@@ -32,8 +46,9 @@
 	<ng-container matColumnDef="device_type" *ngIf="type != 'report'">
 		<th mat-header-cell *matHeaderCellDef> نوع فعالیت دستگاه:</th>
 		<td mat-cell *matCellDef="let element">
-			<div *ngIf="element.device_type == 'in'" class="in">ورود</div>
-			<div *ngIf="element.device_type == 'out'" class="out">خروج</div>
+			
+			<div *ngIf="element.device_type == 'in'" class="in">ورود {{element.status == 'ne'?'-غیرفعال شده':""}}</div>
+			<div *ngIf="element.device_type == 'out'" class="out">خروج {{element.status == 'ne'?'-غیرفعال شده':""}}</div>
 		
 		</td>
 	</ng-container>
@@ -43,26 +58,26 @@
 		<td mat-cell *matCellDef="let element"> {{element.device_time |persianNumbers}} </td>
 	</ng-container>
 	
-	<ng-container matColumnDef="guard" *ngIf="type == 'conflict'">
+	<ng-container matColumnDef="guard" *ngIf="type == 'pending'">
 		<th mat-header-cell *matHeaderCellDef> نگهبان</th>
 		<td mat-cell *matCellDef="let element"> {{element.guard |persianNumbers}} </td>
 	</ng-container>
 	
-	<ng-container matColumnDef="guard_time" *ngIf="type == 'conflict'">
+	<ng-container matColumnDef="guard_time" *ngIf="type == 'pending'">
 		<th mat-header-cell *matHeaderCellDef> ساعت نگهبانی</th>
 		<td mat-cell *matCellDef="let element"> {{element.guard_time |persianNumbers}} </td>
 	</ng-container>
 	
-	<ng-container matColumnDef='guard_type' *ngIf="type == 'conflict'">
+	<ng-container matColumnDef='guard_type' *ngIf="type == 'pending'">
 		<th mat-header-cell *matHeaderCellDef> نوع فعالیت نگهبانی:</th>
 		<td mat-cell *matCellDef="let element">
-			<div *ngIf="element.guard_type == 'ورود'" class="in">ورود</div>
-			<div *ngIf="element.guard_type == 'خروج'" class="out">خروج</div>
+			<div *ngIf="element.guard_type == 'in'" class="in">ورود</div>
+			<div *ngIf="element.guard_type == 'out'" class="out">خروج</div>
 		
 		</td>
 	</ng-container>
 	
-	<ng-container matColumnDef="reason" *ngIf="type == 'conflict'">
+	<ng-container matColumnDef="reason" *ngIf="type == 'pending'">
 		<th mat-header-cell *matHeaderCellDef> علت</th>
 		<td mat-cell *matCellDef="let element">
 			<b>
@@ -116,12 +131,15 @@
 			<div class="d-flex justify-content-start align-items-baseline" *ngIf="type == 'daily'">
 				<button mat-stroked-button color="accent" class="me-3" (click)="openAcceptDialog(element)">تایید
 				</button>
-				<button mat-stroked-button color="warn" (click)="openEditDialog(element)">گزارش</button>
+				<button mat-stroked-button color="warn" (click)="openEditDialog(element)">اصلاح</button>
+			</div>
+			<div class="d-flex justify-content-start align-items-baseline" *ngIf="type == 'pending'">
+				<button mat-stroked-button color="warn" (click)="openEditDialog(element)">اصلاح</button>
 			</div>
 			<div class="d-flex justify-content-start align-items-baseline" *ngIf="type == 'accepted'">
 <!--				<button mat-stroked-button color="accent" class="me-3" (click)="openAcceptDialog(element)">جزئیات-->
 <!--				</button>-->
-				<button mat-stroked-button color="warn" disabled  (click)="openEditDialog(element)">بررسی مجدد</button>
+				<button mat-stroked-button color="warn"   (click)="openEditDialog(element)">گزارش</button>
 			</div>
 			<div class="d-flex justify-content-start align-items-baseline" *ngIf="type == 'report'">
 				<button mat-stroked-button color="accent" class="me-3" (click)="viewMoreInfo()">جزئیات بیشتر</button>

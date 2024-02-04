@@ -13,16 +13,10 @@ export class AttendanceService {
   
     readFromDevice(body:any){
     return this.http.post(`${config.apiRoute}/attendance/readDevice`, body)
-        .pipe(
-            shareReplay(),
-        );
   }
   
   getAttendances(body:any){
     return this.http.post(`${config.apiRoute}/attendance/getLogs`,body)
-        .pipe(
-            shareReplay(),
-        )
   }
   
   createAttendances(body:any){
@@ -41,7 +35,7 @@ export class AttendanceService {
         )
   }
   
-  getDevices(params:any){
+  getDevices(params?:any){
     return this.http.get(`${config.apiRoute}/attendance/devices`,{
       params:params
     })

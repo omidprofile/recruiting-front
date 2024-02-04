@@ -1,4 +1,17 @@
 <div class="dashboard col-12">
+	<div class="breadcrumb2 mt-3 col col-12 col-xl-10">
+		<div class="items">
+			<a class="item" routerLink="/panel">
+				<span class="title">داشبورد</span>
+			</a>
+			<a class="item" routerLink="/panel/report">
+				<span class="title">گزارشات</span>
+			</a>
+			<a class="item" routerLink="/panel/report/reports">
+				<span class="title">لیست گزارشات</span>
+			</a>
+		</div>
+	</div><!-- /breadcrumb2 -->
 	<div class="headline-title col col-12 col-xl-10">گزارشات</div>
 	<div class="col col-12 col-xl-10 mt-3" *ngIf="reports">
 		<div class="row">
@@ -9,7 +22,7 @@
 							{{rep.title}}
 						</div>
 						<div class="dashboard-caption">
-							{{rep.type == 'general'?'کلی':'جزئیات'}}
+							{{rep.type == 'general'?'کلی':rep.type == 'details'?'جزئیات':'پرداختی کارکنان'}}
 						</div>
 					</mat-card-content>
 				</mat-card>

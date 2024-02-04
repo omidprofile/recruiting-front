@@ -50,10 +50,10 @@ export class CalendarService {
           row.dayNumber = dateInfo.day;
           row.date = dateInfo.date;
           row.day == 'جمعه' || data.calendars.filter((e: any) => {
-            return e.day == row.dayNumber
+            return (e.day == row.dayNumber && e.is_holiday)
           }).length ? row.day_status = 'holiday' : row.day_status = 'normal';
           row.day == 'جمعه' || data.calendars.filter((e: any) => {
-            return e.day == row.dayNumber
+            return (e.day == row.dayNumber && e.is_holiday)
           }).length ? holidays++ : work_days++;
           temp.push(row);
         }

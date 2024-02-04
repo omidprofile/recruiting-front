@@ -15,6 +15,7 @@ import _default from "chart.js/dist/plugins/plugin.filler";
 import beforeDatasetDraw = _default.beforeDatasetDraw;
 import { CalendarHttpService } from "../../../../HttpServices/calendar-http.service";
 import { CalendarService } from "../../../../services/calendar.service";
+import { PrintService } from "../../../../services/print.service";
 
 @Component({
 	selector: 'app-work-report',
@@ -58,7 +59,9 @@ export class WorkReportComponent implements OnInit {
 		private _snackBar: MatSnackBar,
 		private date:DateService,
 		private calendar:CalendarHttpService,
-		private PCalendar:CalendarService
+		private PCalendar:CalendarService,
+		private printService:PrintService
+		
 		) {
 	}
 	
@@ -116,7 +119,7 @@ export class WorkReportComponent implements OnInit {
 		// body.day = this.day;
 		body.month = this.month;
 		body.year = this.year;
-		body.user = this.user;
+		this.report_base == 'person'? body.user = this.user:'';
 		this.loading = true;
 		let mLog = new Promise((resolve, reject) => {
 			this.calendar.getCalendar({
@@ -148,19 +151,27 @@ export class WorkReportComponent implements OnInit {
 								item.total_normal = 0
 								item.total_work = 0
 								item.holidays = 0
-								item.total_day = Object.keys(month).length
+								// item.total_day = Object.keys(month).filter((e:any)=>e.split('/')[1] == this.month).length;
+								item.total_day = 0
 								item.conflict = false;
 								item.conflict_arr = []
 								for (let day in month) {
+									if (day.split('/')[1] != this.month)
+										continue;
 									let logs = month[day]
-									if (logs[0]?.shift && !logs[0]?.is_holiday ){
-										if (this.monthLogs.filter((e:any)=>{return e.day == logs[0].date.day}).length == 0)
-											item.total_time += logs[0].shift.force_time;
+									if (logs.find((e:any)=>{ return ['n','m','e'].includes(e?.status )})){
+										item.total_day++;
+										
+										if (logs[0]?.shift && !logs[0]?.is_holiday){
+											if (this.monthLogs.filter((e:any)=>{return (e.day == logs[0].date.day && e.is_holiday)}).length == 0)
+												item.total_time += logs[0].shift.force_time;
+										}
 									}
+
 									
 									
 									if(logs[0]?.is_holiday || this.monthLogs.filter((e:any)=>{
-										return 	e.day == logs[0].date.day
+										return 	(e.day == logs[0].date.day && e.is_holiday)
 									}).length)
 										item.holidays++
 									
@@ -190,7 +201,7 @@ export class WorkReportComponent implements OnInit {
 								item.holiday_work = item.holidays
 								item.holidays = dc[1].holidays;
 								item.all_day = dc[1].days;
-								item.absent_days = item.all_day - (item.total_day + item.holidays - item.holiday_work );
+								item.absent_days = Math.abs(item.all_day - (item.total_day + item.holidays - item.holiday_work ));
 								temp.push(item)
 							}
 							this.dataSource = temp;
@@ -232,7 +243,6 @@ export class WorkReportComponent implements OnInit {
 			data: element,
 		})
 		dialogRef.afterClosed().subscribe(result => {
-			console.log('done')
 		});
 	}
 	
@@ -280,7 +290,6 @@ export class WorkReportComponent implements OnInit {
 	}
 	
 	saveLog(row:any){
-		console.log(row)
 		if (!this.year || !this.month){
 			this._snackBar.openFromComponent(SnackbarComponent, {
 				data: `سال و ماه بایستی وارد شوند`,
@@ -316,6 +325,16 @@ export class WorkReportComponent implements OnInit {
 			})
 		}
 
+	}
+	
+	details(){
+	
+	}
+	
+	print(){
+	this.printService.set(this.dataSource);
+
+	this.route.navigate(['/print/generalReport'])
 	}
 
 	protected readonly Object = Object;

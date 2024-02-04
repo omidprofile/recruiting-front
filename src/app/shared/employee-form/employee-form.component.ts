@@ -288,7 +288,7 @@ export class EmployeeFormComponent implements OnInit {
 	validateUser(stepper: MatStepper) {
 		let body = {
 			...(this.person.value.national_code != null && {national_code: this.person.value.national_code}),
-			...(this.person.value.certificate_code != null && {certificate_code: this.person.value.certificate_code}),
+			// ...(this.person.value.certificate_code != null && {certificate_code: this.person.value.certificate_code}),
 			...(this.connection.value.mobile[0] != null && {mobile: this.connection.value.mobile}),
 			...(this.connection.value.phone[0] != null && {phone: this.connection.value.phone}),
 			...(this.connection.value.email[0] != null && {email: this.connection.value.email}),
@@ -299,8 +299,8 @@ export class EmployeeFormComponent implements OnInit {
 					data = data.result
 					if (data.national_code == false)
 						this.person.get('national_code')?.setErrors({duplicate: true})
-					if (data.certificate_code == false)
-						this.person.get('certificate_code')?.setErrors({duplicate: true})
+					// if (data.certificate_code == false)
+					// 	this.person.get('certificate_code')?.setErrors({duplicate: true})
 					if (data.postal_code == false)
 						this.address.get('postal_code')?.setErrors({duplicate: true})
 					if (data.mobile?.length) {

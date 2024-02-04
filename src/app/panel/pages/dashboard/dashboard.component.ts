@@ -1,9 +1,9 @@
 import {Component, OnInit, ViewEncapsulation} from '@angular/core';
 const items = [
 	{title:'کاربران', logo:'users', link:'users', is_active:true , permission:['recruiting-admin','super-user']},
-	{title:'حضور غیاب', logo:'fingerprint', link:'attendance', is_active:true , permission:['super-user']},
-	{title:'گزارشات', logo:'bill', link:'report', is_active:true , permission:['super-user']},
-	{title:'تقویم', logo:'calendar', link:'calendar', is_active:true , permission:['super-user']},
+	{title:'حضور غیاب', logo:'fingerprint', link:'attendance', is_active:true , permission:['super-user','guard','recruiting-admin']},
+	{title:'گزارشات', logo:'bill', link:'report', is_active:true , permission:['super-user','recruiting-admin']},
+	{title:'تقویم', logo:'calendar', link:'calendar', is_active:true , permission:['super-user','recruiting-admin']},
 ]
 @Component({
 	selector: 'app-dashboard',

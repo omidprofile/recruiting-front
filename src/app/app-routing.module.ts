@@ -30,6 +30,8 @@ import { ReportsComponent } from "./panel/pages/bill/reports/reports.component";
 import { AttendanceInfoComponent } from "./panel/pages/bill/attendance-info/attendance-info.component";
 import { PaySlipComponent } from "./panel/pages/bill/pay-slip/pay-slip.component";
 import { CalendarComponent } from "./panel/pages/calendar/calendar.component";
+import { GeneralReportComponent } from "./print/general-report/general-report.component";
+import { InfoComponent } from "./panel/pages/users/info/info.component";
 
 const routes: Routes = [
 	
@@ -45,6 +47,9 @@ const routes: Routes = [
 		]
 	},
 	
+	/*print*/
+	{path: 'print/generalReport', component: GeneralReportComponent},
+	
 	// Panel :
 	{
 		path: 'panel', component: PanelComponent,
@@ -58,7 +63,7 @@ const routes: Routes = [
 				// canActivate:[accessGuard]
 			},
 			/*calendar*/
-			{path: 'calendar',component: CalendarComponent},
+			{path: 'calendar',component: CalendarComponent,data:{permission: ['super-user', 'recruiting-admin',]},canActivate: [accessGuard]},
 			/*users route*/
 			{
 				path: 'users', component: UsersComponent,
@@ -85,23 +90,29 @@ const routes: Routes = [
 				data: {permission: ['super-user', 'recruiting-admin',]},
 				canActivate:[accessGuard]
 			},
+			{
+				path: 'users/info', component: InfoComponent,
+				data: {permission: ['super-user', 'recruiting-admin',],title: 'اطلاعات کارکنان'},
+				canActivate:[accessGuard]
+			},
 			/*attendance route*/
-			{path: 'attendance', component: AttendanceComponent},
-			{path: 'attendance/daily', component: DailyComponent},
-			{path: 'attendance/manual', component: ManualComponent},
-			{path: 'attendance/conflict', component: ConflictComponent},
-			{path: 'attendance/pending', component: PendingComponent},
-			{path: 'attendance/accepted', component: AcceptedComponent},
-			{path: 'attendance/devices', component: DevicesComponent},
+			{path: 'attendance', component: AttendanceComponent,data:{permission: ['super-user', 'recruiting-admin','guard']},canActivate: [accessGuard]},
+			{path: 'attendance/daily', component: DailyComponent,data:{permission: ['super-user', 'recruiting-admin','guard']},canActivate: [accessGuard]},
+			{path: 'attendance/manual', component: ManualComponent,data:{permission: ['super-user', 'recruiting-admin','guard']},canActivate: [accessGuard]},
+			{path: 'attendance/conflict', component: ConflictComponent,data:{permission: ['super-user', 'recruiting-admin',]},canActivate: [accessGuard]},
+			{path: 'attendance/pending', component: PendingComponent,data:{permission: ['super-user', 'recruiting-admin',]},canActivate: [accessGuard]},
+			{path: 'attendance/accepted', component: AcceptedComponent,data:{permission: ['super-user', 'recruiting-admin','guard']},canActivate: [accessGuard]},
+			{path: 'attendance/devices', component: DevicesComponent,data:{permission: ['super-user', 'recruiting-admin',]},canActivate: [accessGuard]},
 			/*bill routes*/
 			{path: 'report', component: BillComponent},
-			{path: 'report/workReport', component: WorkReportComponent},
-			{path: 'report/reportMaker', component: ReportMakerComponent},
-			{path: 'report/reports', component: ReportsComponent},
-			{path: 'report/workInfo', component: AttendanceInfoComponent},
-			{path: 'report/paySlip', component: PaySlipComponent},
+			{path: 'report/workReport', component: WorkReportComponent,data:{permission: ['super-user',]},canActivate: [accessGuard]},
+			{path: 'report/reportMaker', component: ReportMakerComponent,data:{permission: ['super-user',]},canActivate: [accessGuard]},
+			{path: 'report/reports', component: ReportsComponent,data:{permission: ['super-user', 'recruiting-admin',]},canActivate: [accessGuard]},
+			{path: 'report/workInfo', component: AttendanceInfoComponent,data:{permission: ['super-user', 'recruiting-admin',]},canActivate: [accessGuard]},
+			{path: 'report/paySlip', component: PaySlipComponent,data:{permission: ['super-user',]},canActivate: [accessGuard]},
 			/**/
 			{path: 'user-info', component: Info3Component},
+			
 		]
 	},
 	

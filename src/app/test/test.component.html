@@ -1,4 +1,9 @@
 <!--<app-find-address></app-find-address>-->
 
-<img src="{{'data:image/jpg;base64,' + img}}" alt="" *ngFor="let img of imgs">
+<img src="{{'data:image/jpg;base64,' + img.mini}}" alt="" *ngFor="let img of imgs">
+<img src="{{'data:image/jpg;base64,' + img.full}}" alt="" *ngFor="let img of imgs">
+
+
+<img src="{{'data:image/jpg;base64,' + img.mini}}" alt="" *ngFor="let img of exps">
+<img src="{{'data:image/jpg;base64,' + img.full}}" alt="" *ngFor="let img of exps">
 

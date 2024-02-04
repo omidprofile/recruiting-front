@@ -18,14 +18,14 @@ export interface PeriodicElement {
 })
 export class UsersListComponent implements OnInit, AfterViewInit {
 	title='لیست کاربران'
-	displayedColumns: string[] = ['national_code', 'name', 'roll', 'status'];
+	displayedColumns: string[] = ['name', 'national_code', 'roll', 'status'];
 	dataSource: any;
 	show_data:any;
 	searchKey: string = '';
 	searchValue: string = '';
 	@ViewChild(MatTable) table: MatTable<PeriodicElement>;
 	
-	constructor(private http: UsersHttpService, public router: Router) {
+		constructor(private http: UsersHttpService, public router: Router) {
 	}
 	
 	
@@ -49,7 +49,7 @@ export class UsersListComponent implements OnInit, AfterViewInit {
 					item.name = user.name + ' ' + user.last_name
 					let roles:any = []
 					for (let rol of user.jobs_id)
-						roles.push(rol.rank_info.title)
+						roles.push({title:rol.rank_info.title, personal_code:rol.personal_code})
 					item.roll = roles
 					item.status = user.is_active
 					this.dataSource.push(item)

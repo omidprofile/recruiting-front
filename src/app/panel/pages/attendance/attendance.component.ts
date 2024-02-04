@@ -2,12 +2,12 @@ import { Component } from '@angular/core';
 
 
 const items = [
-  {title:'حضور غیاب روزانه', logo:'daily', link:'daily',is_active:true},
-  {title:'ثبت دستی', logo:'manual', link:'manual',is_active:true},
-  {title:'مغایرت', logo:'conflict', link:'conflict',is_active:false},
-  {title:'نیاز به بررسی', logo:'pending', link:'pending',is_active:false},
-  {title:'تایید شده', logo:'accepted', link:'accepted',is_active:true},
-  {title:'دستگاه ها', logo:'devices', link:'devices',is_active:true},
+  {title:'حضور غیاب روزانه', logo:'daily', link:'daily',is_active:true,permission:['super-user','recruiting-admin','guard']},
+  {title:'ثبت دستی', logo:'manual', link:'manual',is_active:true,permission:['super-user','recruiting-admin','guard']},
+  // {title:'مغایرت', logo:'conflict', link:'conflict',is_active:false,permission:['super-user','recruiting-admin','guard']'},
+  {title:'نیاز به بررسی', logo:'pending', link:'pending',is_active:true,permission:['super-user','recruiting-admin',]},
+  {title:'تایید شده', logo:'accepted', link:'accepted',is_active:true,permission:['super-user','recruiting-admin','guard']},
+  {title:'دستگاه ها', logo:'devices', link:'devices',is_active:true,permission:['super-user','recruiting-admin',]},
 
 ]
 @Component({

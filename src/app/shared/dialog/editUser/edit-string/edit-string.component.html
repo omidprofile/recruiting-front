@@ -1,0 +1,49 @@
+<div mat-dialog-content dir="rtl" class="col col-12">
+	<form action="" [formGroup]="form" class="col col-12">
+		<mat-form-field *ngIf="data.fieldType != 'select'" class="col col-12">
+			<mat-label>{{data.title}}</mat-label>
+			<input matInput class="ps-2" [formControlName]="data.field">
+			<mat-error
+				*ngIf="data.validators.includes('number')">{{validate.numberValidate(form.get(data.field), data.title)}}</mat-error>
+			<mat-error
+				*ngIf="data.validators.includes('nationalCode')">{{validate.nationalCodeValidate(form.get(data.field))}}</mat-error>
+			<mat-error
+				*ngIf="data.validators.includes('mobile')">{{validate.mobileValidate(form.get(data.field))}}</mat-error>
+			<mat-error
+				*ngIf="data.validators.includes('phone')">{{validate.phoneValidate(form.get(data.field))}}</mat-error>
+			<mat-error
+				*ngIf="data.validators.includes('persianString')">{{validate.stringValidate(form.get(data.field), data.title)}}</mat-error>
+			<mat-error
+				*ngIf="data.validators.includes('englishString')">{{validate.stringValidate(form.get(data.field), data.title)}}</mat-error>
+			<mat-error
+				*ngIf="data.validators.includes('string')">{{validate.stringValidate(form.get(data.field), data.title)}}</mat-error>
+		</mat-form-field>
+		<mat-form-field *ngIf="data.fieldType == 'select'" class="col col-12">
+			<mat-label>{{data.title}}</mat-label>
+			<mat-select [formControlName]="data.field">
+				<mat-option class="mat-option-design" *ngFor="let opt of data.fieldValue"
+							[value]="opt.value">{{opt.title}}</mat-option>
+			</mat-select>
+			<mat-error
+				*ngIf="data.validators.includes('number')">{{validate.numberValidate(form.get(data.field), data.title)}}</mat-error>
+			<mat-error
+				*ngIf="data.validators.includes('nationalCode')">{{validate.nationalCodeValidate(form.get(data.field))}}</mat-error>
+			<mat-error
+				*ngIf="data.validators.includes('mobile')">{{validate.mobileValidate(form.get(data.field))}}</mat-error>
+			<mat-error
+				*ngIf="data.validators.includes('phone')">{{validate.phoneValidate(form.get(data.field))}}</mat-error>
+			<mat-error
+				*ngIf="data.validators.includes('persianString')">{{validate.stringValidate(form.get(data.field), data.title)}}</mat-error>
+			<mat-error
+				*ngIf="data.validators.includes('englishString')">{{validate.stringValidate(form.get(data.field), data.title)}}</mat-error>
+			<mat-error
+				*ngIf="data.validators.includes('string')">{{validate.stringValidate(form.get(data.field), data.title)}}</mat-error>
+		</mat-form-field>
+	</form>
+</div>
+<div mat-dialog-actions>
+	<button mat-button [mat-dialog-close]="form.value" (click)="submit()" [disabled]="!form.valid" color="accent">ثبت و
+		تایید
+	</button>
+	<button mat-button color="warn" mat-dialog-close>انصراف</button>
+</div>

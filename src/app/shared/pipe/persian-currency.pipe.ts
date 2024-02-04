@@ -9,9 +9,10 @@ export class PersianCurrencyPipe implements PipeTransform {
   }
   transform(value: string): string
   {
-    if(!value)
+    if(!value && value != '0')
       return '';
-    let str = Number(this.toEN.transform(value.toString()).replace(/\D/g,'')).toLocaleString();
+    
+    let str = Number(this.toEN.transform(value.toString()).replace(/[a-zA-Z,]/g,'')).toLocaleString();
     str = str.replace(/0/g, '۰');
     str = str.replace(/1/g, '۱');
     str = str.replace(/2/g, '۲');
@@ -22,6 +23,8 @@ export class PersianCurrencyPipe implements PipeTransform {
     str = str.replace(/7/g, '۷');
     str = str.replace(/8/g, '۸');
     str = str.replace(/9/g, '۹');
+    
+    
     return str;
   }
   

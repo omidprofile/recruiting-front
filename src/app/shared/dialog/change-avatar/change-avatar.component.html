@@ -1,0 +1,21 @@
+<div >
+	<mat-card>
+		<mat-card-content class="d-flex justify-content-center align-items-center">
+			<div class="img">
+				<img [src]=" 'data:image/jpg;base64,' + data.img" alt="" class="img" *ngIf="!newImage">
+				<img [src]=" newImageUrl.url" alt="" class="img" *ngIf="newImageUrl">
+			</div>
+		</mat-card-content>
+		<mat-card-actions class="d-flex justify-content-center flex-wrap align-items-center mt-3">
+			<div class="col-12 d-flex justify-content-center align-items-center">
+				<button mat-stroked-button color="accent" (click)="imgInput.click()">تغییر</button>
+			</div>
+			<div *ngIf="newImageUrl" class="mt-3">
+				<button mat-stroked-button color="primary" (click)="changeAvatar()">تایید</button>
+				<button mat-stroked-button class="ms-3" (click)="dialogRef.close()">انصراف</button>
+			
+			</div>
+			<input #imgInput accept="image/*" type="file" hidden="hidden" (change)="handleUserFileInputChange(imgInput.files)">
+		</mat-card-actions>
+	</mat-card>
+</div>

@@ -59,6 +59,7 @@
 	}
 	
 	.nonDay{
+		pointer-events: none;
 		border-radius: 5px;
 		cursor: default;
 		color: #aaa;

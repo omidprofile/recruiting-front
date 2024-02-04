@@ -83,6 +83,16 @@ import { YearComponent } from './shared/dialog/year/year.component';
 import { DayEventsComponent } from './shared/dialog/day-events/day-events.component';
 import { DayStatusChangeComponent } from './shared/dialog/day-status-change/day-status-change.component';
 import { DayCreateEventComponent } from './shared/dialog/day-create-event/day-create-event.component';
+import { PrintComponent } from './print/print.component';
+import { GeneralReportComponent } from './print/general-report/general-report.component';
+import { InfoComponent } from './panel/pages/users/info/info.component';
+import { EditStringComponent } from './shared/dialog/editUser/edit-string/edit-string.component';
+import { EditNumberComponent } from './shared/dialog/editUser/edit-number/edit-number.component';
+import { EditSelectComponent } from './shared/dialog/editUser/edit-select/edit-select.component';
+import { ChangeJobComponent } from './shared/dialog/change-job/change-job.component';
+import { JobInfoComponent } from './shared/dialog/job-info/job-info.component';
+import { ChangeAvatarComponent } from './shared/dialog/change-avatar/change-avatar.component';
+import { ManualAttendanceComponent } from './shared/dialog/manual-attendance/manual-attendance.component';
 
 
 @NgModule({
@@ -145,6 +155,16 @@ import { DayCreateEventComponent } from './shared/dialog/day-create-event/day-cr
  DayEventsComponent,
  DayStatusChangeComponent,
  DayCreateEventComponent,
+ PrintComponent,
+ GeneralReportComponent,
+ InfoComponent,
+ EditStringComponent,
+ EditNumberComponent,
+ EditSelectComponent,
+ ChangeJobComponent,
+ JobInfoComponent,
+ ChangeAvatarComponent,
+ ManualAttendanceComponent,
 	],
 	imports: [
 		BrowserModule,

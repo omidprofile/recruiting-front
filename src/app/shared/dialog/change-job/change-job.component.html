@@ -1,0 +1,84 @@
+<div mat-dialog-content>
+	<form [formGroup]="form">
+		<div class="row">
+			<mat-form-field class="col col-12 col-md-6 mb-3" *ngIf="fields.includes('company')">
+				<mat-label>شرکت</mat-label>
+				<mat-select formControlName="company">
+					<mat-option class="mat-option-design"  (click)="openDialog('company','شرکت')">افزودن شرکت<mat-icon color="primary">playlist_add</mat-icon></mat-option>
+					<mat-option class="mat-option-design" (click)="getCollection()" value="{{company._id}}" *ngFor="let company of companies">{{company.title}}</mat-option>
+				</mat-select>
+				<mat-error>{{validate.requiredValidate(form.get('company'), 'شرکت')}}</mat-error>
+			</mat-form-field>
+			<mat-form-field class="col col-12 col-md-6 mb-3" *ngIf="fields.includes('collection')">
+				<mat-label>قسمت</mat-label>
+				<mat-select formControlName="collection">
+					<ng-container *ngIf="collections !== undefined">
+						<mat-option class="mat-option-design" (click)="openDialog('collection','قسمت',form.value.company)">افزودن قسمت<mat-icon color="primary">playlist_add</mat-icon></mat-option>
+						<mat-option class="mat-option-design" (click)="getPart()" value="{{collection._id}}" *ngFor="let collection of collections">{{collection.title}}</mat-option>
+					</ng-container>
+				</mat-select>
+				<mat-error>{{validate.requiredValidate(form.get('collection'), ' قسمت')}}</mat-error>
+			</mat-form-field>
+			<mat-form-field class="col col-12 col-md-6 mb-3" *ngIf="fields.includes('part')">
+				<mat-label>بخش</mat-label>
+				<mat-select formControlName="part">
+					<ng-container *ngIf="parts !== undefined">
+						<mat-option class="mat-option-design" (click)="openDialog('part','بخش',form.value.collection)">افزودن بخش<mat-icon color="primary">playlist_add</mat-icon></mat-option>
+						<mat-option class="mat-option-design" (click)="getRank()" value="{{part._id}}" *ngFor="let part of parts">{{part.title}}</mat-option>
+					</ng-container>
+				</mat-select>
+				<mat-error>{{validate.requiredValidate(form.get('part'), 'بخش')}}</mat-error>
+			</mat-form-field>
+			<mat-form-field class="col col-12 col-md-6 mb-3" *ngIf="fields.includes('rank')">
+				<mat-label>عنوان شغلی</mat-label>
+				<mat-select formControlName="rank">
+					<ng-container *ngIf="ranks !== undefined">
+						<mat-option class="mat-option-design" (click)="openDialog('rank','رده',form.value.part)">افزودن عنوان شغلی<mat-icon color="primary">playlist_add</mat-icon></mat-option>
+						<mat-option class="mat-option-design" value="{{rank._id}}" *ngFor="let rank of ranks">{{rank.title}}</mat-option>
+					</ng-container>
+				</mat-select>
+				<mat-error>{{validate.requiredValidate(form.get('rank'), 'بخش')}}</mat-error>
+			
+			</mat-form-field>
+			<mat-form-field class="col col-12 col-md-6 mb-3" *ngIf="fields.includes('shift')">
+				<mat-label>شیفت</mat-label>
+				<mat-select formControlName="shift">
+					<ng-container *ngIf="shifts !== undefined">
+						<mat-option class="mat-option-design"  (click)="createShift()">افزودن شیفت<mat-icon color="primary">playlist_add</mat-icon></mat-option>
+						<mat-option class="mat-option-design" value="{{shift._id}}" *ngFor="let shift of shifts">{{shift.title}}</mat-option>
+					</ng-container>
+				</mat-select>
+				<mat-error>{{validate.requiredValidate(form.get('shift'), 'شیفت')}}</mat-error>
+			
+			</mat-form-field>
+			<mat-form-field class="col col-12 col-md-6 mb-3" *ngIf="fields.includes('baseSalary')">
+				<mat-label>پایه حقوق</mat-label>
+				<mat-select formControlName="baseSalary">
+					<ng-container *ngIf="baseSalaries !== undefined">
+						<mat-option class="mat-option-design"  (click)="createBaseSalary()">افزودن پایه حقوق<mat-icon color="primary">playlist_add</mat-icon></mat-option>
+						<mat-option class="mat-option-design" value="{{bs._id}}" *ngFor="let bs of baseSalaries">{{bs.title}}</mat-option>
+					</ng-container>
+				</mat-select>
+				<mat-error>{{validate.requiredValidate(form.get('baseSalary'), 'پایه حقوق')}}</mat-error>
+			
+			</mat-form-field>
+			<mat-form-field class="col col-12 col-md-6 mb-3" *ngIf="fields.includes('insurance')">
+				<mat-label>بیمه</mat-label>
+				<mat-select formControlName="insurance">
+					<ng-container *ngIf="insurances != undefined">
+						<mat-option class="mat-option-design"  (click)="createInsurance()">افزودن بیمه<mat-icon color="primary">playlist_add</mat-icon></mat-option>
+						<mat-option class="mat-option-design" value="{{insurance._id}}" *ngFor="let insurance of insurances">{{insurance.title}}</mat-option>
+					</ng-container>
+				</mat-select>
+				<mat-error>{{validate.requiredValidate(form.get('insurance'), 'بیمه')}}</mat-error>
+			</mat-form-field>
+		</div>
+	</form>
+	<div mat-dialog-actions>
+		<button mat-button [mat-dialog-close]="form.value" (click)="submit()" [disabled]="!form.valid" color="accent">ثبت و
+			تایید
+		</button>
+		<button mat-button color="warn" mat-dialog-close>انصراف</button>
+	</div>
+</div>
+

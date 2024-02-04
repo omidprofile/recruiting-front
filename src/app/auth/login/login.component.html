@@ -2,11 +2,14 @@
 <div class="navbar_login col-12">
   <div class="d-flex flex-row align-items-center justify-content-center logobox">
     <div class="col col-auto d-flex justify-content-center align-items-center logo_login">
-      <img src="./assets/images/logo.png" height="65" width="65px" alt="">
+      <img src="./assets/images/64-Sefid.png" alt="">
+      <img src="./assets/images/Arash-Logotype-Sefid.png" class="ms-3" alt="">
+    </div>
+    <div class="col col-auto d-flex justify-content-center align-items-center logo_login">
     </div>
     <div class="col col-auto  m-0 p-0 header-text_login">
       <a class="h3 p-0 m-0" style="color: var(--header_text_color)">
-        <p class="pb-0 m-0 text1_login"> صنعت پروفیل آرش</p>
+<!--        <p class="pb-0 m-0 text1_login"> صنعت پروفیل آرش</p>-->
         <!--        <p class="text2">صنعت </p>-->
       </a>
     </div>
@@ -40,21 +43,38 @@
   <div class="login col-10 col-sm-6 col-md-4 col-lg-4 col-xl-3" [ngClass]="show_login?'come':'back'">
       <div class="header_login d-flex justify-content-around align-items-baseline s">
         <p> سامانه کارکنان صنعت پروفیل آرش</p>
-        <a class="fas fa-times dismiss" style="color: var(--logo_color);" (click)="toggle()"></a>
+        <a class="fas fa-times dismiss" style="color: #004992;" (click)="toggle()"></a>
       </div>
       <div class="login-content">
-        <div class="login_logo">
-          <img src="./assets/images/logo.png" width="150" height="150" alt="">
+        <div class="lp">
+          <div class="login_logo">
+            <img src="./assets/images/logo3.png" width="150" height="150" alt="" class="test">
+          </div>
         </div>
-        <div class="inputBox">
-          <input type="text"   [value]="personal_code|persianNumbers" [(ngModel)]="personal_code" required>
-          <span>کدپرسنلی:</span>
+        <div class="inputBox" *ngIf="sendSms">
+          <input type="text"   [value]="authCode|persianNumbers" [(ngModel)]="authCode" required>
+          <span>کد تایید:</span>
+          <i></i>
+        </div>
+        <div class="inputBox" *ngIf="!sendSms">
+          <input type="text"   [value]="mobile|persianNumbers" [(ngModel)]="mobile" required>
+          <span>شماره موبایل:</span>
           <i></i>
         </div>
         <mat-error *ngIf="error.length">{{error}}</mat-error>
-        <div class="inputBox" *ngIf="!onSubmit">
+        <div class="inputBox" *ngIf="!onSubmit && sendSms">
           <a type="submit" value="ورود" id="btn" (click)="submit()" >
             <div>ورود</div>
+          </a>
+        </div>
+        <div class="inputBox" *ngIf="!onSubmit && !sendSms">
+          <a type="submit" value="ورود" id="btn" (click)="send()" >
+            <div>ارسال کد تایید</div>
+          </a>
+        </div>
+        <div class="inputBox" *ngIf="!onSubmit && sendSms">
+          <a type="submit" value="ورود" id="btn" (click)="send()" [ngClass]="sec>0?'disabled':''" >
+            <div>ارسال مجدد کد تایید {{sec > 0?(sec.toString() | persianNumbers):''}}</div>
           </a>
         </div>
         <span class="loader" *ngIf="onSubmit"></span>

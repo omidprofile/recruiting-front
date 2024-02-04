@@ -54,6 +54,42 @@ export class UsersHttpService {
             );
     }
 
+    updateUser( body:any){
+        return this.http.post(`${config.apiRoute}/users/update`, body, {
+            headers: {'Access-Control-Allow-Origin': '*'}
+        })
+            .pipe(
+                shareReplay(),
+            );
+    }
+
+    updateMobile( body:any){
+        return this.http.post(`${config.apiRoute}/users/mobile`, body, {
+            headers: {'Access-Control-Allow-Origin': '*'}
+        })
+            .pipe(
+                shareReplay(),
+            );
+    }
+
+    updateJob(body:any){
+        return this.http.post(`${config.apiRoute}/users/updateJob`, body, {
+            headers: {'Access-Control-Allow-Origin': '*'}
+        })
+            .pipe(
+                shareReplay(),
+            );
+    }
+
+    updateAvatar(body:any){
+        return this.http.post(`${config.apiRoute}/users/updateAvatar`, body, {
+            headers: {'Access-Control-Allow-Origin': '*'}
+        })
+            .pipe(
+                shareReplay(),
+            );
+    }
+
     validateUser( body:any,param:string){
         return this.http.post(`${config.apiRoute}/users/validate/${param}`, body, {
             headers: {'Access-Control-Allow-Origin': '*'}

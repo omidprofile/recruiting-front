@@ -1,6 +1,23 @@
-<div class="dashboard col col-12">
-	<div class="headline-title col col-12 col-xl-10">فیش حقوق</div>
-	<mat-card class="col col-12 col-xl-10 mt-3">
+<div class="dashboard col col-12" *ngIf="report_data">
+	<div class="breadcrumb2 mt-3 col col-12 col-xl-12">
+		<div class="items">
+			<a class="item" routerLink="/panel">
+				<span class="title">داشبورد</span>
+			</a>
+			<a class="item" routerLink="/panel/report">
+				<span class="title">گزارشات</span>
+			</a>
+			<a class="item" routerLink="/panel/report/reports">
+				<span class="title">لیست گزارشات</span>
+			</a>
+			<a class="item" routerLink="/panel/report/paySlip">
+				<span class="title">{{report_data.title}}</span>
+			</a>
+		</div>
+	</div><!-- /breadcrumb2 -->
+	
+	<div class="headline-title col col-12 col-xl-12">{{report_data.title}}</div>
+	<mat-card class="col col-12 col-xl-12 ?? 'ندارد' mt-3">
 		<mat-card-content>
 			<mat-form-field>
 				<mat-label>انتخاب دوره</mat-label>
@@ -10,4 +27,142 @@
 			</mat-form-field>
 		</mat-card-content>
 	</mat-card>
+	<div class="col col-12 col-xl-12">
+		<table mat-table [dataSource]="dataSource" class="mat-elevation-z8" *ngIf="dataSource && dataSource.length">
+			
+			<!--- Note that these columns can be defined in any order.
+				  The actual rendered columns are set as a property on the row definition" -->
+			
+			<!-- Name Column -->
+			<ng-container matColumnDef="user">
+				<th mat-header-cell *matHeaderCellDef> {{displayedColumnsName[0]}} </th>
+				<td mat-cell *matCellDef="let element"> {{element.user ?? 'ندارد'}} </td>
+			</ng-container>
+
+			<ng-container matColumnDef="personal_code">
+				<th mat-header-cell *matHeaderCellDef> {{displayedColumnsName[1]}} </th>
+				<td mat-cell *matCellDef="let element"> {{(element.personal_code ?? '0') |persianNumbers}} </td>
+			</ng-container>
+
+			<ng-container matColumnDef="baseSalary">
+				<th mat-header-cell *matHeaderCellDef> {{displayedColumnsName[2]}} </th>
+				<td mat-cell *matCellDef="let element"> {{(element.baseSalary ?? '0')|persianpurrencypipe}} </td>
+			</ng-container>
+
+			<ng-container matColumnDef="housingPayment">
+				<th mat-header-cell *matHeaderCellDef> {{displayedColumnsName[3]}} </th>
+				<td mat-cell *matCellDef="let element"> {{(element.housingPayment ?? '0')|persianpurrencypipe}} </td>
+			</ng-container>
+
+			<ng-container matColumnDef="subsidy">
+				<th mat-header-cell *matHeaderCellDef> {{displayedColumnsName[4]}} </th>
+				<td mat-cell *matCellDef="let element"> {{(element.subsidy ?? '0')|persianpurrencypipe}} </td>
+			</ng-container>
+
+			<ng-container matColumnDef="childPayment">
+				<th mat-header-cell *matHeaderCellDef> {{displayedColumnsName[5]}} </th>
+				<td mat-cell *matCellDef="let element"> {{(element.childPayment ?? '0')|persianpurrencypipe}} </td>
+			</ng-container>
+
+			<ng-container matColumnDef="interim_interest">
+				<th mat-header-cell *matHeaderCellDef> {{displayedColumnsName[6]}} </th>
+				<td mat-cell *matCellDef="let element"> {{(element.interim_interest ?? '0')|persianpurrencypipe}} </td>
+			</ng-container>
+
+			<ng-container matColumnDef="insurance">
+				<th mat-header-cell *matHeaderCellDef> {{displayedColumnsName[7]}} </th>
+				<td mat-cell *matCellDef="let element"> {{(element.insurance ?? '0')|persianpurrencypipe}} </td>
+			</ng-container>
+
+			<ng-container matColumnDef="extra_work">
+				<th mat-header-cell *matHeaderCellDef> {{displayedColumnsName[8]}} </th>
+				<td mat-cell *matCellDef="let element"> {{(element.extra_work ?? '0')|persianpurrencypipe}} </td>
+			</ng-container>
+
+			<ng-container matColumnDef="delay_work">
+				<th mat-header-cell *matHeaderCellDef> {{displayedColumnsName[9]}} </th>
+				<td mat-cell *matCellDef="let element"> {{(element.delay_work ?? '0')|persianpurrencypipe}} </td>
+			</ng-container>
+
+			<ng-container matColumnDef="extra_work_payment">
+				<th mat-header-cell *matHeaderCellDef> {{displayedColumnsName[10]}} </th>
+				<td mat-cell *matCellDef="let element"> {{(element.extra_work_payment ?? '0')|persianpurrencypipe}} </td>
+			</ng-container>
+
+			<ng-container matColumnDef="interim_interest_reward">
+				<th mat-header-cell *matHeaderCellDef> {{displayedColumnsName[11]}} </th>
+				<td mat-cell *matCellDef="let element"> {{(element.interim_interest_reward ?? '0')|persianpurrencypipe}} </td>
+			</ng-container>
+
+			<ng-container matColumnDef="transportation">
+				<th mat-header-cell *matHeaderCellDef> {{displayedColumnsName[12]}} </th>
+				<td mat-cell *matCellDef="let element"> {{(element.transportation ?? '0')|persianpurrencypipe}} </td>
+			</ng-container>
+
+			<ng-container matColumnDef="total_day_work">
+				<th mat-header-cell *matHeaderCellDef> {{displayedColumnsName[13]}} </th>
+				<td mat-cell *matCellDef="let element"> {{(element.total_day_work ?? '0')|persianpurrencypipe}} </td>
+			</ng-container>
+
+			<ng-container matColumnDef="absent_days">
+				<th mat-header-cell *matHeaderCellDef> {{displayedColumnsName[14]}} </th>
+				<td mat-cell *matCellDef="let element"> {{(element.absent_days ?? '0')|persianNumbers}} </td>
+			</ng-container>
+
+			<ng-container matColumnDef="total_extra_work">
+				<th mat-header-cell *matHeaderCellDef> {{displayedColumnsName[15]}} </th>
+				<td mat-cell *matCellDef="let element"> {{(createHour(element.total_extra_work))|persianNumbers}} </td>
+			</ng-container>
+
+			<ng-container matColumnDef="total_delay_work">
+				<th mat-header-cell *matHeaderCellDef> {{displayedColumnsName[16]}} </th>
+				<td mat-cell *matCellDef="let element"> {{(createHour(element.total_delay_work))|persianNumbers}} </td>
+			</ng-container>
+
+			<ng-container matColumnDef="weak_hour_work">
+				<th mat-header-cell *matHeaderCellDef> {{displayedColumnsName[17] }}</th>
+				<td mat-cell *matCellDef="let element"> {{(element.weak_hour_work ?? '0')|persianpurrencypipe}} </td>
+			</ng-container>
+
+			<ng-container matColumnDef="holiday_work">
+				<th mat-header-cell *matHeaderCellDef> {{displayedColumnsName[18]}} </th>
+				<td mat-cell *matCellDef="let element"> {{(element.holiday_work ?? '0')|persianpurrencypipe}} </td>
+			</ng-container>
+
+			<ng-container matColumnDef="night_work">
+				<th mat-header-cell *matHeaderCellDef> {{displayedColumnsName[19]}} </th>
+				<td mat-cell *matCellDef="let element"> {{(element.night_work ?? '0')|persianpurrencypipe}} </td>
+			</ng-container>
+
+			<ng-container matColumnDef="helpful">
+				<th mat-header-cell *matHeaderCellDef> {{displayedColumnsName[20]}} </th>
+				<td mat-cell *matCellDef="let element"> {{((element.helpful ?? '0' |persianpurrencypipe))}} </td>
+			</ng-container>
+
+			<ng-container matColumnDef="loan">
+				<th mat-header-cell *matHeaderCellDef> {{displayedColumnsName[21]}} </th>
+				<td mat-cell *matCellDef="let element"> {{(element.loan ?? '0')|persianpurrencypipe}} </td>
+			</ng-container>
+			
+			<ng-container matColumnDef="sum">
+				<th mat-header-cell *matHeaderCellDef> جمع </th>
+				<td mat-cell *matCellDef="let element"> {{(element.sum ?? '0')|persianpurrencypipe}} </td>
+			</ng-container>
+			
+			<ng-container matColumnDef="reduce">
+				<th mat-header-cell *matHeaderCellDef> کاهش </th>
+				<td mat-cell *matCellDef="let element"> {{(element.reduce ?? '0') |persianpurrencypipe}} </td>
+			</ng-container>
+			
+			<ng-container matColumnDef="payment">
+				<th mat-header-cell *matHeaderCellDef> پرداختی </th>
+				<td mat-cell *matCellDef="let element"> {{(element.payment ?? '0') |persianpurrencypipe}} </td>
+			</ng-container>
+
+			
+			<tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+			<tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+		</table>
+	</div>
 </div>
+
