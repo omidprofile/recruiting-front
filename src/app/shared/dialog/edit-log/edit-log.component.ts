@@ -14,7 +14,7 @@ import { MatSnackBar } from "@angular/material/snack-bar";
 })
 export class EditLogComponent {
 	
-	form: FormGroup
+	form: FormGroup;
 	
 	constructor(
 		public dialogRef: MatDialogRef<EditLogComponent>,
@@ -25,20 +25,21 @@ export class EditLogComponent {
 		private _snackBar: MatSnackBar
 	) {
 		this.form = new FormGroup({
-			effective:new FormControl("e",[Validators.required]),
+			effective: new FormControl("e", [Validators.required]),
 			hour: new FormControl(null, [Validators.required, validator.number.bind(this), Validators.max(23)]),
 			min: new FormControl(null, [Validators.required, validator.number.bind(this), Validators.max(59)]),
 			type: new FormControl(null, [Validators.required]),
 			reason: new FormControl(null, [Validators.required])
 		})
 	}
-	change(){
-		if (['ne','re'].includes(this.form.value.effective)){
+	
+	change() {
+		if (['ne', 're','align'].includes(this.form.value.effective)) {
 			this.form.get('hour')?.setValidators([]);
 			this.form.get('min')?.setValidators([]);
 			this.form.get('type')?.setValidators([]);
-		}
-		else {
+			this.form.get('reason')?.setValidators([]);
+		} else {
 			this.form.get('hour')?.setValidators([Validators.required, this.validator.number.bind(this), Validators.max(23)]);
 			this.form.get('min')?.setValidators([Validators.required, this.validator.number.bind(this), Validators.max(59)]);
 			this.form.get('type')?.setValidators([Validators.required]);
@@ -46,16 +47,21 @@ export class EditLogComponent {
 		this.form.get('hour')?.updateValueAndValidity();
 		this.form.get('min')?.updateValueAndValidity();
 		this.form.get('type')?.updateValueAndValidity();
+		this.form.get('reason')?.updateValueAndValidity();
 	}
+	
 	updateLog() {
 		let body: any = {};
-		if (this.form.value.effective == 'e'){
+		if(this.form.value.effective == 'align') {
+			body.type = this.form.get('type')?.value
+			body.align = true;
+		}
+		else if (this.form.value.effective == 'e') {
 			body.time = this.data.item.date + ' ' + this.form.get('hour')?.value + ':' + this.form.get('min')?.value
 			body.type = this.form.get('type')?.value
 			body.description = this.form.get('reason')?.value
-		}
-		else {
-			body.status = this.form.value.effective == 'ne'?'ne':'e';
+		} else {
+			body.status = this.form.value.effective == 'ne' ? 'ne' : 'e';
 			body.description = this.form.get('reason')?.value;
 		}
 		this.http.updateAttendances(body, this.data.item.id, this.data.subject).subscribe({

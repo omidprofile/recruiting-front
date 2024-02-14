@@ -25,12 +25,15 @@
 			
 			&:last-child {
 				color: #fff;
+				//background-color: #004992;
 				background-color: var(--color_orange_500);
+				pointer-events: none !important;
 			}
 		}
 		> a.item:hover {
 			color: #fff;
-			background-color: var(--color_orange_500);
+			background-color: #004992;
+			//background-color: var(--color_orange_500);
 		}
 	}
 }

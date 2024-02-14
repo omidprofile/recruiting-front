@@ -25,8 +25,6 @@ export class AttendanceInfoComponent implements OnInit {
 	            private http: UsersHttpService, private _snackBar: MatSnackBar,
 	            public Report: ReportsService,
 	            private route: Router,
-	            private calendar: CalendarHttpService,
-	            private PCalendar: CalendarService,
 	            public dialog: MatDialog,
 	) {
 	}
@@ -84,17 +82,17 @@ export class AttendanceInfoComponent implements OnInit {
 	}
 	
 	getUsers() {
-		this.http.getUsers().subscribe((data: any) => {
+		this.http.getJob().subscribe((data: any) => {
 			this.options = []
 			for (let item of data) {
 				let person: any = {}
-				person.name = item.name + " " + item.last_name
-				person.code = item.jobs_id[0]?.personal_code
+				person.name = item.user_id.name + " " + item.user_id.last_name
+				person.code = item?.personal_code
 				person.id = item._id
-				person.shift = item.jobs_id[0]?.shift_info;
-				person.collection = item.jobs_id[0]?.collection_info;
-				person.part = item.jobs_id[0]?.part_info;
-				person.rank = item.jobs_id[0]?.rank_info;
+				person.shift = item?.shift_info;
+				person.collection = item?.collection_info;
+				person.part = item?.part_info;
+				person.rank = item?.rank_info;
 				this.options.push(person)
 			}
 			this.filteredOptions = this.options.slice();
@@ -135,71 +133,86 @@ export class AttendanceInfoComponent implements OnInit {
 			year: currentDate.split('/')[0],
 			month: currentDate.split('/')[1],
 			user: this.user,
-			type: 'report'
+			type:'detail'
 		}).subscribe({
 			next: async (data: any) => {
-				data = data.data;
-				if (!Object.keys(data).length) {
-					this._snackBar.openFromComponent(SnackbarComponent, {
-						data: `کاربر فاقد فعالیت در دوره ی انتخابی است`,
-						duration: 3000
-					})
-				} else {
-					await this.PCalendar.preparingDay(this.year, this.month, currentDate).then((ds: any) => {
-						data = Object.values(data)[0];
-						let device:any;
-						setTimeout(() => {
-							for (let row of ds[0]) {
-								this.total_day++;
-								row.conflict = false
-								let traffics: any = Object.keys(data).filter(key => key == row.date)
-								let i = 1;
-								traffics.length ? traffics = data[traffics[0]] : traffics = [];
-								if (traffics.find((e:any)=>{ return ['n','m','e'].includes(e?.status )})){
-									 row.user_status = 'present'
-									traffics.length && row.day_status != 'holiday' ? this.present_day++ : '';
-									traffics.length && row.day_status == 'holiday' ? this.holiday_work++ : '';
-								}
-								else if (traffics.find((e:any)=>{ return ['ne'].includes(e?.status )})){
-									row.day_status == 'normal' ? this.absent_day++ : '';
-									row.user_status = 'absent';
-								}
-								else {
-									row.day_status == 'normal' ? this.absent_day++ : '';
-									row.user_status = 'absent';
-								}
-								
-								for (let traffic of traffics) {
-									if(!device)
-										device = traffic.device_ip._id;
-									row[`traffic${i}`] = {
-										time:(traffic.acceptedTime ? this.date.dateInfo(traffic.acceptedTime).time:''),
-										type: traffic?.acceptedType,
-										id: traffic?._id,
-										date:traffic.date?.date,
-										status:traffic.status
-									}
-									traffic.duration ? row.time = traffic.duration : ''
-									traffic.duration ? this.total_work += +traffic.duration : ''
-									if (traffic.conflict == true) {
-										row.conflict = true
-									}
-									i++;
-								}
-							}
-							this.user_info = this.filteredOptions.filter((e: any) => {
-								return e.id == this.user
-							})
-							this.user_info = this.user_info[0];
-							this.user_info.device = device;
-							this.holidays = ds[1].holidays;
-							this.work_days = ds[1].work_days;
-							this.dataSource = ds[0];
-						})
-					})
-					
-				}
+				data = data.monthInfo[0];
+				this.dataSource = data[0]
+				this.work_days = data[1].work_days
+				this.total_work = data[1].total_work
+				this.holiday_work = data[1].holiday_work
+				this.holidays = data[1].holidays
+				this.absent_day = data[1].absent_day
+				this.present_day = data[1].present_day
+				this.total_day = data[1].total_day
+				this.user_info = this.filteredOptions.filter((e: any) => {
+					return e.id == this.user
+				})[0]
 				this.progress = false;
+				/*				if (!Object.keys(data).length) {
+									this._snackBar.openFromComponent(SnackbarComponent, {
+										data: `کاربر فاقد فعالیت در دوره ی انتخابی است`,
+										duration: 3000
+									})
+								} else {
+									await this.PCalendar.preparingDay(this.year, this.month, currentDate).then((ds: any) => {
+										data = Object.values(data)[0];
+										let device:any;
+										let shift:any;
+										setTimeout(() => {
+											for (let row of ds[0]) {
+												this.total_day++;
+												row.conflict = false
+												let traffics: any = Object.keys(data).filter(key => key == row.date)
+												if (!shift && traffics[0]?.shift)
+													shift = traffics[0].shift
+												let i = 1;
+												traffics.length ? traffics = data[traffics[0]] : traffics = [];
+												if (traffics.find((e:any)=>{ return ['n','m','e'].includes(e?.status )})){
+													 row.user_status = 'present'
+													traffics.length && row.day_status != 'holiday' ? this.present_day++ : '';
+													traffics.length && row.day_status == 'holiday' ? this.holiday_work++ : '';
+												}
+												else if (traffics.find((e:any)=>{ return ['ne'].includes(e?.status )})){
+													row.day_status == 'normal' || shift?.allow_holiday == false ? this.absent_day++ : '';
+													row.user_status = 'absent';
+												}
+												else {
+													row.day_status == 'normal' || shift?.allow_holiday == false ? this.absent_day++ : '';
+													row.user_status = 'absent';
+												}
+												
+												for (let traffic of traffics) {
+													if(!device)
+														device = traffic?.device_ip?._id;
+													row[`traffic${i}`] = {
+														time:(traffic.acceptedTime ? this.date.dateInfo(traffic.acceptedTime).time:''),
+														type: traffic?.acceptedType,
+														id: traffic?._id,
+														date:traffic.date?.date,
+														status:traffic.status
+													}
+													traffic.duration ? row.time = traffic.duration : ''
+													traffic.duration ? this.total_work += +traffic.duration : ''
+													if (traffic.conflict == true) {
+														row.conflict = true
+													}
+													i++;
+												}
+											}
+											this.user_info = this.filteredOptions.filter((e: any) => {
+												return e.id == this.user
+											})
+											this.user_info = this.user_info[0];
+											this.user_info.device = device ?? '';
+											this.holidays = ds[1].holidays;
+											this.work_days = ds[1].work_days;
+											this.dataSource = ds[0];
+											console.log(this.dataSource)
+										})
+									})
+								}
+								this.progress = false;*/
 			},
 			error: (err: any) => {
 			},
@@ -221,7 +234,12 @@ export class AttendanceInfoComponent implements OnInit {
 					this.progress = false;
 				},
 				error: (err) => {
-					console.log(err)
+					this._snackBar.openFromComponent(SnackbarComponent, {
+						data: (err.error.error.message ?? `خطا در مرور اطلاعات`),
+						duration: 3000
+					})
+					this.submit()
+					this.progress = false;
 				},
 			})
 	}
@@ -251,7 +269,8 @@ export class AttendanceInfoComponent implements OnInit {
 				item:{
 					id:item.id,
 					date:item.date
-				}
+				},
+				from:'attendance'
 			}
 			const dialogRef = this.dialog.open(EditLogComponent, {
 				data: data,

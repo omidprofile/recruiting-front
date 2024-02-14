@@ -16,6 +16,10 @@ export class AttendanceService {
   }
   
   getAttendances(body:any){
+    return this.http.post(`${config.apiRoute}/attendance/monthInfo`,body)
+  }
+  
+  getDaily(body:any){
     return this.http.post(`${config.apiRoute}/attendance/getLogs`,body)
   }
   

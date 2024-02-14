@@ -16,6 +16,7 @@ export class DayEventsComponent {
       public dialogRef: MatDialogRef<DayEventsComponent>,
       public dialog: MatDialog,
   ) {
+    console.log(data)
   }
   
   changeStatus(){

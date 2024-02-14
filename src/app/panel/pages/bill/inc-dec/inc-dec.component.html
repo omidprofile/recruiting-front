@@ -1,0 +1,91 @@
+<div class="dashboard col col-12">
+	<div class="breadcrumb2 mt-3 col col-12 col-xl-10">
+		<div class="items">
+			<a class="item" routerLink="/panel">
+				<span class="title">داشبورد</span>
+			</a>
+			<a class="item" routerLink="/panel/report">
+				<span class="title">گزارشات</span>
+			</a>
+			<a class="item" routerLink="/panel/report/IncDec">
+				<span class="title">اضافات و کسورات</span>
+			</a>
+		</div>
+	</div><!-- /breadcrumb2 -->
+	<div class="headline-title col col-12 col-xl-10">
+		اضافات و کسورات
+	</div>
+	<div class="col col-12 col-xl-10 mt-3 ">
+		<button mat-flat-button color="primary" (click)="openDialog()">افزودن
+			<mat-icon>add</mat-icon>
+		</button>
+	
+	</div>
+	<mat-card class="col col-12 col-xl-10">
+		<mat-card-content>
+			<mat-tab-group animationDuration="200ms" color="accent" (selectedIndexChange)="click = indexes[$event]">
+				<mat-tab>
+					<ng-template mat-tab-label>
+						<span (click)="click = ''">
+							همه
+						</span>
+					</ng-template>
+					<div class="mt-3 py-3" *ngIf="click == ''">
+						<app-ind-dec-table #table></app-ind-dec-table>
+					</div>
+				</mat-tab>
+				<mat-tab>
+					<ng-template mat-tab-label>
+						<span (click)="click = 'waiting'">
+							در انتظار
+						</span>
+					</ng-template>
+					<div class="mt-3 py-3" *ngIf="click == 'waiting'">
+						<app-ind-dec-table #table type="waiting"></app-ind-dec-table>
+					</div>
+				</mat-tab>
+				<mat-tab>
+					<ng-template mat-tab-label>
+						<span (click)="click = 'now'">
+							موعد
+					</span>
+					</ng-template>
+					<div class="mt-3 py-3" *ngIf="click == 'now'">
+						<app-ind-dec-table #table type="now"></app-ind-dec-table>
+					</div>
+				</mat-tab>
+				
+				<mat-tab>
+					<ng-template mat-tab-label>
+						<span (click)="click = 'old'">
+						گذشته
+					</span>
+					</ng-template>
+					<div class="mt-3 py-3" *ngIf="click == 'old'">
+						<app-ind-dec-table #table type="old"></app-ind-dec-table>
+					</div>
+				</mat-tab>
+				<mat-tab>
+					<ng-template mat-tab-label>
+						<span (click)="click = 'done'">
+						انجام شده
+					</span>
+					</ng-template>
+					<div class="mt-3 py-3" *ngIf="click == 'done'">
+						<app-ind-dec-table #table type="done"></app-ind-dec-table>
+					</div>
+				</mat-tab>
+				<mat-tab>
+					<ng-template mat-tab-label>
+						<span (click)="click = 'undecided'">
+						 بلاتکلیف
+					</span>
+					</ng-template>
+					<div class="mt-3 py-3" *ngIf="click == 'undecided'">
+						<app-ind-dec-table #table type="undecided"></app-ind-dec-table>
+					</div>
+				</mat-tab>
+			</mat-tab-group>
+		</mat-card-content>
+	</mat-card>
+</div>

@@ -52,4 +52,5 @@ export class DateService {
     let result = moment(date, "jYYYY/jM/jD HH:mm:ss").format("YYYY-M-D HH:mm:ss");
     return +new Date(result);
   }
+
 }

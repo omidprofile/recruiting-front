@@ -32,6 +32,10 @@ import { PaySlipComponent } from "./panel/pages/bill/pay-slip/pay-slip.component
 import { CalendarComponent } from "./panel/pages/calendar/calendar.component";
 import { GeneralReportComponent } from "./print/general-report/general-report.component";
 import { InfoComponent } from "./panel/pages/users/info/info.component";
+import { CalcComponent } from "./calc/calc.component";
+import { IncDecComponent } from "./panel/pages/bill/inc-dec/inc-dec.component";
+import { LoanComponent } from "./panel/pages/bill/loan/loan.component";
+import { LastDaysComponent } from "./panel/pages/attendance/last-days/last-days.component";
 
 const routes: Routes = [
 	
@@ -46,6 +50,10 @@ const routes: Routes = [
 			{path: 'login', component: LoginComponent, canActivate: [getTokenGuard]},
 		]
 	},
+	
+	/*assist*/
+	{path: 'assist/calc', component: CalcComponent},
+	
 	
 	/*print*/
 	{path: 'print/generalReport', component: GeneralReportComponent},
@@ -98,6 +106,7 @@ const routes: Routes = [
 			/*attendance route*/
 			{path: 'attendance', component: AttendanceComponent,data:{permission: ['super-user', 'recruiting-admin','guard']},canActivate: [accessGuard]},
 			{path: 'attendance/daily', component: DailyComponent,data:{permission: ['super-user', 'recruiting-admin','guard']},canActivate: [accessGuard]},
+			{path: 'attendance/last-days', component: LastDaysComponent,data:{permission: ['super-user', 'recruiting-admin','guard']},canActivate: [accessGuard]},
 			{path: 'attendance/manual', component: ManualComponent,data:{permission: ['super-user', 'recruiting-admin','guard']},canActivate: [accessGuard]},
 			{path: 'attendance/conflict', component: ConflictComponent,data:{permission: ['super-user', 'recruiting-admin',]},canActivate: [accessGuard]},
 			{path: 'attendance/pending', component: PendingComponent,data:{permission: ['super-user', 'recruiting-admin',]},canActivate: [accessGuard]},
@@ -105,7 +114,9 @@ const routes: Routes = [
 			{path: 'attendance/devices', component: DevicesComponent,data:{permission: ['super-user', 'recruiting-admin',]},canActivate: [accessGuard]},
 			/*bill routes*/
 			{path: 'report', component: BillComponent},
-			{path: 'report/workReport', component: WorkReportComponent,data:{permission: ['super-user',]},canActivate: [accessGuard]},
+			{path: 'report/workReport', component: WorkReportComponent,data:{permission: ['super-user','recruiting-admin']},canActivate: [accessGuard]},
+			{path: 'report/IncDec', component: IncDecComponent,data:{permission: ['super-user','recruiting-admin']},canActivate: [accessGuard]},
+			{path: 'report/loan', component: LoanComponent,data:{permission: ['super-user',]},canActivate: [accessGuard]},
 			{path: 'report/reportMaker', component: ReportMakerComponent,data:{permission: ['super-user',]},canActivate: [accessGuard]},
 			{path: 'report/reports', component: ReportsComponent,data:{permission: ['super-user', 'recruiting-admin',]},canActivate: [accessGuard]},
 			{path: 'report/workInfo', component: AttendanceInfoComponent,data:{permission: ['super-user', 'recruiting-admin',]},canActivate: [accessGuard]},

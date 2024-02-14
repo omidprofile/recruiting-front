@@ -1,0 +1,17 @@
+<div class="dashboard col-12">
+	<div class="breadcrumb2 mt-3 col col-12 col-xl-10">
+		<div class="items">
+			<a class="item" routerLink="/panel">
+				<span class="title">داشبورد</span>
+			</a>
+			<a class="item" routerLink="/panel/attendance">
+				<span class="title">حضورغیاب</span>
+			</a>
+			<a class="item" routerLink="/panel/attendance/daily">
+				<span class="title">روز های گذشته</span>
+			</a>
+		</div>
+	</div><!-- /breadcrumb2 -->
+	<div class="headline-title col col-12 col-xl-10 mb-3">حضور غیاب روز های گذشته</div>
+	<app-attendance-table type="last" class="col col-12 col-xl-10"></app-attendance-table>
+</div>

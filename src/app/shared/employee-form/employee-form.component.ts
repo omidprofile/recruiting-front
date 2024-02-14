@@ -136,6 +136,7 @@ export class EmployeeFormComponent implements OnInit {
 				increaseSalary: new FormControl('', [Validators.required, Validators.min(0), validator.currency.bind(this)]),
 				decreaseSalary: new FormControl('', [Validators.required, Validators.min(0), validator.currency.bind(this)]),
 				rewardMonthly: new FormControl('', [Validators.required,  Validators.min(0),validator.currency.bind(this)]),
+				dependentChildren: new FormControl('', [Validators.required,  Validators.min(0),Validators.max(2)]),
 				start: new FormControl(null, [Validators.required]),
 				device_id: new FormControl(null, []),
 			}),
@@ -227,6 +228,7 @@ export class EmployeeFormComponent implements OnInit {
 		formData.append('increaseSalary', this.date.convertLocalToNum(this.employeeInfo.value.job?.increaseSalary).toString())
 		formData.append('decreaseSalary', this.date.convertLocalToNum(this.employeeInfo.value.job?.decreaseSalary).toString())
 		formData.append('rewardMonthly', this.date.convertLocalToNum(this.employeeInfo.value.job?.rewardMonthly).toString())
+		formData.append('dependentChildren', this.date.convertLocalToNum(this.employeeInfo.value.job?.dependentChildren).toString())
 		formData.append('start_work', this.employeeInfo.value.job?.start)
 		formData.append('device_id', this.employeeInfo.value.job?.device_id)
 		formData.append('insurance_status', this.employeeInfo.value.insurance?.status)

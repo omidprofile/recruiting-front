@@ -14,10 +14,9 @@ export class GeneralReportComponent implements AfterViewInit{
   printing = true;
   constructor(private print:PrintService, private date:DateService, private router:Router) {
     this.dataSource = print.data();
-    console.log(this.dataSource)
     if (!Object.keys(this.dataSource).length)
       router.navigate(['/panel'])
-      
+    
   }
 
   ngAfterViewInit() {

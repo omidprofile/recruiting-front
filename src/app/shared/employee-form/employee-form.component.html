@@ -386,6 +386,11 @@
                     <mat-error>{{validate.numberValidate(job.get('rewardMonthly'),'پاداش ماهانه')}}</mat-error>
                 </mat-form-field>
                 <mat-form-field class="col col-12 col-md-6 mb-3">
+                    <mat-label>فرزندان تحت تکلف</mat-label>
+                    <input matInput [value]="job.value.dependentChildren | persianNumbers" placeholder="فرزندان تحت تکلف را وارد نمایید ..." formControlName="dependentChildren">
+                    <mat-error>{{validate.numberValidate(job.get('dependentChildren'),'فرزندان تحت تکلف')}}</mat-error>
+                </mat-form-field>
+                <mat-form-field class="col col-12 col-md-6 mb-3">
                     <mat-label>کد کاربر در دستگاه</mat-label>
                     <input matInput placeholder="کد کاربر در دستگاه را وارد نمایید ..." formControlName="device_id">
                     <mat-error>{{validate.stringValidate(job.get('device_id'),'کد کاربر در دستگاه')}}</mat-error>

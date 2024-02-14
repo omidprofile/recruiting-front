@@ -32,6 +32,7 @@ export class InfoComponent implements OnInit {
 	experiment_info:any;
 	guarantee_info:any;
 	userImg: any;
+	userImgFull:any;
 	user_id:any;
 	employee_id:any;
 	job_id:any;
@@ -55,6 +56,7 @@ export class InfoComponent implements OnInit {
 				data = data[0];
 				this.user_id = data._id;
 				this.userImg = data.userImage[0]?.mini ?? defaultImg;
+				this.userImgFull = data.userImage[0]?.full ?? defaultImg;
 				this.user = data.name + " " + data.last_name
 				this.personal_data = [
 					{title: 'نام', value: data.name, field: 'name', action: 'edit', validators:['persianString'],fieldType:'string'},
@@ -89,6 +91,7 @@ export class InfoComponent implements OnInit {
 						{title: 'افزایش حقوق', value: (job.increaseSalary ?? 0), field: 'increaseSalary', action: 'edit', validators:['number'],fieldType:'currency',job_id:job._id, ref:'job'},
 						{title: 'کاهش حقوق', value: (job.decreaseSalary ?? 0), field: 'decreaseSalary', action: 'edit', validators:['number'],fieldType:'currency',job_id:job._id, ref:'job'},
 						{title: 'پاداش ماهانه', value: (job.rewardMonthly ?? 0), field: 'rewardMonthly', action: 'edit', validators:['number'],fieldType:'currency',job_id:job._id, ref:'job'},
+						{title: 'فرزندان تحت تکلف', value: (job.dependentChildren?? 0), field: 'dependentChildren', action: 'edit', validators:['number'],fieldType:'number',job_id:job._id, ref:'job'},
 						{title: 'وضعیت', value: job.is_active, field: 'is_active', action: 'edit', validators:['required'],fieldType:'select',fieldValue:[{title:'فعال' , value:'active' },{title:'غیرفعال' , value:'disable' }],job_id:job._id, ref:'job'},
 					]
 					this.job_data.push(temp);
@@ -260,7 +263,7 @@ export class InfoComponent implements OnInit {
 		const dialogRef = this.dialog.open(ChangeAvatarComponent, {
 			width:'700',
 			data: {
-				img:this.userImg,
+				img:this.userImgFull,
 				id:this.user_id
 			}
 		})

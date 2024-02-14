@@ -1,17 +1,28 @@
 <mat-progress-bar *ngIf="dataSource == undefined" mode="query"></mat-progress-bar>
-<mat-card *ngIf="dataShow != undefined && ['daily', 'accepted','pending'].includes(this.type)">
+<mat-card *ngIf="dataShow != undefined && ['daily', 'accepted','pending','last'].includes(this.type)">
 	<mat-card-content>
-		<mat-form-field class="col-12" >
+		<mat-form-field class="col-12 mb-3" *ngIf="devices_show.length > 1" >
 			<mat-label>دستگاه ها:</mat-label>
 			<mat-select multiple="true" name="devices" [(ngModel)]="devices_show" >
 				<mat-option class="mat-option-design" [value]="device.serial" *ngFor="let device of devices" (click)="updateTable()">{{device.name}}</mat-option>
 			</mat-select>
 		</mat-form-field>
+		<div class="col col-12 mb-3" *ngIf="['last', 'accepted'].includes(type)">
+			<mat-form-field class="col col-12 mt-3">
+				<mat-label>تاریخ</mat-label>
+				<input matInput [matDatepicker]="picker6"  [(ngModel)]="time" placeholder="تاریخ را انتخاب کنید">
+				<mat-datepicker-toggle matSuffix [for]="picker6"></mat-datepicker-toggle>
+				<mat-datepicker #picker6></mat-datepicker>
+			</mat-form-field>
+			<button mat-stroked-button color="accent" class="col col-auto" (click)="getDaily(false,null,time)" *ngIf="type == 'last'">جستجو</button>
+			<button mat-stroked-button color="accent" class="col col-auto" (click)="getDaily(true,null,time)" *ngIf="type == 'accepted'">جستجو</button>
+		</div>
+		<div class="col col-12 d-flex justify-content-start" *ngIf="this.type == 'daily'">
+			<button mat-stroked-button color="accent" class="me-3" (click)="openManual('in')">ثبت ورود دستی</button>
+			<button mat-stroked-button color="warn" (click)="openManual('out')">ثبت خروج دستی</button>
+		</div>
 	</mat-card-content>
-	<mat-card-actions *ngIf="this.type == 'daily'">
-		<button mat-stroked-button color="accent" class="me-3" (click)="openManual('in')">ثبت ورود دستی</button>
-		<button mat-stroked-button color="warn" (click)="openManual('out')">ثبت خروج دستی</button>
-	</mat-card-actions>
+
 </mat-card>
 <table mat-table [dataSource]="dataShow" class="mat-elevation-z8 mt-3" *ngIf="dataShow != undefined">
 	<!-- Position Column -->
@@ -128,7 +139,7 @@
 				</button>
 				<button mat-stroked-button color="warn" (click)="openEditDialog(element)">اصلاح</button>
 			</div>
-			<div class="d-flex justify-content-start align-items-baseline" *ngIf="type == 'daily'">
+			<div class="d-flex justify-content-start align-items-baseline" *ngIf="['daily' , 'last'].includes(type)">
 				<button mat-stroked-button color="accent" class="me-3" (click)="openAcceptDialog(element)">تایید
 				</button>
 				<button mat-stroked-button color="warn" (click)="openEditDialog(element)">اصلاح</button>

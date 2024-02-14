@@ -9,7 +9,6 @@ export class ToggleSidenavService {
  toggle_max = signal<boolean>(false);
  toggle_type = signal<MatDrawerMode>('side');
   constructor() { }
-
   toggle_sidenav(width:number){
    if (width >= 992){
      this.toggle_mini.update(()=>!this.toggle_mini());

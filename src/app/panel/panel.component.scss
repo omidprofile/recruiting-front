@@ -6,10 +6,7 @@
 }
 
 .example-container{
-	height: calc(100% - #{64px});
-	overflow: hidden;
-	background-color: #eee !important;
-
+	direction: rtl;
 }
 
 

@@ -90,17 +90,17 @@ export class ManualAttendanceComponent implements OnInit {
 	}
 	
 	getUsers() {
-		this.userHttp.getUsers().subscribe((data: any) => {
+		this.userHttp.getJob().subscribe((data: any) => {
 			this.options = []
 			for (let item of data) {
 				let person: any = {}
-				person.name = item.name + " " + item.last_name
-				person.code = item.jobs_id[0]?.personal_code
-				person.id = item._id
-				person.shift = item.jobs_id[0]?.shift_info;
-				person.collection = item.jobs_id[0]?.collection_info;
-				person.part = item.jobs_id[0]?.part_info;
-				person.rank = item.jobs_id[0]?.rank_info;
+				person.name = item.user_id.name + " " + item.user_id.last_name
+				person.code = item?.personal_code
+				person.id = item.user_id._id
+				person.shift = item?.shift_info;
+				person.collection = item?.collection_info;
+				person.part = item?.part_info;
+				person.rank = item?.rank_info;
 				this.options.push(person)
 			}
 			this.filteredOptions = this.options.slice();

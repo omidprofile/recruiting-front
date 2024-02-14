@@ -15,13 +15,13 @@
 	<div class="headline-title col col-12 col-xl-10">گزارشات</div>
 	<div class="col col-12 col-xl-10 mt-3" *ngIf="reports">
 		<div class="row">
-			<div class="col col-6 col-xl-2 " *ngFor="let rep of reports">
+			<div class="col col-6 col-xl-2 mb-3" *ngFor="let rep of reports">
 				<mat-card class="dashboard-card zoom-hover" (click)="setReport(rep)" >
 					<mat-card-content class="d-flex justify-content-around align-items-center flex-column ">
 						<div class="card-title-c mt-3">
 							{{rep.title}}
 						</div>
-						<div class="dashboard-caption">
+						<div class="dashboard-caption" style="color: #ccc !important;">
 							{{rep.type == 'general'?'کلی':rep.type == 'details'?'جزئیات':'پرداختی کارکنان'}}
 						</div>
 					</mat-card-content>

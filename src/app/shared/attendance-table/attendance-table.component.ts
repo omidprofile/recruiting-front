@@ -2,7 +2,7 @@ import {
 	AfterContentInit,
 	AfterViewInit,
 	ChangeDetectorRef,
-	Component,
+	Component, DoCheck,
 	EventEmitter,
 	Input,
 	OnInit,
@@ -21,6 +21,8 @@ import { DateService } from "../../services/date.service";
 import { MatTable } from "@angular/material/table";
 import { ManualComponent } from "../../panel/pages/attendance/manual/manual.component";
 import { ManualAttendanceComponent } from "../dialog/manual-attendance/manual-attendance.component";
+import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from "@angular/material/core";
+import { MaterialPersianDateAdapter, PERSIAN_DATE_FORMATS } from "../../services/material.persian-date.adapter.service";
 
 export interface PeriodicElement {
 	name: string;
@@ -38,7 +40,6 @@ export interface PeriodicElement {
 	extra_work: string;
 	delay_work: string;
 	total_work: string;
-	
 }
 
 
@@ -46,7 +47,9 @@ export interface PeriodicElement {
 	selector: 'app-attendance-table',
 	templateUrl: './attendance-table.component.html',
 	styleUrls: ['./attendance-table.component.scss'],
-	providers: [PersianNumberPipe]
+	providers: [PersianNumberPipe,
+		{provide: DateAdapter, useClass: MaterialPersianDateAdapter, deps: [MAT_DATE_LOCALE]},
+		{provide: MAT_DATE_FORMATS, useValue: PERSIAN_DATE_FORMATS},]
 })
 export class AttendanceTableComponent implements OnInit, AfterViewInit {
 	displayedColumns: string[]
@@ -58,6 +61,8 @@ export class AttendanceTableComponent implements OnInit, AfterViewInit {
 	@Input({required: true}) type: any;
 	@Output() moreInfo: EventEmitter<any> = new EventEmitter<any>;
 	@ViewChild(MatTable) table: MatTable<PeriodicElement>;
+	time:any;
+	
 	
 	constructor(
 		public dialog: MatDialog,
@@ -67,6 +72,16 @@ export class AttendanceTableComponent implements OnInit, AfterViewInit {
 		private changeDetectorRef: ChangeDetectorRef,
 		private date: DateService,
 	) {
+	}
+	async ngOnInit() {
+		await this.getDevices();
+		if (this.type == 'pending')
+			this.displayedColumns = ['name', 'personal_code', 'device', 'date', 'day', 'device_type', 'device_time', 'guard', 'guard_time', 'guard_type', 'reason', 'action'];
+		
+		if (this.type == 'report') {
+			this.displayedColumns = ['name', 'personal_code', 'device', 'date', 'day', 'normal_work', 'extra_work', 'delay_work', 'total_work', 'action'];
+		}
+		
 	}
 	
 	getDevices() {
@@ -91,22 +106,18 @@ export class AttendanceTableComponent implements OnInit, AfterViewInit {
 		this.table.renderRows();
 	}
 	
-	async ngOnInit() {
-		await this.getDevices();
-		if (this.type == 'pending')
-			this.displayedColumns = ['name', 'personal_code', 'device', 'date', 'day', 'device_type', 'device_time', 'guard', 'guard_time', 'guard_type', 'reason', 'action'];
-		
-		if (this.type == 'report') {
-			this.displayedColumns = ['name', 'personal_code', 'device', 'date', 'day', 'normal_work', 'extra_work', 'delay_work', 'total_work', 'action'];
-		}
-		
-	}
-	
 	ngAfterViewInit() {
 		setTimeout(() => {
-			if (['daily', 'accepted'].includes(this.type)) {
-				if (this.type == "accepted") {
-					this.getDaily(true);
+			if (['daily', 'accepted','last'].includes(this.type)) {
+				if (this.type == 'last'){
+					let temp = new Date().setDate(new Date().getDate()-1)
+					this.time = new Date(temp)
+				this.getDaily(false,null,this.time)
+				}
+				else if (this.type == "accepted") {
+					let temp = new Date()
+					this.time = new Date(temp)
+					this.getDaily(true,null,this.time);
 				} else {
 					this.readFromDevice()
 				}
@@ -128,21 +139,30 @@ export class AttendanceTableComponent implements OnInit, AfterViewInit {
 				this.getDaily(false)
 			},
 			error: (err) => {
-				console.log(err)
 				this._snackBar.openFromComponent(SnackbarComponent, {
-					data: `خطا در انجام عملیات`,
+					data: (err.error.error.message ?? `خطا در انجام عملیات`),
 					duration: 3000
 				})
 			}
 		})
 	}
 	
-	getDaily(confirm: boolean, status?: any) {
-		let date = moment(Date.now()).format("jYYYY/jM/jD").split('/')
+	getDaily(confirm: boolean, status?: any, time?:any) {
+		let date:any;
 		let body: any = {}
-		body.year = date[0]
-		body.month = date[1]
-		body.day = date[2]
+		if (time && +new Date(time) <= Date.now()){
+			date = moment(time).format("jYYYY/jM/jD").split('/');
+			body.year = date[0]
+			body.month = date[1]
+			body.day = date[2]
+		}
+		else {
+			date = moment(Date.now()).format("jYYYY/jM/jD").split('/')
+			body.year = date[0]
+			body.month = date[1]
+			body.day = date[2]
+		}
+
 		body.type = 'daily'
 		body.status = ['n', 'e','m','ne']
 		body.guard_confirm = confirm ?? false
@@ -155,7 +175,7 @@ export class AttendanceTableComponent implements OnInit, AfterViewInit {
 			body.guard_confirm = confirm ?? false
 			body.status = status
 		}
-		this.http.getAttendances(body).pipe(
+		this.http.getDaily(body).pipe(
 			tap((data) => {
 				this._snackBar.openFromComponent(SnackbarComponent, {
 					data: `اطلاعات با موفقیت بروز رسانی شد`,
@@ -165,7 +185,6 @@ export class AttendanceTableComponent implements OnInit, AfterViewInit {
 		).subscribe({
 			next: (data: any) => {
 				data = data.data
-				
 				data.sort((a: any, b: any) => {
 					return b.device_time - a.device_time
 				})
@@ -176,7 +195,7 @@ export class AttendanceTableComponent implements OnInit, AfterViewInit {
 					let item: any = {};
 					item.device_serial = index.device_ip.serial;
 					item.id = index._id;
-					item.name = index.user.name + " " + index.user.last_name;
+					item.name = index.user.user_id.name + " " + index.user.user_id.last_name;
 					item.personal_code = index.personal_code;
 					item.device = index.device_ip.name;
 					item.date = index.date.date;
@@ -185,7 +204,7 @@ export class AttendanceTableComponent implements OnInit, AfterViewInit {
 					item.status = index.status;
 					item.device_time = this.date.dateInfo(index.acceptedTime).time;
 					if (this.type == 'pending') {
-						item.guard = index.guard.name + " " + index.guard.last_name;
+						item.guard = index.guard.user_id.name + " " + index.guard.user_id.last_name;
 						item.guard_time = this.date.dateInfo(index.guard_time).time;
 						item.guard_type = index.guard_type;
 						item.reason = index.guard_description;
@@ -196,6 +215,7 @@ export class AttendanceTableComponent implements OnInit, AfterViewInit {
 			}
 		})
 	}
+	
 	
 	openAcceptDialog(item: any) {
 		let message: any;
@@ -277,4 +297,6 @@ export class AttendanceTableComponent implements OnInit, AfterViewInit {
 			}
 		});
 	}
+	
+	
 }

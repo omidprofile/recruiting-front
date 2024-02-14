@@ -36,6 +36,9 @@ export class DashboardCardComponent {
 		iconRegistry.addSvgIconLiteral('report_maker', sanitizer.bypassSecurityTrustHtml(icon.report_maker));
 		iconRegistry.addSvgIconLiteral('reports', sanitizer.bypassSecurityTrustHtml(icon.reports));
 		iconRegistry.addSvgIconLiteral('calendar', sanitizer.bypassSecurityTrustHtml(icon.calendar));
+		iconRegistry.addSvgIconLiteral('IncDec', sanitizer.bypassSecurityTrustHtml(icon.IncDec));
+		iconRegistry.addSvgIconLiteral('loan', sanitizer.bypassSecurityTrustHtml(icon.loan));
+		iconRegistry.addSvgIconLiteral('last_days', sanitizer.bypassSecurityTrustHtml(icon.last_days));
 	}
 	
 	// ngOnInit() {

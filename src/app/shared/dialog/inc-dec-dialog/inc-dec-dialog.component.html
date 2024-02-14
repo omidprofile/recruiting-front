@@ -1,0 +1,81 @@
+<div mat-dialog-content dir="rtl">
+	<form action="" [formGroup]="form" class=" d-flex justify-content-start align-items-center flex-wrap">
+		<mat-form-field class=" col-12   mt-3">
+			<mat-label>
+				نوع
+			</mat-label>
+			<mat-select formControlName="type">
+				<mat-option class="mat-option-design" [value]="'increase'">پرداخت</mat-option>
+				<mat-option class="mat-option-design" [value]="'decrease'">مطالبه</mat-option>
+			</mat-select>
+			<mat-error>{{validate.requiredValidate(form.get('type'), 'نوع')}}</mat-error>
+		</mat-form-field>
+		
+		<mat-form-field class=" col-12   mt-3">
+			<mat-label>فرد</mat-label>
+			<input matInput placeholder="انتخاب فرد"
+				   #input
+				   [matAutocomplete]="auto"
+				   (input)="filter()"
+				   (focus)="filter()"
+				   formControlName="user"
+			>
+			<mat-autocomplete requireSelection #auto="matAutocomplete">
+				<mat-option class="mat-option-design" (click)="setUser(option['id'])"
+							*ngFor="let option of filteredOptions"
+							[value]="option['name']">
+					<div class="d-flex justify-content-between " style="width: auto">
+						<div class="me-3">{{option['name']}}</div>
+						<div class="me-3">{{option['code'] ?? '' |persianNumbers}}</div>
+						<div class="me-3">{{option['part'] ?? '' |persianNumbers}}</div>
+						<div class="me-3">{{option['rank'] ?? '' |persianNumbers}}</div>
+					</div>
+				</mat-option>
+			</mat-autocomplete>
+			<mat-error>{{validate.requiredValidate(form.get('user'), 'فرد')}}</mat-error>
+		</mat-form-field>
+		
+		<mat-form-field class=" col-12   mt-3">
+			<mat-label>عنوان</mat-label>
+			<input matInput formControlName="title">
+			<mat-error>{{validate.requiredValidate(form.get('title'), 'عنوان')}}</mat-error>
+		</mat-form-field>
+		
+		<mat-form-field class=" col-12   mt-3">
+			<mat-label>مبلغ</mat-label>
+			<input matInput formControlName="price" [value]="this.form.value.price | persianpurrencypipe">
+			<mat-error>{{validate.numberValidate(form.get('price'), 'مبلغ')}}</mat-error>
+		</mat-form-field>
+		
+		<mat-form-field class=" col-12   mt-3">
+			<mat-label>تاریخ اعمال</mat-label>
+			<input matInput [matDatepicker]="picker8" placeholder="تاریخ اعمال را وارد نمایید ..."
+				   formControlName="date">
+			<mat-datepicker-toggle matSuffix [for]="picker8"></mat-datepicker-toggle>
+			<mat-datepicker #picker8></mat-datepicker>
+			<mat-error>{{validate.stringValidate(form.get('date'), 'تاریخ اعمال')}}</mat-error>
+		</mat-form-field>
+		
+		<mat-form-field class=" col-12   mt-3">
+			<mat-label>نحوه اعمال</mat-label>
+			<mat-select formControlName="apply">
+				<mat-option class="mat-option-design" [value]="'onSalary'">محاسبه با حقوق</mat-option>
+				<mat-option class="mat-option-design" [value]="'anyTime'">به صورت مستقل</mat-option>
+			</mat-select>
+			<mat-error>{{validate.requiredValidate(form.get('apply'), 'نحوه اعمال')}}</mat-error>
+		</mat-form-field>
+		
+		<mat-form-field class="  col-12   mt-3">
+			<mat-label>توضیحات</mat-label>
+			<textarea matInput formControlName="description">
+					</textarea>
+			<mat-error>{{validate.requiredValidate(form.get('description'), 'توضیحات')}}</mat-error>
+		</mat-form-field>
+	
+	</form>
+	<div mat-dialog-actions>
+		<button mat-stroked-button color="accent" class="me-3 ms-2" [disabled]="!form.valid"
+				(click)="submit()">{{data ? 'ویرایش' : 'ثبت'}}</button>
+		<button mat-stroked-button (click)="dialogRef.close()">انصراف</button>
+	</div>
+</div>

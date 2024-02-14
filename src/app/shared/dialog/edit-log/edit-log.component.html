@@ -7,6 +7,7 @@
 				<mat-option class="mat-option-design" (click)="change()" value="e" >ویرایش</mat-option>
 				<mat-option class="mat-option-design" (click)="change()" value="ne" >غیرفعال کردن</mat-option>
 				<mat-option class="mat-option-design" (click)="change()" value="re" >فعال کردن مجدد</mat-option>
+				<mat-option class="mat-option-design" (click)="change()" value="align" *ngIf="data?.from == 'attendance'" >تراز کردن مجدد</mat-option>
 			</mat-select>
 			<mat-error>{{validate.requiredValidate(form.get('effective'), 'نوع عمل')}}</mat-error>
 		</mat-form-field>
@@ -24,8 +25,8 @@
 				<mat-error>{{validate.numberValidate(form.get('hour'),'ساعت')}}</mat-error>
 			</mat-form-field>
 		</div>
-		<p class="mb-3" *ngIf="form.value.effective == 'e'">نوع فعالیت ثبت شده:<b class="mx-3">{{data.type == 'in'?'ورود':'خروج'}}</b> </p>
-		<mat-form-field class=" col-12 mb-3" *ngIf="form.value.effective == 'e'">
+		<p class="mb-3" *ngIf="['e','align'].includes(form.value.effective)">نوع فعالیت ثبت شده:<b class="mx-3">{{data.type == 'in'?'ورود':'خروج'}}</b> </p>
+		<mat-form-field class=" col-12 mb-3" *ngIf="['e','align'].includes(form.value.effective)">
 			<mat-label>نوع فعالیت:</mat-label>
 			<mat-select formControlName="type">
 				<mat-option class="mat-option-design" value="in" >ورود</mat-option>
@@ -43,6 +44,6 @@
 
 </div>
 <div mat-dialog-actions>
-	<button mat-button cdkFocusInitial [mat-dialog-close]="form.value" [disabled]="!form.valid" (click)="updateLog()" color="accent">ثبت و تایید</button>
+	<button mat-button  [disabled]="!form.valid" (click)="updateLog()" color="accent">ثبت و تایید</button>
 	<button mat-button color="warn"  mat-dialog-close>انصراف</button>
 </div>

@@ -20,23 +20,22 @@
 		<mat-progress-bar mode="buffer" color="accent" class="col col-12 col-xl-10" *ngIf="!done"></mat-progress-bar>
 		<div class="d-flex flex-row flex-wrap align-items-stretch col-12 mt-3" *ngIf="done">
 			<div class="col-2 d-flex align-self-stretch">
-				<mat-card class="d-flex flex-wrap justify-content-center align-items-center col col-12">
-					<mat-card-content class="d-flex flex-wrap justify-content-center align-items-center">
-						<div class=" col col-12 avatar" (click)="changeAvatar()"
-							 style="background-image: url({{'data:image/jpg;base64,' + userImg}})"></div>
+				<mat-card class="d-lg-flex flex-wrap justify-content-center align-items-center d-md-none  col col-12">
+					<mat-card-content class="d-flex flex-wrap justify-content-center align-items-center col-10 h-60 avatar " (click)="changeAvatar()" style="background-image: url({{'data:image/jpg;base64,' + userImg}})">
+
 						<div class="col-12 mt-3 d-flex justify-content-center align-items-baseline">
 							<!--							<mat-card-subtitle>
 															نام:
 														</mat-card-subtitle>-->
-							<div class="dashboard-caption ms-3">
+							<div class="dashboard-caption col-12 ms-3 title-style">
 								{{user}}
 							</div>
 						</div>
 					</mat-card-content>
 				</mat-card>
 			</div>
-			<div class="col-10">
-				<mat-card class="ms-3">
+			<div class="col-lg-10 col-md-12">
+				<mat-card class="ms-lg-3 ms-md-0">
 					<mat-card-header>اطلاعات هویتی</mat-card-header>
 					<mat-card-content>
 						<mat-divider></mat-divider>

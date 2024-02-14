@@ -45,7 +45,7 @@
 				<mat-icon>event</mat-icon>
 				<div class="d-flex flex-column justify-content-start align-items-start ms-1">
 					<div class="dashboard-cap-list m-0">{{event.description | persianNumbers}}</div>
-					<sub class="dashboard-sub">اضافه کننده:{{(event?.user?.name??'') + " " + (event?.user?.last_name??'')}}</sub>
+					<sub class="dashboard-sub">اضافه کننده:{{(event?.user?.user_id?.name??'') + " " + (event?.user?.user_id?.last_name??'')}}</sub>
 				</div>
 			</div>
 		</div>

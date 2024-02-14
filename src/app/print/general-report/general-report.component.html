@@ -42,17 +42,17 @@
 			
 			<ng-container matColumnDef="extra_time" class="rows">
 				<th class="printer-text" mat-header-cell *matHeaderCellDef> اضافه کار </th>
-				<td class="printer-text" mat-cell *matCellDef="let element"> {{createHour(element.total_extra) | persianNumbers}} </td>
+				<td class="printer-text" mat-cell *matCellDef="let element"> {{createHour(element.extra_time) | persianNumbers}} </td>
 			</ng-container>
 			
 			<ng-container matColumnDef="delay_time" class="rows">
 				<th class="printer-text" mat-header-cell *matHeaderCellDef> تاخیر </th>
-				<td class="printer-text" mat-cell *matCellDef="let element"> {{createHour(element.total_delay) | persianNumbers}} </td>
+				<td class="printer-text" mat-cell *matCellDef="let element"> {{createHour(element.delay_time) | persianNumbers}} </td>
 			</ng-container>
 			
 			<ng-container matColumnDef="absent" class="rows">
 				<th class="printer-text" mat-header-cell *matHeaderCellDef> غیبت </th>
-				<td class="printer-text" mat-cell *matCellDef="let element"> {{(element.absent_days) | persianNumbers}} </td>
+				<td class="printer-text" mat-cell *matCellDef="let element"> {{(element.absent_day) | persianNumbers}} </td>
 			</ng-container>
 			
 			<ng-container matColumnDef="print">

@@ -55,7 +55,7 @@ import { DevicesComponent } from './panel/pages/attendance/devices/devices.compo
 import { CreateDeviceComponent } from './shared/dialog/create-device/create-device.component';
 import { BillComponent } from './panel/pages/bill/bill.component';
 import { WorkReportComponent } from './panel/pages/bill/work-report/work-report.component';
-import {MatAutocompleteModule} from "@angular/material/autocomplete";
+import { MatAutocompleteModule } from "@angular/material/autocomplete";
 import { RoleFormComponent } from './shared/role-form/role-form.component';
 import { SuccessComponent } from './shared/snackbar/success/success.component';
 import { EnglishNumberPipe } from './shared/pipe/english-number.pipe';
@@ -93,6 +93,13 @@ import { ChangeJobComponent } from './shared/dialog/change-job/change-job.compon
 import { JobInfoComponent } from './shared/dialog/job-info/job-info.component';
 import { ChangeAvatarComponent } from './shared/dialog/change-avatar/change-avatar.component';
 import { ManualAttendanceComponent } from './shared/dialog/manual-attendance/manual-attendance.component';
+import { CalcComponent } from './calc/calc.component';
+import { IncDecComponent } from './panel/pages/bill/inc-dec/inc-dec.component';
+import { LoanComponent } from "./panel/pages/bill/loan/loan.component";
+import { IncDecDialogComponent } from './shared/dialog/inc-dec-dialog/inc-dec-dialog.component';
+import { IndDecTableComponent } from './shared/ind-dec-table/ind-dec-table.component';
+import { IncDecConfirmComponent } from './shared/dialog/inc-dec-confirm/inc-dec-confirm.component';
+import { LastDaysComponent } from './panel/pages/attendance/last-days/last-days.component';
 
 
 @NgModule({
@@ -126,45 +133,52 @@ import { ManualAttendanceComponent } from './shared/dialog/manual-attendance/man
 		AcceptComponent,
 		EditLogComponent,
 		ConflictComponent,
-  AttendanceTableComponent,
-  PendingComponent,
-  AcceptedComponent,
-  DevicesComponent,
-  CreateDeviceComponent,
-  BillComponent,
-  WorkReportComponent,
-  RoleFormComponent,
-  SuccessComponent,
-  EnglishNumberPipe,
-  ManualComponent,
-  ConflictDialogComponent,
-	BaseSalary,
- CreateShiftComponent,
- EmployeeComponent,
- IdentityComponent,
- InsuranceComponent,
- ReportMakerComponent,
- ReportsComponent,
- AttendanceInfoComponent,
- PaySlipComponent,
- BreadcrumbComponent,
- CalendarComponent,
- UsercreatedComponent,
- MonthComponent,
- YearComponent,
- DayEventsComponent,
- DayStatusChangeComponent,
- DayCreateEventComponent,
- PrintComponent,
- GeneralReportComponent,
- InfoComponent,
- EditStringComponent,
- EditNumberComponent,
- EditSelectComponent,
- ChangeJobComponent,
- JobInfoComponent,
- ChangeAvatarComponent,
- ManualAttendanceComponent,
+		AttendanceTableComponent,
+		PendingComponent,
+		AcceptedComponent,
+		DevicesComponent,
+		CreateDeviceComponent,
+		BillComponent,
+		WorkReportComponent,
+		RoleFormComponent,
+		SuccessComponent,
+		EnglishNumberPipe,
+		ManualComponent,
+		ConflictDialogComponent,
+		BaseSalary,
+		CreateShiftComponent,
+		EmployeeComponent,
+		IdentityComponent,
+		InsuranceComponent,
+		ReportMakerComponent,
+		ReportsComponent,
+		AttendanceInfoComponent,
+		PaySlipComponent,
+		BreadcrumbComponent,
+		CalendarComponent,
+		UsercreatedComponent,
+		MonthComponent,
+		YearComponent,
+		DayEventsComponent,
+		DayStatusChangeComponent,
+		DayCreateEventComponent,
+		PrintComponent,
+		GeneralReportComponent,
+		InfoComponent,
+		EditStringComponent,
+		EditNumberComponent,
+		EditSelectComponent,
+		ChangeJobComponent,
+		JobInfoComponent,
+		ChangeAvatarComponent,
+		ManualAttendanceComponent,
+		CalcComponent,
+		IncDecComponent,
+		LoanComponent,
+  IncDecDialogComponent,
+  IndDecTableComponent,
+  IncDecConfirmComponent,
+  LastDaysComponent
 	],
 	imports: [
 		BrowserModule,
@@ -195,20 +209,20 @@ import { ManualAttendanceComponent } from './shared/dialog/manual-attendance/man
 	],
 	providers: [
 		{
-			provide:HTTP_INTERCEPTORS,
-			useClass:GlobalErrorHandlerInterceptor,
-			multi:true
+			provide: HTTP_INTERCEPTORS,
+			useClass: GlobalErrorHandlerInterceptor,
+			multi: true
 		},
 		{
-			provide:HTTP_INTERCEPTORS,
-			useClass:SetTokenInterceptor,
-			multi:true
+			provide: HTTP_INTERCEPTORS,
+			useClass: SetTokenInterceptor,
+			multi: true
 		},
 		Sidenav_model,
 		MapService,
 		MatDatepickerModule,
 		EnglishNumberPipe,
-		{ provide: JWT_OPTIONS, useValue: JWT_OPTIONS },
+		{provide: JWT_OPTIONS, useValue: JWT_OPTIONS},
 		JwtHelperService
 	],
 	exports: [],

@@ -26,7 +26,16 @@ export class PaginatorComponent implements AfterViewInit, OnChanges {
 	}
 	
 	ngOnChanges(changes: any) {
-		this.renderTable()
+		setTimeout(()=>{
+			this.itemTotal = this.dataSource.length;
+			this.dataTable = JSON.parse(JSON.stringify(this.dataSource));
+				if (this.itemTotal >= this.perPageItem)
+					this.endPageItem = this.perPageItem;
+				else {
+					this.endPageItem = this.itemTotal
+				}
+			this.renderTable()
+		},10)
 	}
 	
 	next() {

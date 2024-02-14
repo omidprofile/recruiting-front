@@ -106,6 +106,13 @@ export class UsersHttpService {
             shareReplay()
         )
     }
+
+    calculate(body?:any){
+       return this.http.post(`${config.apiRoute}/workReport/calculate`, body
+        ).pipe(
+            shareReplay()
+        )
+    }
     
     saveWorkReports(report:any){
        return this.http.post(`${config.apiRoute}/workReport`,report)

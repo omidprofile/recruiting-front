@@ -16,6 +16,7 @@ import beforeDatasetDraw = _default.beforeDatasetDraw;
 import { CalendarHttpService } from "../../../../HttpServices/calendar-http.service";
 import { CalendarService } from "../../../../services/calendar.service";
 import { PrintService } from "../../../../services/print.service";
+import { AttendanceService } from "../../../../HttpServices/attendance.service";
 
 @Component({
 	selector: 'app-work-report',
@@ -60,8 +61,8 @@ export class WorkReportComponent implements OnInit {
 		private date:DateService,
 		private calendar:CalendarHttpService,
 		private PCalendar:CalendarService,
-		private printService:PrintService
-		
+		private printService:PrintService,
+	private httpAttendance: AttendanceService
 		) {
 	}
 	
@@ -85,14 +86,15 @@ export class WorkReportComponent implements OnInit {
 	}
 	
 	getUsers() {
-		this.http.getUsers().subscribe((data: any) => {
+		this.http.getJob().subscribe((data: any) => {
 			this.options = []
 			
 			for (let item of data) {
 				let person: any = {}
-				person.name = item.name + " " + item.last_name
-				person.code = item.jobs_id[0].personal_code
+				person.name = item.user_id.name + " " + item.user_id.last_name
+				person.code = item.personal_code
 				person.id = item._id
+				person.shift = item?.shift_info;
 				this.options.push(person)
 			}
 			this.filteredOptions = this.options.slice();
@@ -115,13 +117,21 @@ export class WorkReportComponent implements OnInit {
 		this.moreInfo = false;
 		this.info = false;
 		let body: any = {};
-		body.type = 'report';
+		body.type = 'general';
 		// body.day = this.day;
 		body.month = this.month;
 		body.year = this.year;
 		this.report_base == 'person'? body.user = this.user:'';
 		this.loading = true;
-		let mLog = new Promise((resolve, reject) => {
+		this.httpAttendance.getAttendances(body).subscribe({
+			next:(data:any)=>{
+				this.dataSource = data.monthInfo
+				this.loading = false;
+				},
+			error:(err:any)=>{
+				console.log(err)},
+		})
+/*		let mLog = new Promise((resolve, reject) => {
 			this.calendar.getCalendar({
 				year:this.year,
 				month:this.month
@@ -152,7 +162,7 @@ export class WorkReportComponent implements OnInit {
 								item.total_work = 0
 								item.holidays = 0
 								// item.total_day = Object.keys(month).filter((e:any)=>e.split('/')[1] == this.month).length;
-								item.total_day = 0
+								item.present_day = 0
 								item.conflict = false;
 								item.conflict_arr = []
 								for (let day in month) {
@@ -160,7 +170,7 @@ export class WorkReportComponent implements OnInit {
 										continue;
 									let logs = month[day]
 									if (logs.find((e:any)=>{ return ['n','m','e'].includes(e?.status )})){
-										item.total_day++;
+										item.present_day++;
 										
 										if (logs[0]?.shift && !logs[0]?.is_holiday){
 											if (this.monthLogs.filter((e:any)=>{return (e.day == logs[0].date.day && e.is_holiday)}).length == 0)
@@ -178,9 +188,9 @@ export class WorkReportComponent implements OnInit {
 									
 									for (let log of logs) {
 										if (item.name == undefined && log.user){
-											item.name = log.user.name
-											item.last_name = log.user.last_name
-											item.user_id = log.user._id
+											item.name = log.user.user_id.name
+											item.last_name = log.user.user_id.last_name
+											item.user_id = log.user.user_id._id
 										}
 										
 										if (item.personal_code == undefined)
@@ -200,8 +210,8 @@ export class WorkReportComponent implements OnInit {
 								item.total_delay = item.total_time -item.total_work>0 ?item.total_time -item.total_work: 0
 								item.holiday_work = item.holidays
 								item.holidays = dc[1].holidays;
-								item.all_day = dc[1].days;
-								item.absent_days = Math.abs(item.all_day - (item.total_day + item.holidays - item.holiday_work ));
+								item.total_day = dc[1].days;
+								item.absent_day = Math.abs(item.all_day - (item.total_day + item.holidays - item.holiday_work ));
 								temp.push(item)
 							}
 							this.dataSource = temp;
@@ -211,7 +221,7 @@ export class WorkReportComponent implements OnInit {
 						console.log(e)
 					}
 				})
-		})
+		})*/
 	}
 	
 	viewInfo() {
@@ -333,7 +343,6 @@ export class WorkReportComponent implements OnInit {
 	
 	print(){
 	this.printService.set(this.dataSource);
-
 	this.route.navigate(['/print/generalReport'])
 	}
 

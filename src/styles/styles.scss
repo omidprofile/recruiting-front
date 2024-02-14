@@ -20,8 +20,8 @@
 // Define the palettes for your theme using the Material Design palettes available in palette.scss
 // (imported above). For each palette, you can optionally specify a default, lighter, and darker
 // hue. Available color palettes: https://material.io/design/color/
-$angular-primary: mat.define-palette(mat.$amber-palette,300);
-$angular-accent: mat.define-palette(mat.$indigo-palette, 500, A100, A400);
+$angular-primary: mat.define-palette(mat.$orange-palette,700);
+$angular-accent: mat.define-palette(mat.$blue-palette, 700, A100, A400);
 // The warn palette is optional (defaults to red).
 $angular-warn: mat.define-palette(mat.$red-palette,300);
 
@@ -72,4 +72,8 @@ html, body {
 body {
 	direction: rtl;
 	font-family: irsans, tahoma, arial, sans-serif;
+	background-color: #eff2fa !important;
+	//background-color: rgba(#004992,.08) !important;
+	//background-color: #DCDEE0 !important;
+	
 }

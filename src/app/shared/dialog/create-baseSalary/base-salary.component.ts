@@ -29,7 +29,6 @@ export class BaseSalary {
 		private http: RolesHttpService,
 		public date:DateService
 	) {
-		console.log(data)
 		this.salaryForm = new FormGroup({
 			title: new FormControl(null, [Validators.required]),
 			hourPayment: new FormControl({
