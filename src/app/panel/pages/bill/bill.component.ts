@@ -3,6 +3,7 @@ const items = [
   {title:'گزارش ساز', logo:'report_maker', link:'reportMaker',is_active:true,permission:['super-user','recruiting-admin']},
   {title:'گزارشات', logo:'reports', link:'reports',is_active:true,permission:['super-user','recruiting-admin']},
   {title:'کسورات و اضافات', logo:'IncDec', link:'IncDec',is_active:true,permission:['super-user','']},
+  {title:'ارسالی به بانک', logo:'bank', link:'toBank',is_active:true,permission:['super-user','']},
   // {title:'وام و مساعد', logo:'loan', link:'loan',is_active:true,permission:['super-user','']},
   // {title:'گزارش کارکرد', logo:'workReport', link:'workReport',is_active:true},
   // {title:'گزارش روزانه', logo:'workReport', link:'workInfo',is_active:true},

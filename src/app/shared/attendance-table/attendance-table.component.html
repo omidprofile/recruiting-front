@@ -7,7 +7,7 @@
 				<mat-option class="mat-option-design" [value]="device.serial" *ngFor="let device of devices" (click)="updateTable()">{{device.name}}</mat-option>
 			</mat-select>
 		</mat-form-field>
-		<div class="col col-12 mb-3" *ngIf="['last', 'accepted'].includes(type)">
+		<div class="col col-12 mb-3" *ngIf="['last'].includes(type)">
 			<mat-form-field class="col col-12 mt-3">
 				<mat-label>تاریخ</mat-label>
 				<input matInput [matDatepicker]="picker6"  [(ngModel)]="time" placeholder="تاریخ را انتخاب کنید">

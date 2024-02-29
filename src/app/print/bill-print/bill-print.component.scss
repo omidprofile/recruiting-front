@@ -1,0 +1,82 @@
+.body{
+	position: absolute;
+	width: 600px;
+	top:0 !important
+}
+.bill {
+	border-top: 2px solid black;
+	border-left: 2px solid black;
+	border-right: 2px solid black;
+	border-bottom: 1px solid black;
+	font-size: 10px;
+	font-weight: 500;
+}
+
+.bill-header {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	border-bottom: 1px solid black;
+	height: 30px;
+	top: 0 !important;
+	
+}
+
+.bill-other {
+	border-left: 2px solid black;
+	border-top: 1px solid black;
+	border-bottom: 2px solid black;
+}
+
+.bill-increase {
+	border-left: 2px solid black;
+	border-top: 1px solid black;
+	border-bottom: 1px solid black;
+	
+}
+
+.bill-decrease {
+	border-top: 1px solid black;
+	border-bottom: 2px solid black;
+	
+}
+
+.bill-item {
+	border-bottom: 1px solid black;
+	font-size: 8px!important;
+	height: 30px;
+	.title {
+		border-left: 1px solid black;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
+	
+	.value {
+		padding: 15px 0;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
+}
+
+.sum-increase{
+	border-left: 2px solid black;
+}
+.sum-decrease{
+}
+.sum-other{
+	border-left: 2px solid black;
+	border-bottom: 1px solid black;
+}
+
+
+.bill-item:last-child{
+	//border-bottom:  none;
+}
+
+@media print {
+	.print-hidden {
+		display: none !important;
+	}
+}

@@ -3,7 +3,7 @@ import { Component } from '@angular/core';
 
 const items = [
   {title:'حضور غیاب روزانه', logo:'daily', link:'daily',is_active:true,permission:['super-user','recruiting-admin','guard']},
-  {title:'حضور غیاب روز های گذشته', logo:'last_days', link:'last-days',is_active:true,permission:['super-user','recruiting-admin','guard']},
+  {title:'حضور غیاب روز های گذشته', logo:'last_days', link:'last-days',is_active:true,permission:['super-user','recruiting-admin']},
   {title:'ثبت دستی', logo:'manual', link:'manual',is_active:true,permission:['super-user','recruiting-admin','guard']},
   // {title:'مغایرت', logo:'conflict', link:'conflict',is_active:false,permission:['super-user','recruiting-admin','guard']'},
   {title:'نیاز به بررسی', logo:'pending', link:'pending',is_active:true,permission:['super-user','recruiting-admin',]},

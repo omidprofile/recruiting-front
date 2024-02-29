@@ -1,0 +1,36 @@
+<div class="col-12 d-flex justify-content-center align-items-center flex-wrap" *ngIf="data">
+	<div class="col col-12" style="max-width: 800px !important;">
+	<mat-card class="col-12 d-flex justify-content-start align-items-center mt-3 print-hidden">
+		<mat-card-actions>
+			<button mat-flat-button color="primary" (click)="window.print()">چاپ</button>
+		</mat-card-actions>
+	</mat-card>
+		<div class="col-12 d-flex justify-content-center align-items-center mt-5">
+			<table class="table table-bordered">
+				<thead>
+				<tr>
+					<th colspan="100">صنعت پروفیل آرش</th>
+				</tr>
+				<tr>
+					<th scope="col">ردیف</th>
+					<th scope="col">نام</th>
+					<th scope="col">کد پرسنلی</th>
+					<th scope="col">شماره حساب</th>
+					<th scope="col">انتقالی</th>
+					<th scope="col">حقوق</th>
+				</tr>
+				</thead>
+				<tbody>
+				<tr *ngFor="let item of data;let i = index">
+					<td>{{(i+1).toString()| persianNumbers}}</td>
+					<td>{{item.user}}</td>
+					<td>{{item.personal_code | persianNumbers}}</td>
+					<td>{{item.bank_account_number | persianNumbers}}</td>
+					<td>{{item.different |persianpurrencypipe}}</td>
+					<td>{{item.mini |persianpurrencypipe}}</td>
+				</tr>
+				</tbody>
+			</table>
+		</div>
+</div>
+</div>

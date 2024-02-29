@@ -100,6 +100,11 @@ import { IncDecDialogComponent } from './shared/dialog/inc-dec-dialog/inc-dec-di
 import { IndDecTableComponent } from './shared/ind-dec-table/ind-dec-table.component';
 import { IncDecConfirmComponent } from './shared/dialog/inc-dec-confirm/inc-dec-confirm.component';
 import { LastDaysComponent } from './panel/pages/attendance/last-days/last-days.component';
+import { PaySlipInfoComponent } from './shared/dialog/pay-slip-info/pay-slip-info.component';
+import { BillPrintComponent } from './print/bill-print/bill-print.component';
+import { ToBankComponent } from './panel/pages/bill/to-bank/to-bank.component';
+import { ToBankPrintComponent } from './print/to-bank-print/to-bank-print.component';
+import { DeleteUserComponent } from './shared/dialog/delete-user/delete-user.component';
 
 
 @NgModule({
@@ -178,7 +183,12 @@ import { LastDaysComponent } from './panel/pages/attendance/last-days/last-days.
   IncDecDialogComponent,
   IndDecTableComponent,
   IncDecConfirmComponent,
-  LastDaysComponent
+  LastDaysComponent,
+  PaySlipInfoComponent,
+  BillPrintComponent,
+  ToBankComponent,
+  ToBankPrintComponent,
+  DeleteUserComponent
 	],
 	imports: [
 		BrowserModule,

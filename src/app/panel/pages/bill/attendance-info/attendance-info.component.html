@@ -201,7 +201,7 @@
 				<td mat-cell *matCellDef="let element"
 					class="traffic "
 					(click)="openEditDialog(element.traffic1, element)"
-					[ngClass]="(element?.traffic1?.status && element.traffic1.status == 'ne')? 'ne-design':element.traffic1?.type?element.traffic1?.type == 'in'?'in-design':'out-design':''"
+					[ngClass]="(element?.traffic1?.status && element.traffic1.status == 'ne')? 'ne-design':(element?.traffic1?.status && element.traffic1.status == 'p')?'orange-design':element.traffic1?.type?element.traffic1?.type == 'in'?'in-design':'out-design':''"
 				>
 					<div class="d-flex align-items-center">
 						<mat-icon [matTooltip]="element?.traffic1?.status == 'e'?'ویرایش شده':'ثبت دستی'"
@@ -216,7 +216,7 @@
 				<td mat-cell *matCellDef="let element"
 					class="traffic"
 					(click)="openEditDialog(element.traffic2, element)"
-					[ngClass]="(element?.traffic2?.status && element.traffic2.status == 'ne')? 'ne-design':element.traffic2?.type?element.traffic2?.type == 'in'?'in-design':'out-design':''"
+					[ngClass]="(element?.traffic2?.status && element.traffic2.status == 'ne')? 'ne-design':(element?.traffic2?.status && element.traffic2.status == 'p')?'orange-design':element.traffic2?.type?element.traffic2?.type == 'in'?'in-design':'out-design':''"
 				>
 					<div class="d-flex align-items-center">
 						<mat-icon [matTooltip]="element?.traffic2.status == 'e'?'ویرایش شده':'ثبت دستی'"
@@ -230,7 +230,7 @@
 				<td mat-cell *matCellDef="let element"
 					class="traffic"
 					(click)="openEditDialog(element.traffic3, element)"
-					[ngClass]="(element?.traffic3?.status && element.traffic3.status == 'ne')? 'ne-design':element.traffic3?.type?element.traffic3?.type == 'in'?'in-design':'out-design':''"
+					[ngClass]="(element?.traffic3?.status && element.traffic3.status == 'ne')? 'ne-design':(element?.traffic3?.status && element.traffic3.status == 'p')?'orange-design':element.traffic3?.type?element.traffic3?.type == 'in'?'in-design':'out-design':''"
 				>
 					<div class="d-flex align-items-center">
 						<mat-icon [matTooltip]="element?.traffic3?.status == 'e'?'ویرایش شده':'ثبت دستی'"
@@ -244,7 +244,7 @@
 				<td mat-cell *matCellDef="let element"
 					class="traffic"
 					(click)="openEditDialog(element.traffic4, element)"
-					[ngClass]="(element?.traffic4?.status && element.traffic4.status == 'ne')? 'ne-design':element.traffic4?.type?element.traffic4?.type == 'in'?'in-design':'out-design':''"
+					[ngClass]="(element?.traffic4?.status && element.traffic4.status == 'ne')? 'ne-design':(element?.traffic4?.status && element.traffic4.status == 'p')?'orange-design':element.traffic4?.type?element.traffic4?.type == 'in'?'in-design':'out-design':''"
 				>
 					<div class="d-flex align-items-center">
 						<mat-icon [matTooltip]="element?.traffic4?.status == 'e'?'ویرایش شده':'ثبت دستی'"
@@ -259,7 +259,7 @@
 				<td mat-cell *matCellDef="let element"
 					class="traffic"
 					(click)="openEditDialog(element.traffic5, element)"
-					[ngClass]="(element?.traffic5?.status && element.traffic5.status == 'ne')? 'ne-design':element.traffic5?.type?element.traffic5?.type == 'in'?'in-design':'out-design':''"
+					[ngClass]="(element?.traffic5?.status && element.traffic5.status == 'ne')? 'ne-design':(element?.traffic5?.status && element.traffic5.status == 'p')?'orange-design':element.traffic5?.type?element.traffic5?.type == 'in'?'in-design':'out-design':''"
 				>
 					<div class="d-flex align-items-center">
 						<mat-icon [matTooltip]="element?.traffic5?.status == 'e'?'ویرایش شده':'ثبت دستی'"
@@ -273,7 +273,7 @@
 				<td mat-cell *matCellDef="let element"
 					class="traffic"
 					(click)="openEditDialog(element.traffic6, element)"
-					[ngClass]="(element?.traffic6?.status && element.traffic6.status == 'ne')? 'ne-design':element.traffic6?.type?element.traffic6?.type == 'in'?'in-design':'out-design':''"
+					[ngClass]="(element?.traffic6?.status && element.traffic6.status == 'ne')? 'ne-design':(element?.traffic6?.status && element.traffic6.status == 'p')?'orange-design':element.traffic6?.type?element.traffic6?.type == 'in'?'in-design':'out-design':''"
 				>
 					<div class="d-flex align-items-center">
 						<mat-icon [matTooltip]="element?.traffic6?.status == 'e'?'ویرایش شده':'ثبت دستی'"
@@ -285,9 +285,9 @@
 			<ng-container matColumnDef="traffic7">
 				<th mat-header-cell *matHeaderCellDef> {{displayedColumnsPersian[9] | persianNumbers}} </th>
 				<td mat-cell *matCellDef="let element"
-					class="traffic"
+					class="traffic ne-design"
 					(click)="openEditDialog(element.traffic7, element)"
-					[ngClass]="(element?.traffic7?.status && element.traffic7.status == 'ne')? 'ne-design':element.traffic7?.type?element.traffic7?.type == 'in'?'in-design':'out-design':''"
+					[ngClass]="(element?.traffic7?.status && element.traffic7.status == 'ne')? 'ne-design':(element?.traffic7?.status && element.traffic7.status == 'p')?'orange-design':element.traffic7?.type?element.traffic7?.type == 'in'?'in-design':'out-design':''"
 				>
 					<div class="d-flex align-items-center">
 						<mat-icon [matTooltip]="element?.traffic7?.status == 'e'?'ویرایش شده':'ثبت دستی'"
@@ -301,7 +301,7 @@
 				<td mat-cell *matCellDef="let element"
 					class="traffic"
 					(click)="openEditDialog(element.traffic8, element)"
-					[ngClass]="(element?.traffic8?.status && element.traffic8.status == 'ne')? 'ne-design':element.traffic8?.type?element.traffic8?.type == 'in'?'in-design':'out-design':''"
+					[ngClass]="(element?.traffic8?.status && element.traffic8.status == 'ne')? 'ne-design':(element?.traffic8?.status && element.traffic8.status == 'p')?'orange-design':element.traffic8?.type?element.traffic8?.type == 'in'?'in-design':'out-design':''"
 				>
 					<div class="d-flex align-items-center">
 						<mat-icon [matTooltip]="element?.traffic8?.status == 'e'?'ویرایش شده':'ثبت دستی'"

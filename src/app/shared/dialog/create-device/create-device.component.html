@@ -24,6 +24,11 @@
 				<mat-error>{{validate.requiredValidate(device.get('serial'), 'سریال')}}</mat-error>
 			</mat-form-field>
 		</div>
+		<mat-form-field class="mb-3">
+			<mat-label>طول داده</mat-label>
+			<input matInput placeholder="طول داده دستگاه را وارد کنید ..." formControlName="dataLength">
+			<mat-error>{{validate.requiredValidate(device.get('dataLength'), 'طول داده')}}</mat-error>
+		</mat-form-field>
 		<mat-form-field class="col-12 mb-3">
 			<mat-label>وضعیت</mat-label>
 			<mat-select formControlName="is_active">

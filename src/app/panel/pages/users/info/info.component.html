@@ -1,507 +1,517 @@
 <div class="dashboard col-12">
-	<div class="breadcrumb2 mt-3 col col-12 col-xl-10">
-		<div class="items">
-			<a class="item" routerLink="/panel">
-				<span class="title">داشبورد</span>
-			</a>
-			<a class="item" routerLink="/panel/users">
-				<span class="title">کاربران</span>
-			</a>
-			<a class="item" routerLink="/panel/users/list">
-				<span class="title">لیست کاربران</span>
-			</a>
-			<a class="item" routerLink="/panel/users/info">
-				<span class="title">جزئیات</span>
-			</a>
-		</div>
-	</div><!-- /breadcrumb2 -->
-	<div class="headline-title col col-12 col-xl-10">جزئیات اطلاعات</div>
-	<div class="col col-12 col-xl-10">
-		<mat-progress-bar mode="buffer" color="accent" class="col col-12 col-xl-10" *ngIf="!done"></mat-progress-bar>
-		<div class="d-flex flex-row flex-wrap align-items-stretch col-12 mt-3" *ngIf="done">
-			<div class="col-2 d-flex align-self-stretch">
-				<mat-card class="d-lg-flex flex-wrap justify-content-center align-items-center d-md-none  col col-12">
-					<mat-card-content class="d-flex flex-wrap justify-content-center align-items-center col-10 h-60 avatar " (click)="changeAvatar()" style="background-image: url({{'data:image/jpg;base64,' + userImg}})">
+    <div class="breadcrumb2 mt-3 col col-12 col-xl-10">
+        <div class="items">
+            <a class="item" routerLink="/panel">
+                <span class="title">داشبورد</span>
+            </a>
+            <a class="item" routerLink="/panel/users">
+                <span class="title">کاربران</span>
+            </a>
+            <a class="item" routerLink="/panel/users/list">
+                <span class="title">لیست کاربران</span>
+            </a>
+            <a class="item" routerLink="/panel/users/info">
+                <span class="title">جزئیات</span>
+            </a>
+        </div>
+    </div><!-- /breadcrumb2 -->
+    <div class="headline-title col col-12 col-xl-10">جزئیات اطلاعات</div>
+    <div class="col col-12 col-xl-10">
+        <mat-progress-bar mode="buffer" color="accent" class="col col-12 col-xl-10" *ngIf="!done"></mat-progress-bar>
+        <div class="d-flex flex-row flex-wrap align-items-stretch col-12 mt-3" *ngIf="done">
+            <div class="col-2 d-flex align-self-stretch">
+                <mat-card class="d-lg-flex flex-wrap justify-content-center align-items-center d-none  col col-12">
+                    <mat-card-content
+                            class="d-flex flex-wrap justify-content-center align-items-center col-10 h-60 avatar "
+                            (click)="changeAvatar('avatar',userImgFull)"
+                            style="background-image: url({{'data:image/jpg;base64,' + userImg}})">
+                        <div class="col-12 mt-3 d-flex justify-content-center align-items-baseline">
+                            <!--							<mat-card-subtitle>
+                                                            نام:
+                                                        </mat-card-subtitle>-->
+                            <div class="dashboard-caption col-12 ms-3 title-style">
+                                {{user}}
+                            </div>
+                        </div>
+                    </mat-card-content>
+                </mat-card>
+            </div>
+            <div class="col-lg-10 col-12">
+                <mat-card class="ms-lg-3 ms-md-0">
+                    <mat-card-header>اطلاعات هویتی</mat-card-header>
+                    <mat-card-content>
+                        <mat-divider></mat-divider>
+                        <table mat-table [dataSource]="personal_data" class="mt-3"><!--mat-elevation-z8-->
 
-						<div class="col-12 mt-3 d-flex justify-content-center align-items-baseline">
-							<!--							<mat-card-subtitle>
-															نام:
-														</mat-card-subtitle>-->
-							<div class="dashboard-caption col-12 ms-3 title-style">
-								{{user}}
-							</div>
-						</div>
-					</mat-card-content>
-				</mat-card>
-			</div>
-			<div class="col-lg-10 col-md-12">
-				<mat-card class="ms-lg-3 ms-md-0">
-					<mat-card-header>اطلاعات هویتی</mat-card-header>
-					<mat-card-content>
-						<mat-divider></mat-divider>
-						<table mat-table [dataSource]="personal_data" class="mt-3"><!--mat-elevation-z8-->
-							
-							
-							<!-- Position Column -->
-							<ng-container matColumnDef="title">
-								<th mat-header-cell *matHeaderCellDef></th>
-								<td mat-cell *matCellDef="let element" style="width: 200px !important;" class="">
-									<mat-card-subtitle>{{element.title + " :"}} </mat-card-subtitle>
-								</td>
-							</ng-container>
-							
-							<!-- Name Column -->
-							<ng-container matColumnDef="value">
-								<th mat-header-cell *matHeaderCellDef></th>
-								<td mat-cell *matCellDef="let element">
-									<div
-										class="dashboard-caption d-flex align-items-start m-0">{{element.value | persianNumbers}} </div>
-								</td>
-							</ng-container>
-							
-							<!-- Weight Column -->
-							<ng-container matColumnDef="action">
-								<th mat-header-cell *matHeaderCellDef></th>
-								<td mat-cell *matCellDef="let element">
-									<div class="col col-12  d-flex justify-content-end">
-										<button mat-stroked-button color="accent"
-												(click)="edit(element.title, element.field, element.value,'baseuser',element.validators, element.fieldType,element.fieldValue)"
-												*ngIf="element.action == 'edit'">ویرایش
-										</button>
-									</div>
-								</td>
-							</ng-container>
-							
-							<tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-						</table>
-					
-					
-					</mat-card-content>
-				</mat-card>
-			</div>
-			<mat-accordion class=" col-12 mt-3">
-				<mat-expansion-panel>
-					<mat-expansion-panel-header>اطلاعات تکمیلی</mat-expansion-panel-header>
-					<div>
-						<table mat-table [dataSource]="complete_data" class="mt-3"><!--mat-elevation-z8-->
-							
-							<ng-container matColumnDef="title">
-								<th mat-header-cell *matHeaderCellDef></th>
-								<td mat-cell *matCellDef="let element" style="width: 200px !important;" class="">
-									<mat-card-subtitle>{{element.title + " :"}} </mat-card-subtitle>
-								</td>
-							</ng-container>
-							
-							<ng-container matColumnDef="value">
-								<th mat-header-cell *matHeaderCellDef></th>
-								<td mat-cell *matCellDef="let element">
-									<div class="dashboard-caption d-flex align-items-start m-0">
-										<div *ngIf="element.value === true">
-											<button mat-mini-fab color="accent">
-												<mat-icon>done</mat-icon>
-											</button>
-										</div>
-										<div *ngIf="element.value === false ">
-											<button mat-mini-fab color="warn">
-												<mat-icon>cancel</mat-icon>
-											</button>
-										</div>
-										<div *ngIf="element.value == 'active'">
-											<button mat-mini-fab color="primary">
-												<mat-icon>done_all</mat-icon>
-											</button>
-										</div>
-										<div *ngIf="element.value == 'disable'">
-											<button mat-mini-fab color="warn">
-												<mat-icon>cancel</mat-icon>
-											</button>
-										</div>
-										<div
-											*ngIf="element.value !== true && element.value != 'active' && element.value !== false  && element.value != 'disable'">{{element.value | persianNumbers}} </div>
-									</div>
-								</td>
-							</ng-container>
-							
-							<ng-container matColumnDef="action">
-								<th mat-header-cell *matHeaderCellDef></th>
-								<td mat-cell *matCellDef="let element">
-									<div class="col col-12  d-flex justify-content-end">
-										<button mat-mini-fab color="accent"
-												(click)="edit(element.title, element.field, element.value,'baseuser',element.validators, element.fieldType,element.fieldValue)"
-												*ngIf="element.action == 'edit'">
-											<mat-icon>edit</mat-icon>
-										</button>
-									</div>
-								</td>
-							</ng-container>
-							
-							<tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-						</table>
-					</div>
-				</mat-expansion-panel>
-			</mat-accordion>
-			<mat-accordion class=" col-12 mt-3" *ngFor="let job of job_data">
-				<mat-expansion-panel>
-					<mat-expansion-panel-header>اطلاعات شغلی</mat-expansion-panel-header>
-					<div>
-						<table mat-table [dataSource]="job" class="mt-3"><!--mat-elevation-z8-->
-							
-							<ng-container matColumnDef="title">
-								<th mat-header-cell *matHeaderCellDef></th>
-								<td mat-cell *matCellDef="let element" style="width: 200px !important;" class="">
-									<mat-card-subtitle>{{element.title + " :"}} </mat-card-subtitle>
-								</td>
-							</ng-container>
-							
-							<!-- Name Column -->
-							<ng-container matColumnDef="value">
-								<th mat-header-cell *matHeaderCellDef></th>
-								<td mat-cell *matCellDef="let element">
-									<div class="dashboard-caption d-flex align-items-start m-0"
-										 *ngIf="!element.data && element.fieldType != 'currency'">
-										{{(element.value == 'active' ? 'فعال' : element.value == 'disable' ? 'غیرفعال' : element.value) | persianNumbers}}
-									</div>
-									<div class="dashboard-caption d-flex align-items-start m-0"
-										 *ngIf="!element.data && element.fieldType == 'currency'">
-										{{(element.value == 'active' ? 'فعال' : element.value == 'disable' ? 'غیرفعال' : element.value) | persianpurrencypipe}}
-									</div>
-									<div class="dashboard-caption d-flex align-items-start m-0" *ngIf="element.data">
-										<button mat-stroked-button color="accent"
-												(click)="jobInfo(element)">{{element.value | persianNumbers}}</button>
-									</div>
-								</td>
-							</ng-container>
-							
-							<!-- Weight Column -->
-							<ng-container matColumnDef="action">
-								<th mat-header-cell *matHeaderCellDef></th>
-								<td mat-cell *matCellDef="let element">
-									<div class="col col-12  d-flex justify-content-end">
-										<button mat-mini-fab color="accent" (click)="editJob(element)"
-												*ngIf="element.action == 'edit'">
-											<mat-icon>edit</mat-icon>
-										</button>
-									</div>
-								</td>
-							</ng-container>
-							
-							<tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-						</table>
-					</div>
-				</mat-expansion-panel>
-			</mat-accordion>
-			<mat-accordion class=" col-12 mt-3">
-				<mat-expansion-panel>
-					<mat-expansion-panel-header>اطلاعات ارتباطی</mat-expansion-panel-header>
-					<div>
-						<table mat-table [dataSource]="contact_info" class="mt-3"><!--mat-elevation-z8-->
-							
-							<!--- Note that these columns can be defined in any order.
-								  The actual rendered columns are set as a property on the row definition" -->
-							
-							<!-- Position Column -->
-							<ng-container matColumnDef="title">
-								<th mat-header-cell *matHeaderCellDef></th>
-								<td mat-cell *matCellDef="let element" style="width: 200px !important;" class="">
-									<mat-card-subtitle>{{element.title + " :"}} </mat-card-subtitle>
-								</td>
-							</ng-container>
-							
-							<!-- Name Column -->
-							<ng-container matColumnDef="value">
-								<th mat-header-cell *matHeaderCellDef></th>
-								<td mat-cell *matCellDef="let element">
-									<div
-										class="dashboard-caption d-flex align-items-start m-0">{{element.value | persianNumbers}} </div>
-								</td>
-							</ng-container>
-							
-							<!-- Weight Column -->
-							<ng-container matColumnDef="action">
-								<th mat-header-cell *matHeaderCellDef></th>
-								<td mat-cell *matCellDef="let element">
-									<div class="col col-12  d-flex justify-content-end">
-										<button mat-stroked-button color="warn"
-												*ngIf="element.action.includes('delete')" class="ms-3">حذف
-										</button>
-										<button mat-stroked-button color="primary"
-												*ngIf="element.action.includes('insert')" class="ms-3"
-												(click)="edit(element.title, element.field,'','baseuser',element.validators, element.fieldType,element.fieldValue)">
-											افزودن
-										</button>
-										<button mat-stroked-button color="accent" class="ms-3"
-												(click)="edit(element.title, element.field, element.value,'baseuser',element.validators, element.fieldType,element.fieldValue)"
-												*ngIf="element.action.includes('edit')">ویرایش
-										</button>
-									
-									</div>
-								</td>
-							</ng-container>
-							
-							<tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-						</table>
-					</div>
-				</mat-expansion-panel>
-			</mat-accordion>
-			<mat-accordion class=" col-12 mt-3" *ngFor="let address of address_info">
-				<mat-expansion-panel>
-					<mat-expansion-panel-header>اطلاعات محل سکونت</mat-expansion-panel-header>
-					<div>
-						<table mat-table [dataSource]="address" class="mt-3"><!--mat-elevation-z8-->
-							
-							<!--- Note that these columns can be defined in any order.
-								  The actual rendered columns are set as a property on the row definition" -->
-							
-							<!-- Position Column -->
-							<ng-container matColumnDef="title">
-								<th mat-header-cell *matHeaderCellDef></th>
-								<td mat-cell *matCellDef="let element" style="width: 200px !important;" class="">
-									<mat-card-subtitle>{{element.title + " :"}} </mat-card-subtitle>
-								</td>
-							</ng-container>
-							
-							<!-- Name Column -->
-							<ng-container matColumnDef="value">
-								<th mat-header-cell *matHeaderCellDef></th>
-								<td mat-cell *matCellDef="let element">
-									<div
-										class="dashboard-caption d-flex align-items-start m-0">{{element.value | persianNumbers}} </div>
-								</td>
-							</ng-container>
-							
-							<!-- Weight Column -->
-							<ng-container matColumnDef="action">
-								<th mat-header-cell *matHeaderCellDef></th>
-								<td mat-cell *matCellDef="let element">
-									<div class="col col-12  d-flex justify-content-end">
-										<button mat-stroked-button color="accent"
-												(click)="edit(element.title, element.field, element.value,'baseuser',element.validators, element.fieldType,element.fieldValue)"
-												*ngIf="element.action == 'edit'">ویرایش
-										</button>
-									</div>
-								</td>
-							</ng-container>
-							
-							<tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-						</table>
-					</div>
-				</mat-expansion-panel>
-			</mat-accordion>
-			<mat-accordion class=" col-12 mt-3">
-				<mat-expansion-panel>
-					<mat-expansion-panel-header>اطلاعات بیمه</mat-expansion-panel-header>
-					<div>
-						<table mat-table [dataSource]="insurance_info" class="mt-3"><!--mat-elevation-z8-->
-							
-							<!--- Note that these columns can be defined in any order.
-								  The actual rendered columns are set as a property on the row definition" -->
-							
-							<!-- Position Column -->
-							<ng-container matColumnDef="title">
-								<th mat-header-cell *matHeaderCellDef></th>
-								<td mat-cell *matCellDef="let element" style="width: 200px !important;" class="">
-									<mat-card-subtitle>{{element.title + " :"}} </mat-card-subtitle>
-								</td>
-							</ng-container>
-							
-							<!-- Name Column -->
-							<ng-container matColumnDef="value">
-								<th mat-header-cell *matHeaderCellDef></th>
-								<td mat-cell *matCellDef="let element">
-									<div class="dashboard-caption d-flex align-items-start m-0">
-										{{(element.value == true ? 'دارد' : element.value == false ? 'ندارد' : element.value) | persianNumbers}}
-									</div>
-								</td>
-							</ng-container>
-							
-							<!-- Weight Column -->
-							<ng-container matColumnDef="action">
-								<th mat-header-cell *matHeaderCellDef></th>
-								<td mat-cell *matCellDef="let element">
-									<div class="col col-12  d-flex justify-content-end">
-										<button mat-stroked-button color="accent"
-												(click)="edit(element.title, element.field, element.value,'employee',element.validators, element.fieldType,element.fieldValue)"
-												*ngIf="element.action == 'edit'">ویرایش
-										</button>
-									</div>
-								</td>
-							</ng-container>
-							
-							<tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-						</table>
-					</div>
-				</mat-expansion-panel>
-			</mat-accordion>
-			<mat-accordion class=" col-12 mt-3">
-				<mat-expansion-panel>
-					<mat-expansion-panel-header>اطلاعات بانکی</mat-expansion-panel-header>
-					<div>
-						<table mat-table [dataSource]="bank_info" class="mt-3"><!--mat-elevation-z8-->
-							
-							<!--- Note that these columns can be defined in any order.
-								  The actual rendered columns are set as a property on the row definition" -->
-							
-							<!-- Position Column -->
-							<ng-container matColumnDef="title">
-								<th mat-header-cell *matHeaderCellDef></th>
-								<td mat-cell *matCellDef="let element" style="width: 200px !important;" class="">
-									<mat-card-subtitle>{{element.title + " :"}} </mat-card-subtitle>
-								</td>
-							</ng-container>
-							
-							<!-- Name Column -->
-							<ng-container matColumnDef="value">
-								<th mat-header-cell *matHeaderCellDef></th>
-								<td mat-cell *matCellDef="let element">
-									<div
-										class="dashboard-caption d-flex align-items-start m-0">{{element.value | persianNumbers}} </div>
-								</td>
-							</ng-container>
-							
-							<!-- Weight Column -->
-							<ng-container matColumnDef="action">
-								<th mat-header-cell *matHeaderCellDef></th>
-								<td mat-cell *matCellDef="let element">
-									<div class="col col-12  d-flex justify-content-end">
-										<button mat-stroked-button color="accent"
-												(click)="edit(element.title, element.field, element.value,'employee',element.validators, element.fieldType,element.fieldValue)"
-												*ngIf="element.action == 'edit'">ویرایش
-										</button>
-									</div>
-								</td>
-							</ng-container>
-							
-							<tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-						</table>
-					</div>
-				</mat-expansion-panel>
-			</mat-accordion>
-			<mat-accordion class=" col-12 mt-3" *ngFor="let exp of experiment_info">
-				<mat-expansion-panel>
-					<mat-expansion-panel-header>اطلاعات سلامت</mat-expansion-panel-header>
-					<div>
-						<table mat-table [dataSource]="exp" class="mt-3"><!--mat-elevation-z8-->
-							
-							<!--- Note that these columns can be defined in any order.
-								  The actual rendered columns are set as a property on the row definition" -->
-							
-							<!-- Position Column -->
-							<ng-container matColumnDef="title">
-								<th mat-header-cell *matHeaderCellDef></th>
-								<td mat-cell *matCellDef="let element" style="width: 200px !important;" class="">
-									<mat-card-subtitle>{{element.title + " :"}} </mat-card-subtitle>
-								</td>
-							</ng-container>
-							
-							<!-- Name Column -->
-							<ng-container matColumnDef="value">
-								<th mat-header-cell *matHeaderCellDef></th>
-								<td mat-cell *matCellDef="let element">
-									<div class="dashboard-caption d-flex align-items-start m-0"
-										 *ngIf="element.type == 'txt'">{{element.value | persianNumbers}} </div>
-									<div *ngIf="element.type == 'img'">
-										<mat-grid-list *ngIf="element.imgs.length"
-													   [cols]="element.imgs.length >4 ?element.imgs.length:4"
-													   rowHeight="150px">
-											<mat-grid-tile *ngFor="let url of element.imgs">
-												<div class="d-flex flex-column">
-													<mat-chip class="d-flex flex-row-reverse">
-														<button matChipRemove matPrefix>
-															<mat-icon>cancel</mat-icon>
-														
-														</button>
-														حذف
-													</mat-chip>
-													<img [src]="'data:image/jpg;base64,' + url.mini" height="100px">
-												</div>
-											</mat-grid-tile>
-										</mat-grid-list>
-									</div>
-								</td>
-							</ng-container>
-							
-							<!-- Weight Column -->
-							<ng-container matColumnDef="action">
-								<th mat-header-cell *matHeaderCellDef></th>
-								<td mat-cell *matCellDef="let element">
-									<div class="col col-12  d-flex justify-content-end">
-										<button mat-stroked-button color="accent"
-												(click)="edit(element.title, element.field, element.value,'employee',element.validators, element.fieldType,element.fieldValue)"
-												*ngIf="element.action == 'edit'">ویرایش
-										</button>
-									</div>
-								</td>
-							</ng-container>
-							
-							<tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-						</table>
-					</div>
-				</mat-expansion-panel>
-			</mat-accordion>
-			<mat-accordion class=" col-12 mt-3" *ngFor="let gur of guarantee_info">
-				<mat-expansion-panel>
-					<mat-expansion-panel-header>اطلاعات وثیقه</mat-expansion-panel-header>
-					<div>
-						<table mat-table [dataSource]="gur" class="mt-3"><!--mat-elevation-z8-->
-							
-							<!--- Note that these columns can be defined in any order.
-								  The actual rendered columns are set as a property on the row definition" -->
-							
-							<!-- Position Column -->
-							<ng-container matColumnDef="title">
-								<th mat-header-cell *matHeaderCellDef></th>
-								<td mat-cell *matCellDef="let element" style="width: 200px !important;" class="">
-									<mat-card-subtitle>{{element.title + " :"}} </mat-card-subtitle>
-								</td>
-							</ng-container>
-							
-							<!-- Name Column -->
-							<ng-container matColumnDef="value">
-								<th mat-header-cell *matHeaderCellDef></th>
-								<td mat-cell *matCellDef="let element">
-									<div class="dashboard-caption d-flex align-items-start m-0"
-										 *ngIf="element.type == 'txt'">{{element.value | persianNumbers}} </div>
-									<div *ngIf="element.type == 'img'">
-										<mat-grid-list *ngIf="element.imgs.length"
-													   [cols]="element.imgs.length >4 ?element.imgs.length:4"
-													   rowHeight="150px">
-											<mat-grid-tile *ngFor="let url of element.imgs">
-												<div class="d-flex flex-column">
-													<mat-chip class="d-flex flex-row-reverse">
-														<button matChipRemove matPrefix>
-															<mat-icon>cancel</mat-icon>
-														
-														</button>
-														حذف
-													</mat-chip>
-													<img [src]="'data:image/jpg;base64,' + url.mini" height="100px">
-												</div>
-											</mat-grid-tile>
-										</mat-grid-list>
-									</div>
-								</td>
-							</ng-container>
-							
-							<!-- Weight Column -->
-							<ng-container matColumnDef="action">
-								<th mat-header-cell *matHeaderCellDef></th>
-								<td mat-cell *matCellDef="let element">
-									<div class="col col-12  d-flex justify-content-end">
-										<button mat-stroked-button color="accent"
-												(click)="edit(element.title, element.field, element.value,'employee',element.validators, element.fieldType,element.fieldValue)"
-												*ngIf="element.action == 'edit'">ویرایش
-										</button>
-									</div>
-								</td>
-							</ng-container>
-							
-							<tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-						</table>
-					</div>
-				</mat-expansion-panel>
-			</mat-accordion>
-		
-		</div>
-	
-	</div>
+
+                            <!-- Position Column -->
+                            <ng-container matColumnDef="title">
+                                <th mat-header-cell *matHeaderCellDef></th>
+                                <td mat-cell *matCellDef="let element" style="width: 200px !important;" class="">
+                                    <mat-card-subtitle>{{element.title + " :"}} </mat-card-subtitle>
+                                </td>
+                            </ng-container>
+
+                            <!-- Name Column -->
+                            <ng-container matColumnDef="value">
+                                <th mat-header-cell *matHeaderCellDef></th>
+                                <td mat-cell *matCellDef="let element">
+                                    <div
+                                            class="dashboard-caption d-flex align-items-start m-0">{{element.value | persianNumbers}} </div>
+                                </td>
+                            </ng-container>
+
+                            <!-- Weight Column -->
+                            <ng-container matColumnDef="action">
+                                <th mat-header-cell *matHeaderCellDef></th>
+                                <td mat-cell *matCellDef="let element">
+                                    <div class="col col-12  d-flex justify-content-end">
+                                        <button mat-stroked-button color="accent"
+                                                (click)="edit(element.title, element.field, element.value,'baseuser',element.validators, element.fieldType,element.fieldValue)"
+                                                *ngIf="element.action == 'edit'">ویرایش
+                                        </button>
+                                    </div>
+                                </td>
+                            </ng-container>
+
+                            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                        </table>
+
+
+                    </mat-card-content>
+                </mat-card>
+            </div>
+            <mat-accordion class=" col-12 mt-3">
+                <mat-expansion-panel>
+                    <mat-expansion-panel-header>اطلاعات تکمیلی</mat-expansion-panel-header>
+                    <div>
+                        <table mat-table [dataSource]="complete_data" class="mt-3"><!--mat-elevation-z8-->
+
+                            <ng-container matColumnDef="title">
+                                <th mat-header-cell *matHeaderCellDef></th>
+                                <td mat-cell *matCellDef="let element" style="width: 200px !important;" class="">
+                                    <mat-card-subtitle>{{element.title + " :"}} </mat-card-subtitle>
+                                </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="value">
+                                <th mat-header-cell *matHeaderCellDef></th>
+                                <td mat-cell *matCellDef="let element">
+                                    <div class="dashboard-caption d-flex align-items-start m-0">
+                                        <div *ngIf="element.value === true">
+                                            <button mat-mini-fab color="accent">
+                                                <mat-icon>done</mat-icon>
+                                            </button>
+                                        </div>
+                                        <div *ngIf="element.value === false ">
+                                            <button mat-mini-fab color="warn">
+                                                <mat-icon>cancel</mat-icon>
+                                            </button>
+                                        </div>
+                                        <div *ngIf="element.value == 'active'">
+                                            <button mat-mini-fab color="primary">
+                                                <mat-icon>done_all</mat-icon>
+                                            </button>
+                                        </div>
+                                        <div *ngIf="element.value == 'disable'">
+                                            <button mat-mini-fab color="warn">
+                                                <mat-icon>cancel</mat-icon>
+                                            </button>
+                                        </div>
+                                        <div
+                                                *ngIf="element.value !== true && element.value != 'active' && element.value !== false  && element.value != 'disable'">{{element.value | persianNumbers}} </div>
+                                    </div>
+                                </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="action">
+                                <th mat-header-cell *matHeaderCellDef></th>
+                                <td mat-cell *matCellDef="let element">
+                                    <div class="col col-12  d-flex justify-content-end">
+                                        <button mat-mini-fab color="accent"
+                                                (click)="edit(element.title, element.field, element.value,'baseuser',element.validators, element.fieldType,element.fieldValue)"
+                                                *ngIf="element.action == 'edit'">
+                                            <mat-icon>edit</mat-icon>
+                                        </button>
+                                    </div>
+                                </td>
+                            </ng-container>
+
+                            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                        </table>
+                    </div>
+                </mat-expansion-panel>
+            </mat-accordion>
+            <mat-accordion class=" col-12 mt-3" *ngFor="let job of job_data">
+                <mat-expansion-panel>
+                    <mat-expansion-panel-header>اطلاعات شغلی</mat-expansion-panel-header>
+                    <div>
+                        <table mat-table [dataSource]="job" class="mt-3"><!--mat-elevation-z8-->
+
+                            <ng-container matColumnDef="title">
+                                <th mat-header-cell *matHeaderCellDef></th>
+                                <td mat-cell *matCellDef="let element" style="width: 200px !important;" class="">
+                                    <mat-card-subtitle>{{element.title + " :"}} </mat-card-subtitle>
+                                </td>
+                            </ng-container>
+
+                            <!-- Name Column -->
+                            <ng-container matColumnDef="value">
+                                <th mat-header-cell *matHeaderCellDef></th>
+                                <td mat-cell *matCellDef="let element">
+                                    <div class="dashboard-caption d-flex align-items-start m-0"
+                                         *ngIf="!element.data && element.fieldType != 'currency'">
+                                        {{(element.value == 'active' ? 'فعال' : element.value == 'disable' ? 'غیرفعال' : element.value) | persianNumbers}}
+                                    </div>
+                                    <div class="dashboard-caption d-flex align-items-start m-0"
+                                         *ngIf="!element.data && element.fieldType == 'currency'">
+                                        {{(element.value == 'active' ? 'فعال' : element.value == 'disable' ? 'غیرفعال' : element.value) | persianpurrencypipe}}
+                                    </div>
+                                    <div class="dashboard-caption d-flex align-items-start m-0" *ngIf="element.data">
+                                        <button mat-stroked-button color="accent"
+                                                (click)="jobInfo(element)">{{element.value | persianNumbers}}</button>
+                                    </div>
+                                </td>
+                            </ng-container>
+
+                            <!-- Weight Column -->
+                            <ng-container matColumnDef="action">
+                                <th mat-header-cell *matHeaderCellDef></th>
+                                <td mat-cell *matCellDef="let element">
+                                    <div class="col col-12  d-flex justify-content-end">
+                                        <button mat-mini-fab color="accent" (click)="editJob(element)"
+                                                *ngIf="element.action == 'edit'">
+                                            <mat-icon>edit</mat-icon>
+                                        </button>
+                                    </div>
+                                </td>
+                            </ng-container>
+
+                            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                        </table>
+                    </div>
+                </mat-expansion-panel>
+            </mat-accordion>
+            <mat-accordion class=" col-12 mt-3">
+                <mat-expansion-panel>
+                    <mat-expansion-panel-header>اطلاعات ارتباطی</mat-expansion-panel-header>
+                    <div>
+                        <table mat-table [dataSource]="contact_info" class="mt-3"><!--mat-elevation-z8-->
+
+                            <!--- Note that these columns can be defined in any order.
+                                  The actual rendered columns are set as a property on the row definition" -->
+
+                            <!-- Position Column -->
+                            <ng-container matColumnDef="title">
+                                <th mat-header-cell *matHeaderCellDef></th>
+                                <td mat-cell *matCellDef="let element" style="width: 200px !important;" class="">
+                                    <mat-card-subtitle>{{element.title + " :"}} </mat-card-subtitle>
+                                </td>
+                            </ng-container>
+
+                            <!-- Name Column -->
+                            <ng-container matColumnDef="value">
+                                <th mat-header-cell *matHeaderCellDef></th>
+                                <td mat-cell *matCellDef="let element">
+                                    <div
+                                            class="dashboard-caption d-flex align-items-start m-0">{{element.value | persianNumbers}} </div>
+                                </td>
+                            </ng-container>
+
+                            <!-- Weight Column -->
+                            <ng-container matColumnDef="action">
+                                <th mat-header-cell *matHeaderCellDef></th>
+                                <td mat-cell *matCellDef="let element">
+                                    <div class="col col-12  d-flex justify-content-end">
+                                        <button mat-stroked-button color="warn"
+                                                *ngIf="element.action.includes('delete')" class="ms-3"
+                                                (click)="delete(element.field, element.index)">حذف
+                                        </button>
+                                        <button mat-stroked-button color="primary"
+                                                *ngIf="element.action.includes('insert')" class="ms-3"
+                                                (click)="edit(element.title, element.field,'','baseuser',element.validators, element.fieldType,element.fieldValue)">
+                                            افزودن
+                                        </button>
+                                        <button mat-stroked-button color="accent" class="ms-3"
+                                                (click)="edit(element.title, element.field, element.value,'baseuser',element.validators, element.fieldType,element.fieldValue)"
+                                                *ngIf="element.action.includes('edit')">ویرایش
+                                        </button>
+
+                                    </div>
+                                </td>
+                            </ng-container>
+
+                            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                        </table>
+                    </div>
+                </mat-expansion-panel>
+            </mat-accordion>
+            <mat-accordion class=" col-12 mt-3" *ngFor="let address of address_info; let index = index">
+                <mat-expansion-panel>
+                    <mat-expansion-panel-header>اطلاعات محل سکونت</mat-expansion-panel-header>
+                    <div>
+                        <table mat-table [dataSource]="address" class="mt-3"><!--mat-elevation-z8-->
+
+                            <!--- Note that these columns can be defined in any order.
+                                  The actual rendered columns are set as a property on the row definition" -->
+
+                            <!-- Position Column -->
+                            <ng-container matColumnDef="title">
+                                <th mat-header-cell *matHeaderCellDef></th>
+                                <td mat-cell *matCellDef="let element" style="width: 200px !important;" class="">
+                                    <mat-card-subtitle>{{element.title + " :"}} </mat-card-subtitle>
+                                </td>
+                            </ng-container>
+
+                            <!-- Name Column -->
+                            <ng-container matColumnDef="value">
+                                <th mat-header-cell *matHeaderCellDef></th>
+                                <td mat-cell *matCellDef="let element">
+                                    <div
+                                            class="dashboard-caption d-flex align-items-start m-0">{{element.value | persianNumbers}} </div>
+                                </td>
+                            </ng-container>
+
+                            <!-- Weight Column -->
+                            <ng-container matColumnDef="action">
+                                <th mat-header-cell *matHeaderCellDef></th>
+                                <td mat-cell *matCellDef="let element">
+                                    <div class="col col-12  d-flex justify-content-end">
+                                        <button mat-stroked-button color="accent"
+                                                (click)="edit(element.title, element.field, element.value,'baseuser',element.validators, element.fieldType,element.fieldValue, element.parent, index)"
+                                                *ngIf="element.action == 'edit'">ویرایش
+                                        </button>
+                                    </div>
+                                </td>
+                            </ng-container>
+
+                            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                        </table>
+                    </div>
+                </mat-expansion-panel>
+            </mat-accordion>
+            <mat-accordion class=" col-12 mt-3">
+                <mat-expansion-panel>
+                    <mat-expansion-panel-header>اطلاعات بیمه</mat-expansion-panel-header>
+                    <div>
+                        <table mat-table [dataSource]="insurance_info" class="mt-3"><!--mat-elevation-z8-->
+
+                            <!--- Note that these columns can be defined in any order.
+                                  The actual rendered columns are set as a property on the row definition" -->
+
+                            <!-- Position Column -->
+                            <ng-container matColumnDef="title">
+                                <th mat-header-cell *matHeaderCellDef></th>
+                                <td mat-cell *matCellDef="let element" style="width: 200px !important;" class="">
+                                    <mat-card-subtitle>{{element.title + " :"}} </mat-card-subtitle>
+                                </td>
+                            </ng-container>
+
+                            <!-- Name Column -->
+                            <ng-container matColumnDef="value">
+                                <th mat-header-cell *matHeaderCellDef></th>
+                                <td mat-cell *matCellDef="let element">
+                                    <div class="dashboard-caption d-flex align-items-start m-0">
+                                        {{(element.value == true ? 'دارد' : element.value == false ? 'ندارد' : element.value) | persianNumbers}}
+                                    </div>
+                                </td>
+                            </ng-container>
+
+                            <!-- Weight Column -->
+                            <ng-container matColumnDef="action">
+                                <th mat-header-cell *matHeaderCellDef></th>
+                                <td mat-cell *matCellDef="let element">
+                                    <div class="col col-12  d-flex justify-content-end">
+                                        <button mat-stroked-button color="accent"
+                                                (click)="editEmployee(element)"
+                                                *ngIf="element.action == 'edit'">ویرایش
+                                        </button>
+                                    </div>
+                                </td>
+                            </ng-container>
+
+                            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                        </table>
+                    </div>
+                </mat-expansion-panel>
+            </mat-accordion>
+            <mat-accordion class=" col-12 mt-3">
+                <mat-expansion-panel>
+                    <mat-expansion-panel-header>اطلاعات بانکی</mat-expansion-panel-header>
+                    <div>
+                        <table mat-table [dataSource]="bank_info" class="mt-3"><!--mat-elevation-z8-->
+
+                            <!--- Note that these columns can be defined in any order.
+                                  The actual rendered columns are set as a property on the row definition" -->
+
+                            <!-- Position Column -->
+                            <ng-container matColumnDef="title">
+                                <th mat-header-cell *matHeaderCellDef></th>
+                                <td mat-cell *matCellDef="let element" style="width: 200px !important;" class="">
+                                    <mat-card-subtitle>{{element.title + " :"}} </mat-card-subtitle>
+                                </td>
+                            </ng-container>
+
+                            <!-- Name Column -->
+                            <ng-container matColumnDef="value">
+                                <th mat-header-cell *matHeaderCellDef></th>
+                                <td mat-cell *matCellDef="let element">
+                                    <div
+                                            class="dashboard-caption d-flex align-items-start m-0">{{element.value | persianNumbers}} </div>
+                                </td>
+                            </ng-container>
+
+                            <!-- Weight Column -->
+                            <ng-container matColumnDef="action">
+                                <th mat-header-cell *matHeaderCellDef></th>
+                                <td mat-cell *matCellDef="let element">
+                                    <div class="col col-12  d-flex justify-content-end">
+                                        <button mat-stroked-button color="accent"
+                                                (click)="editEmployee(element)"
+                                                *ngIf="element.action == 'edit'">ویرایش
+                                        </button>
+                                    </div>
+                                </td>
+                            </ng-container>
+
+                            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                        </table>
+                    </div>
+                </mat-expansion-panel>
+            </mat-accordion>
+            <mat-accordion class=" col-12 mt-3" *ngFor="let exp of experiment_info; let index = index">
+                <mat-expansion-panel>
+                    <mat-expansion-panel-header>اطلاعات سلامت</mat-expansion-panel-header>
+                    <div>
+                        <table mat-table [dataSource]="exp" class="mt-3"><!--mat-elevation-z8-->
+
+                            <!--- Note that these columns can be defined in any order.
+                                  The actual rendered columns are set as a property on the row definition" -->
+
+                            <!-- Position Column -->
+                            <ng-container matColumnDef="title">
+                                <th mat-header-cell *matHeaderCellDef></th>
+                                <td mat-cell *matCellDef="let element" style="width: 200px !important;" class="">
+                                    <mat-card-subtitle>{{element.title + " :"}} </mat-card-subtitle>
+                                </td>
+                            </ng-container>
+
+                            <!-- Name Column -->
+                            <ng-container matColumnDef="value">
+                                <th mat-header-cell *matHeaderCellDef></th>
+                                <td mat-cell *matCellDef="let element" class="w-75">
+                                    <div class="dashboard-caption d-flex align-items-start m-0"
+                                         *ngIf="element.type == 'txt'">{{element.value | persianNumbers}} </div>
+                                    <div *ngIf="element.type == 'img'">
+                                        <mat-grid-list *ngIf="element.imgs.length"
+                                                       [cols]="element.imgs.length>4 ?element.imgs.length:4"
+                                                       rowHeight="150px">
+                                            <mat-grid-tile *ngFor="let url of element.imgs" style="min-width: 100px">
+                                                <div class="d-flex flex-column">
+                                                    <mat-chip class="d-flex flex-row-reverse mb-1">
+                                                        <button matChipRemove matPrefix (click)="delete(url.field, url.index,url)">
+                                                            <mat-icon>cancel</mat-icon>
+                                                        </button>
+                                                        حذف
+                                                    </mat-chip>
+                                                    <img width="100px" [src]="'data:image/jpg;base64,' + url.mini"
+                                                         (click)="changeAvatar('show', url.full)" height="100px">
+                                                </div>
+                                            </mat-grid-tile>
+                                        </mat-grid-list>
+                                    </div>
+                                </td>
+                            </ng-container>
+
+                            <!-- Weight Column -->
+                            <ng-container matColumnDef="action">
+                                <th mat-header-cell *matHeaderCellDef></th>
+                                <td mat-cell *matCellDef="let element">
+                                    <div class="col col-12  d-flex justify-content-end">
+                                        <button mat-stroked-button color="accent"
+                                                (click)="editEmployee(element)"
+                                                *ngIf="element.action == 'edit'">ویرایش
+                                        </button>
+                                    </div>
+                                </td>
+                            </ng-container>
+
+                            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                        </table>
+                    </div>
+					<mat-card-actions class="mt-3">
+						<button mat-stroked-button color="accent" (click)="changeAvatar('experiment',null, index)">افزودن تصویر</button>
+					</mat-card-actions>
+                </mat-expansion-panel>
+            </mat-accordion>
+            <mat-accordion class=" col-12 mt-3" *ngFor="let gur of guarantee_info; let index = index">
+                <mat-expansion-panel>
+                    <mat-expansion-panel-header>اطلاعات وثیقه</mat-expansion-panel-header>
+                    <div>
+                        <table mat-table [dataSource]="gur" class="mt-3"><!--mat-elevation-z8-->
+
+                            <!--- Note that these columns can be defined in any order.
+                                  The actual rendered columns are set as a property on the row definition" -->
+
+                            <!-- Position Column -->
+                            <ng-container matColumnDef="title">
+                                <th mat-header-cell *matHeaderCellDef></th>
+                                <td mat-cell *matCellDef="let element" style="width: 200px !important;" class="">
+                                    <mat-card-subtitle>{{element.title + " :"}} </mat-card-subtitle>
+                                </td>
+                            </ng-container>
+
+                            <!-- Name Column -->
+                            <ng-container matColumnDef="value">
+                                <th mat-header-cell *matHeaderCellDef></th>
+                                <td mat-cell *matCellDef="let element" class="w-75">
+                                    <div class="dashboard-caption d-flex align-items-start m-0"
+                                         *ngIf="element.type == 'txt'">{{element.value | persianNumbers}} </div>
+                                    <div *ngIf="element.type == 'img'">
+                                        <mat-grid-list *ngIf="element.imgs.length"
+                                                       [cols]="element.imgs.length>4 ?element.imgs.length:4"
+                                                       rowHeight="150px">
+                                            <mat-grid-tile *ngFor="let url of element.imgs">
+                                                <div class="d-flex flex-column">
+                                                    <mat-chip class="d-flex flex-row-reverse mb-1">
+                                                        <button matChipRemove matPrefix (click)="delete(url.field, url.index,url)">
+                                                            <mat-icon>cancel</mat-icon>
+                                                        </button>
+                                                        حذف
+                                                    </mat-chip>
+                                                    <img width="100px" [src]="'data:image/jpg;base64,' + url.mini" height="100px"
+                                                    (click)="changeAvatar('show', url.full)"
+                                                    >
+                                                </div>
+                                            </mat-grid-tile>
+                                        </mat-grid-list>
+                                    </div>
+                                </td>
+                            </ng-container>
+
+                            <!-- Weight Column -->
+                            <ng-container matColumnDef="action">
+                                <th mat-header-cell *matHeaderCellDef></th>
+                                <td mat-cell *matCellDef="let element">
+                                    <div class="col col-12  d-flex justify-content-end">
+                                        <button mat-stroked-button color="accent"
+                                                (click)="editEmployee(element)"
+                                                *ngIf="element.action == 'edit'">ویرایش
+                                        </button>
+                                    </div>
+                                </td>
+                            </ng-container>
+
+                            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                        </table>
+                    </div>
+                    <mat-card-actions class="mt-3">
+                        <button mat-stroked-button color="accent" (click)="changeAvatar('guarantee',null, index)">افزودن تصویر</button>
+                    </mat-card-actions>
+                </mat-expansion-panel>
+            </mat-accordion>
+
+        </div>
+
+    </div>
 </div>

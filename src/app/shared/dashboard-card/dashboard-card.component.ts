@@ -39,6 +39,7 @@ export class DashboardCardComponent {
 		iconRegistry.addSvgIconLiteral('IncDec', sanitizer.bypassSecurityTrustHtml(icon.IncDec));
 		iconRegistry.addSvgIconLiteral('loan', sanitizer.bypassSecurityTrustHtml(icon.loan));
 		iconRegistry.addSvgIconLiteral('last_days', sanitizer.bypassSecurityTrustHtml(icon.last_days));
+		iconRegistry.addSvgIconLiteral('bank', sanitizer.bypassSecurityTrustHtml(icon.bank));
 	}
 	
 	// ngOnInit() {

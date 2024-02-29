@@ -36,6 +36,9 @@ import { CalcComponent } from "./calc/calc.component";
 import { IncDecComponent } from "./panel/pages/bill/inc-dec/inc-dec.component";
 import { LoanComponent } from "./panel/pages/bill/loan/loan.component";
 import { LastDaysComponent } from "./panel/pages/attendance/last-days/last-days.component";
+import { BillPrintComponent } from "./print/bill-print/bill-print.component";
+import { ToBankComponent } from "./panel/pages/bill/to-bank/to-bank.component";
+import { ToBankPrintComponent } from "./print/to-bank-print/to-bank-print.component";
 
 const routes: Routes = [
 	
@@ -57,6 +60,8 @@ const routes: Routes = [
 	
 	/*print*/
 	{path: 'print/generalReport', component: GeneralReportComponent},
+	{path: 'print/paySlip', component: BillPrintComponent},
+	{path: 'print/toBankPrint', component: ToBankPrintComponent},
 	
 	// Panel :
 	{
@@ -106,7 +111,7 @@ const routes: Routes = [
 			/*attendance route*/
 			{path: 'attendance', component: AttendanceComponent,data:{permission: ['super-user', 'recruiting-admin','guard']},canActivate: [accessGuard]},
 			{path: 'attendance/daily', component: DailyComponent,data:{permission: ['super-user', 'recruiting-admin','guard']},canActivate: [accessGuard]},
-			{path: 'attendance/last-days', component: LastDaysComponent,data:{permission: ['super-user', 'recruiting-admin','guard']},canActivate: [accessGuard]},
+			{path: 'attendance/last-days', component: LastDaysComponent,data:{permission: ['super-user', 'recruiting-admin']},canActivate: [accessGuard]},
 			{path: 'attendance/manual', component: ManualComponent,data:{permission: ['super-user', 'recruiting-admin','guard']},canActivate: [accessGuard]},
 			{path: 'attendance/conflict', component: ConflictComponent,data:{permission: ['super-user', 'recruiting-admin',]},canActivate: [accessGuard]},
 			{path: 'attendance/pending', component: PendingComponent,data:{permission: ['super-user', 'recruiting-admin',]},canActivate: [accessGuard]},
@@ -121,6 +126,7 @@ const routes: Routes = [
 			{path: 'report/reports', component: ReportsComponent,data:{permission: ['super-user', 'recruiting-admin',]},canActivate: [accessGuard]},
 			{path: 'report/workInfo', component: AttendanceInfoComponent,data:{permission: ['super-user', 'recruiting-admin',]},canActivate: [accessGuard]},
 			{path: 'report/paySlip', component: PaySlipComponent,data:{permission: ['super-user',]},canActivate: [accessGuard]},
+			{path: 'report/toBank', component: ToBankComponent,data:{permission: ['super-user',]},canActivate: [accessGuard]},
 			/**/
 			{path: 'user-info', component: Info3Component},
 			

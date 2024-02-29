@@ -1,6 +1,14 @@
 <div mat-dialog-content dir="rtl" class="col col-12">
 	<form action="" [formGroup]="form" class="col col-12">
-		<mat-form-field *ngIf="data.fieldType != 'select'" class="col col-12">
+		<mat-form-field *ngIf="data.fieldType == 'date' " class="col col-12">
+			<mat-label>{{data.title}}</mat-label>
+			<input matInput [matDatepicker]="picker6"  placeholder=""
+				   [formControlName]="data.field" >
+			<mat-datepicker-toggle matSuffix [for]="picker6"></mat-datepicker-toggle>
+			<mat-datepicker #picker6></mat-datepicker>
+			<mat-error>{{validate.requiredValidate(form.get(data.field), data.title)}}</mat-error>
+		</mat-form-field>
+		<mat-form-field *ngIf="data.fieldType != 'date' && data.fieldType != 'select'" class="col col-12">
 			<mat-label>{{data.title}}</mat-label>
 			<input matInput class="ps-2" [formControlName]="data.field">
 			<mat-error

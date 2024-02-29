@@ -5,7 +5,7 @@ import { UsersHttpService } from "../../../../HttpServices/users-http.service";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { SnackbarComponent } from "../../../../shared/snackbar/snackbar.component";
 import { ReportsService } from "../../../../services/reports.service";
-import { Router } from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
 import { CalendarHttpService } from "../../../../HttpServices/calendar-http.service";
 import { CalendarService } from "../../../../services/calendar.service";
 import { EditLogComponent } from "../../../../shared/dialog/edit-log/edit-log.component";
@@ -26,6 +26,7 @@ export class AttendanceInfoComponent implements OnInit {
 	            public Report: ReportsService,
 	            private route: Router,
 	            public dialog: MatDialog,
+	            private routeData:ActivatedRoute
 	) {
 	}
 	
@@ -62,6 +63,12 @@ export class AttendanceInfoComponent implements OnInit {
 		this.year = today.year;
 		this.month = today.month
 		await this.getUsers()
+		if (this.routeData.snapshot.queryParams['user']){
+			this.user = this.routeData.snapshot.queryParams['user'];
+			this.year = this.routeData.snapshot.queryParams['year'];
+			this.month = this.routeData.snapshot.queryParams['month'];
+			await this.submit();
+		}
 	}
 	
 	displayedColumns: string[] = ['day', 'date', 'day_status', 'traffic1', 'traffic2', 'traffic3', 'traffic4', 'traffic5', 'traffic6', 'traffic7', 'traffic8', 'user_status', 'conflict', 'time'];
@@ -136,18 +143,20 @@ export class AttendanceInfoComponent implements OnInit {
 			type:'detail'
 		}).subscribe({
 			next: async (data: any) => {
+				if (data.monthInfo.length) {
 				data = data.monthInfo[0];
-				this.dataSource = data[0]
-				this.work_days = data[1].work_days
-				this.total_work = data[1].total_work
-				this.holiday_work = data[1].holiday_work
-				this.holidays = data[1].holidays
-				this.absent_day = data[1].absent_day
-				this.present_day = data[1].present_day
-				this.total_day = data[1].total_day
-				this.user_info = this.filteredOptions.filter((e: any) => {
-					return e.id == this.user
-				})[0]
+					this.dataSource = data[0]
+					this.work_days = data[1].work_days
+					this.total_work = data[1].total_work
+					this.holiday_work = data[1].holiday_work
+					this.holidays = data[1].holidays
+					this.absent_day = data[1].absent_day
+					this.present_day = data[1].present_day
+					this.total_day = data[1].total_day
+					this.user_info = this.filteredOptions.filter((e: any) => {
+						return e.id == this.user
+					})[0]
+				}
 				this.progress = false;
 				/*				if (!Object.keys(data).length) {
 									this._snackBar.openFromComponent(SnackbarComponent, {

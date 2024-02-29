@@ -8,6 +8,7 @@ import { EditStringComponent } from "../../../../shared/dialog/editUser/edit-str
 import { JobInfoComponent } from "../../../../shared/dialog/job-info/job-info.component";
 import { ChangeJobComponent } from "../../../../shared/dialog/change-job/change-job.component";
 import { ChangeAvatarComponent } from "../../../../shared/dialog/change-avatar/change-avatar.component";
+import {DeleteUserComponent} from "../../../../shared/dialog/delete-user/delete-user.component";
 
 const defaultImg = `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`
 
@@ -55,6 +56,7 @@ export class InfoComponent implements OnInit {
 			next: (data: any) => {
 				data = data[0];
 				this.user_id = data._id;
+				this.employee_id = data.employee_info._id
 				this.userImg = data.userImage[0]?.mini ?? defaultImg;
 				this.userImgFull = data.userImage[0]?.full ?? defaultImg;
 				this.user = data.name + " " + data.last_name
@@ -80,7 +82,7 @@ export class InfoComponent implements OnInit {
 						{title: 'کد پرسنلی', value: job.personal_code, field: 'personal_code', action: '', validators:['number'],fieldType:'number',job_id:job._id, ref:'job'},
 						{title: 'شناسه تردد', value: job.device_id, field: 'device_id', action: '', validators:['number'],fieldType:'number',job_id:job._id, ref:'job'},
 						{title: 'ایمیل سازمانی', value: job.companyMail??'', field: 'companyMail', action: 'edit', validators:['email'],fieldType:'string',job_id:job._id, ref:'job'},
-						{title: 'شروع به کار', value:this.date.dateInfo(+ new Date(job.start_work)).date , field: 'start_work', action: 'edit', validators:['required'],fieldType:'string',job_id:job._id, ref:'job'},
+						{title: 'شروع به کار', unix:job.start_work,value:this.date.dateInfo(+ new Date(job.start_work)).date , field: 'start_work', action: 'edit', validators:['required'],fieldType:'date',job_id:job._id, ref:'job'},
 						{title: 'شرکت', value: job.company_info.title, field: 'company_info', action: 'edit', data:job.company_info,fieldType:'',job_id:job._id, ref:'job'},
 						{title: 'قسمت', value: job.collection_info.title, field: 'collection_info', action: 'edit', data:job.collection_info,fieldType:'',job_id:job._id, ref:'job'},
 						{title: 'بخش', value: job.part_info.title, field: 'part_info', action: 'edit', data:job.part_info,fieldType:'',job_id:job._id, ref:'job'},
@@ -114,7 +116,7 @@ export class InfoComponent implements OnInit {
 						actions.push('delete')
 					if (data.phone?.length == index+1)
 						actions.push('insert')
-					this.contact_info.push({title:'ثابت', value:ph,action:actions, validators:['phone'],fieldType:'number',index:index},)
+					this.contact_info.push({title:'ثابت', value:ph,action:actions,field:'phone', validators:['phone'],fieldType:'number',index:index},)
 					index++;
 				}
 				index = 0;
@@ -124,7 +126,7 @@ export class InfoComponent implements OnInit {
 						actions.push('delete')
 					if (data.email?.length == index+1)
 						actions.push('insert')
-					this.contact_info.push({title:'ایمیل', value:e,action:actions,validators:['email'],fieldType:'string',index:index},)
+					this.contact_info.push({title:'ایمیل', value:e,action:actions,field:'email',validators:['email'],fieldType:'string',index:index},)
 					index++;
 				}
 				
@@ -132,43 +134,43 @@ export class InfoComponent implements OnInit {
 				let i = 0;
 				for (let addr of data.address){
 					let temp = [
-						{title:'استان', value:addr.province ?? '-' ,field:`address[${i}].province` ,action:'edit',validators:['string'], fieldType:'string'},
-						{title:'شهر', value:addr.city ?? '-' ,field:`address[${i}].city` ,action:'edit',validators:['string'], fieldType:'string'},
-						{title:'روستا', value:addr.Village ?? '-' ,field:`address[${i}].Village` ,action:'edit',validators:['string'], fieldType:'string'},
-						{title:'خیابان', value:addr.street ?? '-' ,field:`address[${i}].street` ,action:'edit',validators:['string'], fieldType:'string'},
-						{title:'کوچه', value:addr.alley ?? '-' ,field:`address[${i}].alley` ,action:'edit',validators:['string'], fieldType:'string'},
-						{title:'پلاک', value:addr.Plaque ?? '-' ,field:`address[${i}].Plaque` ,action:'edit',validators:['string'], fieldType:'string'},
-						{title:'ساختمان', value:addr.building ?? '-' ,field:`address[${i}].building` ,action:'edit',validators:['string'], fieldType:'string'},
-						{title:'کد پستی', value:addr.postal_code ,field:`address[${i}].postal_code` ,action:'edit',validators:['nationalCode'], fieldType:'number'},
-						{title:'آدرس کامل', value:addr.full_address ?? '-' ,field:`address[${i}].full_address` ,action:'edit',validators:['string'], fieldType:'string'},
+						{title:'استان', value:addr.province ?? '-' ,field:`province` ,action:'edit',validators:['string'], fieldType:'string', parent:'address'},
+						{title:'شهر', value:addr.city ?? '-' ,field:`city` ,action:'edit',validators:['string'], fieldType:'string', parent:'address'},
+						{title:'روستا', value:addr.Village ?? '-' ,field:`Village` ,action:'edit',validators:['string'], fieldType:'string', parent:'address'},
+						{title:'خیابان', value:addr.street ?? '-' ,field:`street` ,action:'edit',validators:['string'], fieldType:'string', parent:'address'},
+						{title:'کوچه', value:addr.alley ?? '-' ,field:`alley` ,action:'edit',validators:['string'], fieldType:'string', parent:'address'},
+						{title:'پلاک', value:addr.Plaque ?? '-' ,field:`Plaque` ,action:'edit',validators:['string'], fieldType:'string', parent:'address'},
+						{title:'ساختمان', value:addr.building ?? '-' ,field:`building` ,action:'edit',validators:['string'], fieldType:'string', parent:'address'},
+						{title:'کد پستی', value:addr.postal_code ,field:`postal_code` ,action:'edit',validators:['nationalCode'], fieldType:'number', parent:'address'},
+						{title:'آدرس کامل', value:addr.full_address ?? '-' ,field:`full_address` ,action:'edit',validators:['string'], fieldType:'string', parent:'address'},
 					]
 					i++;
 					this.address_info.push(temp);
 				}
 				
 				this.insurance_info = [
-					{title:'وضیت بیمه', value:data.employee_info.insurance_status  ,field:'insurance_status' ,action:'edit', validators:['required'], fieldType:'select',fieldValue:[{title:'دارد' , value:true },{title:'ندارد' , value:false }]},
-					{title:'کد بیمه', value:data.employee_info.insurance_code ,field:'insurance_code' ,action:'edit', validators:['number'], fieldType:'number'},
-					{title:'روز بیمه ای', value:data.employee_info.insurance_day  ,field:'insurance_day' ,action:'edit', validators:['number'], fieldType:'number'},
-					{title:'سابقه بیمه', value:data.employee_info.insurance_history ,field:'insurance_history' ,action:'edit', validators:['required'], fieldType:'select',fieldValue:[{title:'دارد' , value:'دارد' },{title:'ندارد' , value:'ندارد' }]},
+					{title:'وضیت بیمه', value:data.employee_info.insurance_status  ,field:'insurance_status' ,action:'edit', validators:['required'], fieldType:'select',fieldValue:[{title:'دارد' , value:true },{title:'ندارد' , value:false }], ref:'employee',Employee_id:data.employee_info._id},
+					{title:'کد بیمه', value:data.employee_info.insurance_code ,field:'insurance_code' ,action:'edit', validators:['number'], fieldType:'number', ref:'employee',Employee_id:data.employee_info._id},
+					{title:'روز بیمه ای', value:data.employee_info.insurance_day  ,field:'insurance_day' ,action:'edit', validators:['number'], fieldType:'number', ref:'employee',Employee_id:data.employee_info._id},
+					{title:'سابقه بیمه', value:data.employee_info.insurance_history ,field:'insurance_history' ,action:'edit', validators:['required'], fieldType:'select',fieldValue:[{title:'دارد' , value:'دارد' },{title:'ندارد' , value:'ندارد' }], ref:'employee',Employee_id:data.employee_info._id},
 				]
 				
 				this.bank_info = [
-					{title:'شماره کارت', value:data.employee_info.bank_card ,field:'bank_card' ,action:'edit', validators:['number'],fieldType:'number'},
-					{title:'شماره حساب', value:data.employee_info.bank_account_number ,field:'bank_account_number' ,action:'edit', validators:['number'],fieldType:'number'},
+					{title:'شماره کارت', value:data.employee_info.bank_card ,field:'bank_card' ,action:'edit', validators:['number'],fieldType:'number',ref:'employee',Employee_id:data.employee_info._id},
+					{title:'شماره حساب', value:data.employee_info.bank_account_number ,field:'bank_account_number' ,action:'edit', validators:['number'],fieldType:'number',ref:'employee',Employee_id:data.employee_info._id},
 				]
 				
 				this.experiment_info = [];
 				i = 0;
 				for (let exp of data.employee_info.experiment){
 					let temp:any = [
-						{title:'تاریخ',type:'txt', value:this.date.dateInfo(exp.date).date ,field:`experiment[${i}].date` ,action:'delete'},
+						{title:'تاریخ',type:'txt',unix:exp.date, value:this.date.dateInfo(exp.date).date ,field:`date`,parent:'experiment',validators:[''], fieldType:'date',action:'edit',index:i,Employee_id:data.employee_info._id, ref:'employee'},
 					]
 					let j = 0;
 					let temp2 = [];
 					for(let img of exp.img){
 						temp2.push(
-							{title:'تصویر', type:'img' ,mini:img.mini ,full:img.full  ,field:`experiment[${i}].img[${j}]` ,action:'delete'}
+							{title:'تصویر', type:'img' ,mini:img.mini ,full:img.full  ,field:`experiment`,action:'delete',index:i,imgIndex:j, parent:'experiment',Employee_id:data.employee_info._id, ref:'employee'}
 						)
 						j++;
 					}
@@ -183,13 +185,13 @@ export class InfoComponent implements OnInit {
 				i = 0;
 				for (let grn of data.employee_info.guarantee){
 					let temp:any = [
-						{title:'کد',type:'txt', value:grn.code ,field:`guarantee[${i}].code` ,action:'delete'},
+						{title:'کد',type:'txt', value:grn.code ,field:`code` ,parent:'guarantee' ,validators:['string'], fieldType:'string', action:'edit', index:i,Employee_id:data.employee_info._id, ref:'employee'},
 					]
 					let j = 0;
 					let temp2 = [];
 					for(let img of grn.img){
 						temp2.push(
-							{title:'تصویر', type:'img' ,mini:img.mini ,full:img.full  ,field:`guarantee[${i}].img[${j}]` ,action:'delete'}
+							{title:'تصویر', type:'img' ,mini:img.mini ,full:img.full,imgIndex:j  ,field:`guarantee` ,action:'delete', index:i,Employee_id:data.employee_info._id, ref:'employee'}
 						)
 						j++;
 					}
@@ -204,7 +206,7 @@ export class InfoComponent implements OnInit {
 		})
 	}
 	
-	edit(title:any,field:any,value:any, ref:string, validate:string[],fieldType:any, fieldValue?:any){
+	edit(title:any,field:any,value:any, ref:string, validate:string[],fieldType:any, fieldValue?:any, parent?:any, index?:any){
 		const dialogRef = this.dialog.open(EditStringComponent, {
 			disableClose:true,
 			width:'500',
@@ -216,7 +218,26 @@ export class InfoComponent implements OnInit {
 				ref:ref,
 				validators:validate,
 				fieldType:fieldType,
-				fieldValue:fieldValue
+				fieldValue:fieldValue,
+				index:index,
+				parent:parent
+			},
+		})
+		dialogRef.afterClosed().subscribe(result => {
+			if (result == 'success')
+				this.getUsers();
+		});
+	}
+
+	delete(field:any, index:any, element?:any){
+		const dialogRef = this.dialog.open(DeleteUserComponent, {
+			disableClose:true,
+			width:'500',
+			data: {
+				id: this.user_id,
+				field:field,
+				index:index,
+				element:element
 			},
 		})
 		dialogRef.afterClosed().subscribe(result => {
@@ -258,13 +279,28 @@ export class InfoComponent implements OnInit {
 			});
 		}
 	}
-	
-	changeAvatar(){
+
+	editEmployee(element:any){
+		const dialogRef = this.dialog.open(EditStringComponent, {
+			disableClose:true,
+			width:'500',
+			data: element,
+		})
+		dialogRef.afterClosed().subscribe(result => {
+			if (result == 'success')
+				this.getUsers();
+		});
+	}
+
+	changeAvatar(field:string, img:any, index?:number){
 		const dialogRef = this.dialog.open(ChangeAvatarComponent, {
 			width:'700',
 			data: {
-				img:this.userImgFull,
-				id:this.user_id
+				img: img ,
+				id:this.user_id,
+				employee_id:this.employee_id,
+				field:field,
+				index:index
 			}
 		})
 		dialogRef.afterClosed().subscribe(result => {
@@ -272,6 +308,11 @@ export class InfoComponent implements OnInit {
 				this.getUsers();
 		});
 	}
+
+	deleteExperimentImg(){
+
+	}
 	
 	protected readonly Number = Number;
+	protected readonly console = console;
 }

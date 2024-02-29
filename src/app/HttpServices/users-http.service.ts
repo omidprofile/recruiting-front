@@ -72,8 +72,97 @@ export class UsersHttpService {
             );
     }
 
+    updatePhone( body:any){
+        return this.http.post(`${config.apiRoute}/users/phone`, body, {
+            headers: {'Access-Control-Allow-Origin': '*'}
+        })
+            .pipe(
+                shareReplay(),
+            );
+    }
+
+    updateEmail( body:any){
+        return this.http.post(`${config.apiRoute}/users/email`, body, {
+            headers: {'Access-Control-Allow-Origin': '*'}
+        })
+            .pipe(
+                shareReplay(),
+            );
+    }
+
+    updateAddress( body:any){
+        return this.http.post(`${config.apiRoute}/users/address`, body, {
+            headers: {'Access-Control-Allow-Origin': '*'}
+        })
+            .pipe(
+                shareReplay(),
+            );
+    }
+
+    updateExperiment( body:any){
+        return this.http.post(`${config.apiRoute}/users/experiment`, body, {
+            headers: {'Access-Control-Allow-Origin': '*'}
+        })
+            .pipe(
+                shareReplay(),
+            );
+    }
+
+    updateGuarantee( body:any){
+        return this.http.post(`${config.apiRoute}/users/guarantee`, body, {
+            headers: {'Access-Control-Allow-Origin': '*'}
+        })
+            .pipe(
+                shareReplay(),
+            );
+    }
+
+    rmGuaranteeImg( body:any){
+        return this.http.post(`${config.apiRoute}/users/rmGuaranteeImg`, body, {
+            headers: {'Access-Control-Allow-Origin': '*'}
+        })
+            .pipe(
+                shareReplay(),
+            );
+    }
+
+    rmExperimentImg( body:any){
+        return this.http.post(`${config.apiRoute}/users/rmExperimentImg`, body, {
+            headers: {'Access-Control-Allow-Origin': '*'}
+        })
+            .pipe(
+                shareReplay(),
+            );
+    }
+
+    addExperimentImg( body:any){
+        return this.http.post(`${config.apiRoute}/users/addExperimentImg`, body, {
+            headers: {'Access-Control-Allow-Origin': '*'}
+        })
+            .pipe(
+                shareReplay(),
+            );
+    }
+    addGuaranteeImg( body:any){
+        return this.http.post(`${config.apiRoute}/users/addGuaranteeImg`, body, {
+            headers: {'Access-Control-Allow-Origin': '*'}
+        })
+            .pipe(
+                shareReplay(),
+            );
+    }
+
     updateJob(body:any){
         return this.http.post(`${config.apiRoute}/users/updateJob`, body, {
+            headers: {'Access-Control-Allow-Origin': '*'}
+        })
+            .pipe(
+                shareReplay(),
+            );
+    }
+
+    updateEmployee(body:any){
+        return this.http.post(`${config.apiRoute}/users/updateEmployee`, body, {
             headers: {'Access-Control-Allow-Origin': '*'}
         })
             .pipe(
@@ -116,6 +205,13 @@ export class UsersHttpService {
     
     saveWorkReports(report:any){
        return this.http.post(`${config.apiRoute}/workReport`,report)
+            .pipe(
+                shareReplay(),
+            );
+    }
+
+    toBank(report:any){
+       return this.http.post(`${config.apiRoute}/workReport/toBank`,report)
             .pipe(
                 shareReplay(),
             );

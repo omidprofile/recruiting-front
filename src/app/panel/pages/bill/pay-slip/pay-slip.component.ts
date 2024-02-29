@@ -8,6 +8,9 @@ import { MatSnackBar } from "@angular/material/snack-bar";
 import { DateService } from "../../../../services/date.service";
 import { MatTable } from "@angular/material/table";
 import { PeriodicElement } from "../../users/users-list/users-list.component";
+import { ManualAttendanceComponent } from "../../../../shared/dialog/manual-attendance/manual-attendance.component";
+import { PaySlipInfoComponent } from "../../../../shared/dialog/pay-slip-info/pay-slip-info.component";
+import { PrintService } from "../../../../services/print.service";
 
 @Component({
 	selector: 'app-pay-slip',
@@ -15,13 +18,13 @@ import { PeriodicElement } from "../../users/users-list/users-list.component";
 	styleUrls: ['./pay-slip.component.scss']
 })
 export class PaySlipComponent implements OnInit {
-	displayedColumns: string[] = ['user', 'personal_code', 'baseSalary', 'housingPayment', 'subsidy', 'childPayment',
-		'interim_interest', 'insurance', 'extra_work', 'extra_work_payment', 'interim_interest_reward', 'transportation', 'total_day_work', 'absent_days',
-		'total_extra_work', 'weak_hour_work', 'holiday_work', 'night_work', 'increases','decreases', 'sum', 'reduce', 'payment'];
-	displayedColumnsName: string[] = ['کاربر', 'کدپرسنلی', 'حقوق پایه', 'حق مسکن', 'حق بن', 'حق اولاد',
-		'علی الحساب سنوات', 'حق بیمه', ' کل اضافه کار', 'کل تاخیر', 'مبلغ اضافه کار', 'علی الحساب عیدی', 'ایاب ذهاب', 'کارکرد موثر', 'غیبت', 'ساعت اضافه کار', 'مقدار تاخیر',
-		'ساعت کار هفته', 'تعطیل کاری', 'شب کاری', 'سایر اضافات','سایر کسورات', 'مجموع', 'کسورات', 'پرداختی'];
-	
+	/*	displayedColumns: string[] = ['user', 'personal_code', 'baseSalary', 'housingPayment', 'subsidy', 'childPayment',
+			'interim_interest', 'insurance', 'extra_work', 'extra_work_payment', 'interim_interest_reward', 'transportation', 'total_day_work', 'absent_days',
+			'total_extra_work', 'weak_hour_work', 'holiday_work', 'night_work', 'increases','decreases', 'sum', 'reduce', 'payment'];
+		displayedColumnsName: string[] = ['کاربر', 'کدپرسنلی', 'حقوق پایه', 'حق مسکن', 'حق بن', 'حق اولاد',
+			'علی الحساب سنوات', 'حق بیمه', ' کل اضافه کار', 'کل تاخیر', 'مبلغ اضافه کار', 'علی الحساب عیدی', 'ایاب ذهاب', 'کارکرد موثر', 'غیبت', 'ساعت اضافه کار', 'مقدار تاخیر',
+			'ساعت کار هفته', 'تعطیل کاری', 'شب کاری', 'سایر اضافات','سایر کسورات', 'مجموع', 'کسورات', 'پرداختی'];*/
+	displayedColumns: any = ['No', 'user', 'personal_code', 'baseSalary', 'extraSalary','present','absent', 'extraTime', 'delayTime', 'requireIncrease', 'requireDecrease', 'increases', 'decreases', 'payment','action']
 	dataSource: any;
 	allCourses: any = [];
 	selectCourses: any;
@@ -35,13 +38,14 @@ export class PaySlipComponent implements OnInit {
 	            private route: Router,
 	            private _snackBar: MatSnackBar,
 	            private date: DateService,
+	            private printer:PrintService,
 	) {
 	}
 	
 	ngOnInit() {
 		if (this.Report.report().title) {
 			this.report_data = this.Report.report();
-			this.displayedColumns = this.report_data.cols
+			// this.displayedColumns = this.report_data.cols
 		} else {
 			this.route.navigate(['panel/report/reports']).then(() => {
 				this._snackBar.openFromComponent(SnackbarComponent, {
@@ -51,6 +55,11 @@ export class PaySlipComponent implements OnInit {
 			})
 		}
 		this.getCourses()
+		 let lastTitle = localStorage.getItem('title')
+		if (lastTitle){
+			this.calculate({title:lastTitle})
+			this.selectCourse = lastTitle
+		}
 	}
 	
 	createHour(hour: any) {
@@ -71,323 +80,107 @@ export class PaySlipComponent implements OnInit {
 		this.http.getWorkReport().subscribe({
 			next: (data: any) => {
 				data = data.reports
-					data.forEach((data: any) => {
-						!this.allCourses.includes(data.title) ? this.allCourses.push(data.title) : '';
-					})
-				}
+				data.forEach((data: any) => {
+					!this.allCourses.includes(data.title) ? this.allCourses.push(data.title) : '';
+				})
+			}
 		});
 	}
 	
-	calculate(item:any){
-	let body:any = {};
-	body.title = item.title;
-	body.report = this.report_data;
-	this.http.calculate(body).subscribe({
-		next:(data:any)=>{
-			this.dataSource = data.result
-		},
-		error:(err:any)=>{
-			console.log(err)},
-	})
-	}
-	
-/*	async fillData(row: any) {
-		await this.http.getJob({personal_code: row.personal_code}).subscribe((data: any) => {
-			row.baseInfo = data[0];
-			this.dataSource.push(this.calcBase(row));
-			if (this.table)
-				this.table.renderRows();
-			
-		})
-	}
-	
-	calcBase(row: any) {
-		let basePayment = row.baseInfo.baseSalary_info.monthlyPayment ?? 0;
-		let bon = row.baseInfo.baseSalary_info.subsidy ?? 0;
-		let housing = row.baseInfo.baseSalary_info.housingPayment ?? 0;
-		let children = row.baseInfo.baseSalary_info.childPayment ?? 0;
-		let interim_interest = row.baseInfo.baseSalary_info.interim_interest ?? 0;
-		let transportation = row.baseInfo.baseSalary_info.transportation ?? 0;
-		let reward = row.baseInfo.rewardMonthly ?? 0;
-		let increaseSalary = row.baseInfo.increaseSalary ?? 0;
-		let decreaseSalary = row.baseInfo.decreaseSalary ?? 0;
-		let endPay = 0;
-		let baseSalary = 0;
-		baseSalary += basePayment;
-		baseSalary += increaseSalary;
-		baseSalary -= decreaseSalary;
-		this.report_data.reward_effect == 'onBase' ?
-			baseSalary += (row.baseInfo.rewardMonthly ?? 0)
-			: this.report_data.reward_effect == 'onPay' ?
-				endPay += (row.baseInfo.rewardMonthly ?? 0) : ''
-		let workTime = row.baseInfo.shift_info.force_time;
-		let dailyPayment = baseSalary / 30;
-		let hourPayment = dailyPayment / workTime;
-		let extra = (dailyPayment / 7.33) * 1.4;
-		let baseMonthWorkPayment = (dailyPayment) * (row.info.total_day + row.info.holidays - row.info.holiday_work);
-		let extraWork = extra * row.info.total_extra;
-		let delayWork = extra * row.info.total_delay;
-		let advantages = housing + bon;
-		let child = +row.baseInfo.user_id.child * children;
-		let traffic = transportation * row.info.total_day;
-		let insurance = ((basePayment + advantages) / 100) * (row.baseInfo?.insurance_info?.user_share ?? 0);
-		
-		////////////////////////////////////////////////////////////////////////////////////////
-		
-		let effective = this.report_data.cols;
-		let data: any = {};
-		data.payment = 0;
-		data.user = row.baseInfo.user_id.name + ' ' + row.baseInfo.user_id.last_name;
-		data.personal_code = row.personal_code;
-		data.total_day_work = row.info.total_day;
-		data.absent_days = row.info.absent_days;
-		data.total_extra_work = row.info.total_extra;
-		data.total_delay_work = row.info.total_delay;
-		data.holiday_work = row.info.holiday_work;
-		data.baseSalary = baseSalary.toFixed(2);
-		data.extra_work_payment = extra.toFixed(2);
-		data.extra_work = extraWork.toFixed(2);
-		data.delay_work = delayWork.toFixed(2);
-		data.housingPayment = housing.toFixed(2);
-		data.subsidy = bon.toFixed(2);
-		data.childPayment = child.toFixed(2);
-		data.transportation = traffic.toFixed(2);
-		data.interim_interest = this.date.dateInfo(+Date.now()).year - this.date.dateInfo(+new Date(row.baseInfo.start_work)).year > 0 ?
-			row.baseInfo.baseSalary_info.interim_interest * row.info.all_day : 0;
-		data.interim_interest_reward = Math.round(((dailyPayment * 60) / 12) * ((row.info.total_day + row.info.holidays - row.info.holiday_work) / row.info.all_day));
-		data.insurance = insurance;
-		data.helpful = row.baseInfo?.helpful ?? 0
-		let sum = 0;
-		if (effective.includes('baseSalary'))
-			sum += +baseMonthWorkPayment;
-		
-		if (effective.includes('extra_work'))
-			sum += +data.extra_work;
-		
-		if (effective.includes('housingPayment'))
-			sum += +data.housingPayment;
-		
-		if (effective.includes('subsidy'))
-			sum += +data.subsidy;
-		
-		if (effective.includes('childPayment'))
-			sum += +data.childPayment;
-		
-		if (effective.includes('interim_interest'))
-			sum += +data.interim_interest;
-		
-		if (effective.includes('interim_interest_reward'))
-			sum += +data.interim_interest_reward;
-		
-		if (effective.includes('transportation'))
-			sum += +data.transportation;
-		data.sum = +sum.toFixed(2);
-		
-		let reduce = 0;
-		
-		if (effective.includes('insurance'))
-			reduce += +data.insurance;
-		
-		if (effective.includes('helpful'))
-			reduce += +data.helpful;
-		
-		if (effective.includes('delay_work')) {
-			reduce += +data.delay_work;
-			console.log(data.delay_work)
-		}
-		
-		data.reduce = +reduce.toFixed(2);
-		
-		data.payment = endPay + data.sum - data.reduce;
-		if (this.report_data.max) {
-			if (data.payment - data.extra_work > this.report_data.max) {
-				data.payment -= data.extra_work;
-				data.sum -= data.extra_work;
-				data.extra_work = 0;
-				data.total_extra_work = 0;
-			}
-			while (data.payment > this.report_data.max) {
-				while (data.payment > this.report_data.max && data.extra_work > 0 && data.extra_work - data.extra_work_payment > 0) {
-					data.extra_work -= data.extra_work_payment;
-					data.total_extra_work -= 1;
-					data.payment -= data.extra_work_payment;
-					data.sum -= data.extra_work_payment;
-				}
-				if (data.extra_work - data.extra_work_payment < 0) {
-					data.extra_work = 0;
-					data.total_extra_work = 0;
-					data.payment -= data.extra_work;
-					data.sum -= data.extra_work;
-				}
-				while (data.payment > this.report_data.max && baseMonthWorkPayment > 0 && baseMonthWorkPayment - dailyPayment > 0) {
-					data.total_day_work -= 1;
-					baseMonthWorkPayment -= dailyPayment;
-					data.payment -= dailyPayment;
-					data.sum -= dailyPayment;
-				}
-			}
-		}
-		data.payment = data.payment.toFixed(2);
-		return data;
-	}*/
-/*	getCourses(param?: any) {
-		this.http.getWorkReport(param).subscribe({
+	calculate(item: any) {
+		localStorage.setItem('title',item.title)
+		let body: any = {};
+		body.title = item.title;
+		body.report = this.report_data;
+		this.http.calculate(body).subscribe({
 			next: (data: any) => {
-				data = data.reports
-				if (this.allCourses.length) {
-					this.selectCourses = data;
-					this.dataSource = [];
-					for (let record of this.selectCourses) {
-						this.fillData(record)
+				data = data.result;
+				this.dataSource = [];
+				for(item of data){
+					let temp:any={};
+					temp.sumInfo = [
+						{title: 'حقوق ثابت',price:item.baseMonthWorkPayment ?? 0},
+						{title: 'اضافه کار',price:item.extra_work ?? 0},
+						{title: 'حق مسکن',price:item.housingPayment ?? 0},
+						{title: 'حق عائله مندی',price:item.childPayment ?? 0},
+						{title: 'بن',price:item.subsidy ?? 0},
+						{title: 'علی الحساب ماهانه',price:item.interim_interest ?? 0},
+						{title: 'علی الحساب عیدی',price:item.interim_interest_reward ?? 0},
+						{title: 'ایاب ذهاب',price:item.transportation ?? 0},
+						{title: 'پاداش',price:item.endPay ?? 0},
+						
+					];
+					temp.reduceInfo = [
+						{title: 'بیمه',price:item.insurance},
+						{title: 'کسر کار',price:item.delay_work ?? 0},
+						{title: 'هزینه غذا',price: 0}
+					];
+					temp.increasesInfo = [];
+					temp.decreasesInfo =[];
+					if (item.increases_info){
+						for(let inc of item.increases_info){
+							temp.sumInfo.push({title:inc.title, price:inc.price})
+							temp.increasesInfo.push({title:inc.title, price:inc.price})
+						}
 					}
-				} else {
-					data.forEach((data: any) => {
-						!this.allCourses.includes(data.title) ? this.allCourses.push(data.title) : '';
-					})
+					if(item.decreases_info){
+						for(let dec of item.decreases_info){
+							temp.reduceInfo.push({title:dec.title, price:dec.price})
+							temp.decreasesInfo.push({title:dec.title, price:dec.price})
+						}
+					}
+					temp.conflict = item.conflict
+					temp.gender = item.gender;
+					temp.child = item.child;
+					temp.dailySalary = item.dailySalary;
+					temp.date = item.date;
+					temp.user = item.user;
+					temp.personal_code = item.personal_code;
+					temp.baseSalary = item.baseSalary;
+					temp.extraSalary = item.extra_work_payment;
+					temp.present = item.present_day;
+					temp.absent = item.absent_days;
+					temp.extraTime = item.total_extra_work;
+					temp.delayTime = item.total_delay_work;
+					temp.requireIncrease = item.increases ?? 0;
+					temp.requireDecrease = item.decreases ?? 0;
+					temp.increases = item.sum;
+					temp.decreases = item.reduce;
+					temp.payment = item.payment
+					this.dataSource.push(temp);
 				}
+			},
+			error: (err: any) => {
+				console.log(err)
+			},
+		})
+	}
+	
+	
+	seeInfo(info:any){
+		const dialogRef = this.dialog.open(PaySlipInfoComponent, {
+			width:'500px',
+			direction:"rtl",
+			data: info,
+			hasBackdrop:true,
+		})
+		dialogRef.afterClosed().subscribe(async (result) => {
+			if (result == 'success') {
+			
 			}
 		});
 	}
 	
-	async fillData(row: any) {
-		await this.http.getJob({personal_code: row.personal_code}).subscribe((data: any) => {
-			row.baseInfo = data[0];
-			this.dataSource.push(this.calcBase(row));
-			if (this.table)
-				this.table.renderRows();
-			
-		})
+	print(element:any){
+	this.printer.set(element);
+	this.route.navigate(['/print/paySlip'])
 	}
 	
-	calcBase(row: any) {
-		let basePayment = row.baseInfo.baseSalary_info.monthlyPayment ?? 0;
-		let bon = row.baseInfo.baseSalary_info.subsidy ?? 0;
-		let housing = row.baseInfo.baseSalary_info.housingPayment ?? 0;
-		let children = row.baseInfo.baseSalary_info.childPayment ?? 0;
-		let interim_interest = row.baseInfo.baseSalary_info.interim_interest ?? 0;
-		let transportation = row.baseInfo.baseSalary_info.transportation ?? 0;
-		let reward = row.baseInfo.rewardMonthly ?? 0;
-		let increaseSalary = row.baseInfo.increaseSalary ?? 0;
-		let decreaseSalary = row.baseInfo.decreaseSalary ?? 0;
-		let endPay = 0;
-		let baseSalary = 0;
-		baseSalary += basePayment;
-		baseSalary += increaseSalary;
-		baseSalary -= decreaseSalary;
-		this.report_data.reward_effect == 'onBase' ?
-			baseSalary += (row.baseInfo.rewardMonthly ?? 0)
-			: this.report_data.reward_effect == 'onPay' ?
-				endPay += (row.baseInfo.rewardMonthly ?? 0) : ''
-		let workTime = row.baseInfo.shift_info.force_time;
-		let dailyPayment = baseSalary / 30;
-		let hourPayment = dailyPayment / workTime;
-		let extra = (dailyPayment / 7.33) * 1.4;
-		let baseMonthWorkPayment = (dailyPayment) * (row.info.total_day + row.info.holidays - row.info.holiday_work);
-		let extraWork = extra * row.info.total_extra;
-		let delayWork = extra * row.info.total_delay;
-		let advantages = housing + bon;
-		let child = +row.baseInfo.user_id.child * children;
-		let traffic = transportation * row.info.total_day;
-		let insurance = ((basePayment + advantages) / 100) * (row.baseInfo?.insurance_info?.user_share ?? 0);
-		
-		////////////////////////////////////////////////////////////////////////////////////////
-		
-		let effective = this.report_data.cols;
-		let data: any = {};
-		data.payment = 0;
-		data.user = row.baseInfo.user_id.name + ' ' + row.baseInfo.user_id.last_name;
-		data.personal_code = row.personal_code;
-		data.total_day_work = row.info.total_day;
-		data.absent_days = row.info.absent_days;
-		data.total_extra_work = row.info.total_extra;
-		data.total_delay_work = row.info.total_delay;
-		data.holiday_work = row.info.holiday_work;
-		data.baseSalary = baseSalary.toFixed(2);
-		data.extra_work_payment = extra.toFixed(2);
-		data.extra_work = extraWork.toFixed(2);
-		data.delay_work = delayWork.toFixed(2);
-		data.housingPayment = housing.toFixed(2);
-		data.subsidy = bon.toFixed(2);
-		data.childPayment = child.toFixed(2);
-		data.transportation = traffic.toFixed(2);
-		data.interim_interest = this.date.dateInfo(+Date.now()).year - this.date.dateInfo(+new Date(row.baseInfo.start_work)).year > 0 ?
-			row.baseInfo.baseSalary_info.interim_interest * row.info.all_day : 0;
-		data.interim_interest_reward = Math.round(((dailyPayment * 60) / 12) * ((row.info.total_day + row.info.holidays - row.info.holiday_work) / row.info.all_day));
-		data.insurance = insurance;
-		data.helpful = row.baseInfo?.helpful ?? 0
-		let sum = 0;
-		if (effective.includes('baseSalary'))
-			sum += +baseMonthWorkPayment;
-		
-		if (effective.includes('extra_work'))
-			sum += +data.extra_work;
-		
-		if (effective.includes('housingPayment'))
-			sum += +data.housingPayment;
-		
-		if (effective.includes('subsidy'))
-			sum += +data.subsidy;
-		
-		if (effective.includes('childPayment'))
-			sum += +data.childPayment;
-		
-		if (effective.includes('interim_interest'))
-			sum += +data.interim_interest;
-		
-		if (effective.includes('interim_interest_reward'))
-			sum += +data.interim_interest_reward;
-		
-		if (effective.includes('transportation'))
-			sum += +data.transportation;
-		data.sum = +sum.toFixed(2);
-		
-		let reduce = 0;
-		
-		if (effective.includes('insurance'))
-			reduce += +data.insurance;
-		
-		if (effective.includes('helpful'))
-			reduce += +data.helpful;
-		
-		if (effective.includes('delay_work')) {
-			reduce += +data.delay_work;
-			console.log(data.delay_work)
-		}
-		
-		data.reduce = +reduce.toFixed(2);
-		
-		data.payment = endPay + data.sum - data.reduce;
-		if (this.report_data.max) {
-			if (data.payment - data.extra_work > this.report_data.max) {
-				data.payment -= data.extra_work;
-				data.sum -= data.extra_work;
-				data.extra_work = 0;
-				data.total_extra_work = 0;
-			}
-			while (data.payment > this.report_data.max) {
-				while (data.payment > this.report_data.max && data.extra_work > 0 && data.extra_work - data.extra_work_payment > 0) {
-					data.extra_work -= data.extra_work_payment;
-					data.total_extra_work -= 1;
-					data.payment -= data.extra_work_payment;
-					data.sum -= data.extra_work_payment;
-				}
-				if (data.extra_work - data.extra_work_payment < 0) {
-					data.extra_work = 0;
-					data.total_extra_work = 0;
-					data.payment -= data.extra_work;
-					data.sum -= data.extra_work;
-				}
-				while (data.payment > this.report_data.max && baseMonthWorkPayment > 0 && baseMonthWorkPayment - dailyPayment > 0) {
-					data.total_day_work -= 1;
-					baseMonthWorkPayment -= dailyPayment;
-					data.payment -= dailyPayment;
-					data.sum -= dailyPayment;
-				}
-			}
-		}
-		data.payment = data.payment.toFixed(2);
-		return data;
-	}*/
-
-
+	seeMonthInfo(element:any){
+		// this.route.navigate(['/panel/report/workInfo'],{queryParams:{
+		// 	user:element.personal_code,
+		// 		year:element.date.year,
+		// 		month:element.date.month
+		// 	}})
+	}
 }
